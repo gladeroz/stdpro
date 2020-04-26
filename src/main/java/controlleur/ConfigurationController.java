@@ -91,7 +91,7 @@ public class ConfigurationController implements Initializable {
 
 	@FXML
 	private void defaultSaveButtonAction(ActionEvent event){
-		Logger.print(LogLevel.DEBUG, "SAUVEGARDE EN COURS DE "+ Job.COMPTAGE_PDF);
+		Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(Job.COMPTAGE_PDF);
 
@@ -111,9 +111,7 @@ public class ConfigurationController implements Initializable {
 
 		config.setConfigComptagePdf(cc);
 
-		Logger.print(LogLevel.DEBUG, "FIN DE LA SAUVEGARDE DE "+ Job.COMPTAGE_PDF + "\n");
-
-		Logger.print(LogLevel.DEBUG, "SAUVEGARDE EN COURS DE "+ Job.SUFFIX_PREFIX);
+		Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.SUFFIX_PREFIX);
 
 		cc = config.getSpecificConfig(Job.SUFFIX_PREFIX);
 
@@ -131,9 +129,7 @@ public class ConfigurationController implements Initializable {
 			}
 		}
 
-		config.setConfigComptagePdf(cc);
-
-		Logger.print(LogLevel.DEBUG, "FIN DE LA SAUVEGARDE DE "+ Job.SUFFIX_PREFIX + "\n");
+		config.setConfigSuffixPrefix(cc);
 
 		try {
 			Yaml.saveConfig(config, stage);
@@ -181,7 +177,7 @@ public class ConfigurationController implements Initializable {
 			default:
 				//Defining the Name text field
 				final TextField def = new TextField();
-				def.setPromptText(child.getLabel());
+				def.setPromptText((child.getMandatory()) ? child.getLabel() : "[Optionnel] " + child.getLabel());
 				//name.setPrefColumnCount(25);
 				def.setText(child.getValue());
 				def.setId("INPUT#" + child.getConfigName() + "#" + child.getId());

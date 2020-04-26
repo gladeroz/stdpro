@@ -24,7 +24,7 @@ public class Logger {
 	public void initLogger(TextArea consoleLogscreen) {		
 		Console console = new Console();
 		PrintStream ps = new PrintStream(console, true);
-		//System.setOut(ps);
+		System.setOut(ps);
 		System.setErr(ps);
 		System.err.flush();
 		System.out.flush();
@@ -33,69 +33,52 @@ public class Logger {
 	private class Console extends OutputStream {
 		@Override
 		public void write(final int i) throws IOException {
-			Platform.runLater(new Runnable() {
-				public void run() {
-					consoleLogscreen.appendText(String.valueOf((char) i));
-				}
-			});
+			consoleLogscreen.appendText(String.valueOf((char) i));
 		}
 	}
 
 	public static void print(LogLevel level, Object mesg) {
 		if(consoleLogscreen == null) return;
-		
-		try {
-			switch (level) {
-			case INFO:
-				info(mesg);
-				break;
-			case ERROR:
-				error(mesg);
-				break;
-			case DEBUG:
-				debug(mesg);
-				break;
-			case WARNING:
-				warning(mesg);
-				break;
-			default:
-				break;
+		Platform.runLater(new Runnable() {
+			public void run() {
+				try {
+					switch (level) {
+					case INFO:
+						info(mesg);
+						break;
+					case ERROR:
+						error(mesg);
+						break;
+					case DEBUG:
+						debug(mesg);
+						break;
+					case WARNING:
+						warning(mesg);
+						break;
+					default:
+						break;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		});
 	}
 
 	private static void warning(Object mesg) throws InterruptedException {
-		Platform.runLater(new Runnable() {
-	        public void run() {
-	        	consoleLogscreen.appendText("[WARNING] " + mesg + "\n");
-	        }
-	    });
+		consoleLogscreen.appendText("[WARNING] " + mesg + "\n");
 	}
 
 	private static void error(Object mesg) throws InterruptedException {
-		Platform.runLater(new Runnable() {
-	        public void run() {
-	        	consoleLogscreen.appendText("[ERROR] " + mesg + "\n");
-	        }
-	    });
+		consoleLogscreen.appendText("[ERROR] " + mesg + "\n");
 	}
 
 	private static void info(Object mesg) throws InterruptedException {
-		Platform.runLater(new Runnable() {
-	        public void run() {
-	        	consoleLogscreen.appendText("[INFO] " + mesg + "\n");
-	        }
-	    });
+		consoleLogscreen.appendText("[INFO] " + mesg + "\n");
 	}
 
 	private static void debug(Object mesg) throws InterruptedException {
-		Platform.runLater(new Runnable() {
-	        public void run() {
-	        	consoleLogscreen.appendText("[DEBUG] " + mesg + "\n");
-	        }
-	    });
+		consoleLogscreen.appendText("[DEBUG] " + mesg + "\n");
 	}
 
 	public TextArea getConsoleLogscreen() {

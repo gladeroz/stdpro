@@ -15,7 +15,7 @@ public class ConfigCollection {
 		case COMPTAGE_PDF:
 			return getConfigComptagePdf();
 		case SUFFIX_PREFIX:
-			return getConfigComptagePdf();
+			return getConfigSuffixPrefix();
 		default:
 			return null;
 		}
