@@ -21,18 +21,27 @@
 	],
 	"configSuffixPrefix" : [
 		{
-			"configName": "path",
+			"configName": "prefixe",
 	 		"id": 10,
 	 		"label":"Prefixe",
 	 		"type":"STRING",
 	 		"value":"",
-	 		"mandatory":true
+	 		"mandatory":false
+		},
+		{
+			"configName": "suffixe",
+	 		"id": 11,
+	 		"label":"Suffixe",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
 		},
 		{
 			"configName": "path",
-	 		"id": 11,
-	 		"label":"Suffixe",
-	 		"type":"DATE_TIME",
+	 		"id": 12,
+	 		"label":"Chemin du dossier",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
 	 		"value":"",
 	 		"mandatory":true
 		}

@@ -15,7 +15,7 @@ public class Traitement {
 	
 	public static void doJob() {
 		if(action == null) {
-			Logger.print(LogLevel.WARNING, "Aucune action valide n'a été sélectionnée");
+			Logger.print(LogLevel.WARNING, "Aucune action valide n'a ete selectionnee");
 			return;
 		}
 		
@@ -27,7 +27,7 @@ public class Traitement {
 				SuffixePrefixe.traitement(config.getSpecificConfig(action));
 				break;
 			default:
-				Logger.print(LogLevel.ERROR, "L action n est pas implementee");
+				Logger.print(LogLevel.ERROR, "L'action n'est pas implementee");
 		}
 	}
 
