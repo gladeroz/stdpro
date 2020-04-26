@@ -1,0 +1,40 @@
+{
+	"configComptagePdf" : [
+		 {
+			"configName": "path",
+	 		"id": 1,
+	 		"label":"Chemin du dossier",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "exportcsv",
+	 		"id": 2,
+	 		"label":"Chemin CSV",
+	 		"options":["FILECHOOSER_FILE", "FILECHOOSER_SAVE"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		}
+	],
+	"configSuffixPrefix" : [
+		{
+			"configName": "path",
+	 		"id": 10,
+	 		"label":"Prefixe",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "path",
+	 		"id": 11,
+	 		"label":"Suffixe",
+	 		"type":"DATE_TIME",
+	 		"value":"",
+	 		"mandatory":true
+		}
+	]
+}
