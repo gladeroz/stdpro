@@ -37,7 +37,7 @@ public class Yaml {
 
 		setPath(p);
 
-		Logger.print(LogLevel.INFO, "DEBUT DE LA LECTURE DE LA CONFIGURATION DE "+ path);
+		Logger.print(LogLevel.INFO, "Debut de la lecture de la configuration "+ path);
 
 		try{
 			ConfigCollection cc = null;
@@ -46,7 +46,7 @@ public class Yaml {
 			} else {
 				cc = Mapper.getInstance().readValue(new File(path), ConfigCollection.class);
 			}
-			Logger.print(LogLevel.INFO, "FIN DE LA LECTURE DE LA CONFIGURATION DE "+ path);
+			Logger.print(LogLevel.INFO, "Fin de la lecture de la configuration "+ path);
 			setConfig(cc);
 			return cc;
 		}catch (IOException e){
@@ -57,18 +57,18 @@ public class Yaml {
 
 	@SuppressWarnings("deprecation")
 	public static void printConfig(ConfigCollection config) {
-		Logger.print(LogLevel.INFO, "AFFICHAGE DE LA CONFIGURATION ACTUELLE");
+		Logger.print(LogLevel.INFO, "Affichage de la configuration");
 
 		try {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(Mapper.getInstance().writeValueAsString(config));
-			System.out.println(gson.toJson(je));
+			Logger.print(LogLevel.INFO, gson.toJson(je));
 		} catch (JsonProcessingException e) {
 			System.err.println(e);
 		}
 
-		Logger.print(LogLevel.INFO, "FIN DE L'AFFICHAGE DE LA CONFIGURATION ACTUELLE");
+		Logger.print(LogLevel.INFO, "Fin de l'affichage de la configuration");
 	}
 
 	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException {
