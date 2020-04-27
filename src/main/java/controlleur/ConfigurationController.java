@@ -7,6 +7,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -48,8 +50,10 @@ public class ConfigurationController implements Initializable {
 	@FXML public TextArea LogArea;
 	
 	private static Logger logger = Logger.getLogger(ConfigurationController.class);
+	private static ExecutorService executor = Executors.newFixedThreadPool(5);
 	private ConfigCollection config;
 	private Stage stage;
+	private Job job;
 
 	public ConfigurationController(ConfigCollection config, Stage stage) {
 		super();
@@ -75,8 +79,10 @@ public class ConfigurationController implements Initializable {
 
 	@FXML
 	private void handleExecuteButtonAction(ActionEvent event){
-		Traitement.setConfig(config);
-		Traitement.doJob();
+		Traitement t = new Traitement();
+		t.setConfig(config);
+		t.setAction(job);
+		executor.execute(t);
 	}
 
 	@FXML
@@ -241,4 +247,13 @@ public class ConfigurationController implements Initializable {
 			}
 		}
 	}
+	
+	public Job getJob() {
+		return job;
+	}
+
+	public void setJob(Job job) {
+		this.job = job;
+	}
+
 }
