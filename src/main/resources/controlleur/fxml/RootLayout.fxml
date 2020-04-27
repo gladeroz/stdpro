@@ -20,6 +20,7 @@
               <items>
                   <CheckMenuItem fx:id="tCompt" mnemonicParsing="false" onAction="#validateTraitement" text="Compter les PDFs" />
                   <CheckMenuItem fx:id="tSuffix" mnemonicParsing="false" onAction="#validateTraitement" text="Prefixe et Suffixe" />
+                  <CheckMenuItem fx:id="tOcr" mnemonicParsing="false" onAction="#validateTraitement" text="Utiliser l'OCR" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Console">

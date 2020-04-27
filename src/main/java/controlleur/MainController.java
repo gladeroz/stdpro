@@ -24,6 +24,8 @@ public class MainController implements Initializable {
 	
 	@FXML private CheckMenuItem tSuffix;
 	
+	@FXML private CheckMenuItem tOcr;
+	
 	private Stage primaryStage;
 	
 	private ConfigurationController cc;
@@ -59,6 +61,7 @@ public class MainController implements Initializable {
 	private void validateTraitement(ActionEvent event){
 		tCompt.setSelected(false);
 		tSuffix.setSelected(false);
+		tOcr.setSelected(false);
 		
 		CheckMenuItem item = (CheckMenuItem)event.getSource();
 		
@@ -66,7 +69,9 @@ public class MainController implements Initializable {
 			Traitement.setAction(Job.COMPTAGE_PDF);
 		} else if (item.equals(tSuffix)) {
 			Traitement.setAction(Job.SUFFIX_PREFIX);
-		}
+		} else if (item.equals(tOcr)) {
+			Traitement.setAction(Job.OCR);
+		} 
 		
 		item.setSelected(true);
 	}

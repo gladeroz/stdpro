@@ -45,5 +45,33 @@
 	 		"value":"",
 	 		"mandatory":true
 		}
+	],
+	"configOcr" : [
+		{
+			"configName": "path",
+	 		"id": 20,
+	 		"label":"Chemin OCR",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "tess4j",
+	 		"id": 21,
+	 		"label":"tess4j Location",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "pattern",
+	 		"id": 22,
+	 		"label":"Pattern de recherche",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		}
 	]
 }
