@@ -58,7 +58,7 @@ public class ComptagePDF {
 		try{
 			job(conf);
 		}catch (Exception e) {
-			System.err.println(e);
+			logger.error(e);
 		}
 		logger.debug("Fin du Traitement : " + new Date());
 	}

@@ -112,7 +112,7 @@ public class ConfigurationController implements Initializable {
 		try {
 			Yaml.saveConfig(config, stage);
 		} catch (FileNotFoundException | URISyntaxException e) {
-			System.err.println(e);
+			logger.error(e);
 		}
 	}
 	
