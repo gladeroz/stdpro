@@ -3,20 +3,14 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-    <appender name="console" class="org.apache.log4j.ConsoleAppender">
-        <param name="Target" value="System.out"/>
+    <appender name="consoleBox" class="utils.LoggerArea">
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/>
         </layout>
     </appender>
 
-    <logger name="std">
-        <level value="DEBUG"/>
-    </logger>
-
     <root>
-        <priority value ="WARN" />
-        <appender-ref ref="console" />
+        <level value="DEBUG"/>
+        <appender-ref ref="consoleBox" />
     </root>
-
 </log4j:configuration>

@@ -6,18 +6,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import enums.Extension;
-import enums.LogLevel;
 import model.ConfigItem;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.PdfUtilities;
 import traitement.config.CustomConfigOcr;
 import traitement.enums.CustomEnumOcr;
-import utils.Logger;
 import utils.Traitement;
 
 public class Ocr {
+	
+	private static Logger logger = Logger.getLogger(Ocr.class);
 
 	public static CustomConfigOcr initConfig(Collection<ConfigItem> config) {
 		CustomConfigOcr cc = new CustomConfigOcr();
@@ -38,23 +40,23 @@ public class Ocr {
 	}
 
 	public static void traitement(Collection<ConfigItem> config) {
-		Logger.print(LogLevel.INFO, "Traitement 'OCR' en cours");
+		logger.info("Traitement 'OCR' en cours");
 
-		Logger.print(LogLevel.DEBUG, "Configuration en cours de traitement");
+		logger.debug("Configuration en cours de traitement");
 		CustomConfigOcr conf = initConfig(config);
 		
 		if(conf == null) {
-			Logger.print(LogLevel.ERROR, "La Configuration comporte des erreurs ou il manque un parametre");
+			logger.error("La Configuration comporte des erreurs ou il manque un parametre");
 			return;
 		}
 
-		Logger.print(LogLevel.DEBUG, "Lancement du Traitement : " + new Date());
+		logger.debug("Lancement du Traitement : " + new Date());
 		try{
 			job(conf);
 		}catch (Exception e) {
-			System.err.println(e);
+			logger.error(e);
 		}
-		Logger.print(LogLevel.DEBUG, "Fin du Traitement : " + new Date());
+		logger.debug("Fin du Traitement : " + new Date());
 	}
 
 	public static void job(CustomConfigOcr config) throws IOException {
@@ -64,7 +66,7 @@ public class Ocr {
 
 		long endTime = System.nanoTime();
 
-		Logger.print(LogLevel.INFO, "Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	private static void ocr(CustomConfigOcr config) throws IOException {
@@ -97,22 +99,22 @@ public class Ocr {
     				
     				if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
     					String NEWFILE = Traitement.withSlash(config.getPath()) + currentFileName;
-    					Logger.print(LogLevel.INFO, "[Fichier en cours : " + NEWFILE + "]");
+    					logger.info("[Fichier en cours : " + NEWFILE + "]");
     		            File[] png = PdfUtilities.convertPdf2Png(new File(NEWFILE));
     		            
-    		            Logger.print(LogLevel.INFO, "[Fichier convertit en png]");
+    		            logger.info("[Fichier convertit en png]");
     		            
     		            // the path of your tess data folder 
     		            // inside the extracted file 
     		            String text = tesseract.doOCR(png[0]); 
     		  
     		            // path of your image file 
-    		            Logger.print(LogLevel.INFO, "[OCR] " + text); 
+    		            logger.info("[OCR] " + text); 
     				}
     			}
     		}
         } catch (TesseractException e) { 
-            Logger.print(LogLevel.ERROR, e.getMessage()); 
+        	logger.error(e); 
         } 
 	}
 }

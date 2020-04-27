@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import enums.LogLevel;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.ConfigCollection;
@@ -19,10 +18,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
 
+import org.apache.log4j.Logger;
+
 public class Yaml {
-
+	
+	private static Logger logger = Logger.getLogger(Yaml.class);
 	private static String path = "configuration/config.json";
-
 	private static ConfigCollection config;
 
 	public static ConfigCollection parseConfig() {
@@ -31,13 +32,13 @@ public class Yaml {
 
 	public static ConfigCollection parseConfig(String p, Boolean ressources) {
 		if(p == null) {
-			Logger.print(LogLevel.ERROR, "Valeur invalide (path: "+ p + ")");
+			logger.error("Valeur invalide (path: "+ p + ")");
 			return null;
 		}
 
 		setPath(p);
 
-		Logger.print(LogLevel.INFO, "Debut de la lecture de la configuration "+ path);
+		logger.info("Debut de la lecture de la configuration "+ path);
 
 		try{
 			ConfigCollection cc = null;
@@ -46,29 +47,29 @@ public class Yaml {
 			} else {
 				cc = Mapper.getInstance().readValue(new File(path), ConfigCollection.class);
 			}
-			Logger.print(LogLevel.INFO, "Fin de la lecture de la configuration "+ path);
+			logger.info("Fin de la lecture de la configuration "+ path);
 			setConfig(cc);
 			return cc;
 		}catch (IOException e){
-			System.err.println(e);
+			logger.error(e);
 		}
 		return null;
 	}
 
 	@SuppressWarnings("deprecation")
 	public static void printConfig(ConfigCollection config) {
-		Logger.print(LogLevel.INFO, "Affichage de la configuration");
+		logger.info("Affichage de la configuration");
 
 		try {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(Mapper.getInstance().writeValueAsString(config));
-			Logger.print(LogLevel.INFO, gson.toJson(je));
+			logger.info(gson.toJson(je));
 		} catch (JsonProcessingException e) {
 			System.err.println(e);
 		}
 
-		Logger.print(LogLevel.INFO, "Fin de l'affichage de la configuration");
+		logger.info("Fin de l'affichage de la configuration");
 	}
 
 	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException {
@@ -84,7 +85,7 @@ public class Yaml {
 				ObjectWriter writer = Mapper.getInstance().writer(new DefaultPrettyPrinter());
 				writer.writeValue(pwriter, cc);
 			} catch (IOException e) {
-				System.err.println(e);
+				logger.error(e);
 			} 
 		}
 	}

@@ -2,23 +2,25 @@ package utils;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import enums.Job;
-import enums.LogLevel;
 import model.ConfigCollection;
 import traitement.ComptagePDF;
 import traitement.Ocr;
 import traitement.SuffixePrefixe;
 
 public class Traitement {
-	private static Job action;
 	
+	private static Logger logger = Logger.getLogger(Traitement.class);
 	private static ConfigCollection config;
+	private static Job action;
 	
 	public void traitement() {}
 	
 	public static void doJob() {
 		if(action == null) {
-			Logger.print(LogLevel.WARNING, "Aucune action valide n'a ete selectionnee");
+			logger.warn("Aucune action valide n'a ete selectionnee");
 			return;
 		}
 		
@@ -33,7 +35,7 @@ public class Traitement {
 				Ocr.traitement(config.getSpecificConfig(action));
 				break;
 			default:
-				Logger.print(LogLevel.ERROR, "L'action n'est pas implementee");
+				logger.error("L'action n'est pas implementee");
 		}
 	}
 

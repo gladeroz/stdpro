@@ -9,19 +9,21 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import com.itextpdf.text.pdf.PdfReader;
 
 import enums.Extension;
-import enums.LogLevel;
 import model.ConfigExportCSV;
 import model.ConfigItem;
 import traitement.config.CustomConfigComptage;
 import traitement.enums.CustomEnumComptage;
 import utils.CSVUtils;
-import utils.Logger;
 import utils.Traitement;
 
 public class ComptagePDF {
+	
+	private static Logger logger = Logger.getLogger(ComptagePDF.class);
 
 	public static CustomConfigComptage initConfig(Collection<ConfigItem> config) {
 		CustomConfigComptage cc = new CustomConfigComptage();
@@ -42,23 +44,23 @@ public class ComptagePDF {
 	}
 
 	public static void traitement(Collection<ConfigItem> config) {
-		Logger.print(LogLevel.INFO, "Traitement 'Comptage des PDFs' en cours");
+		logger.info("Traitement 'Comptage des PDFs' en cours");
 
-		Logger.print(LogLevel.DEBUG, "Configuration en cours de traitement");
+		logger.debug("Configuration en cours de traitement");
 		CustomConfigComptage conf = initConfig(config);
 		
 		if(conf == null) {
-			Logger.print(LogLevel.ERROR, "La Configuration comporte des erreurs ou il manque un parametre");
+			logger.error("La Configuration comporte des erreurs ou il manque un parametre");
 			return;
 		}
 
-		Logger.print(LogLevel.DEBUG, "Lancement du Traitement : " + new Date());
+		logger.debug("Lancement du Traitement : " + new Date());
 		try{
 			job(conf);
 		}catch (Exception e) {
 			System.err.println(e);
 		}
-		Logger.print(LogLevel.DEBUG, "Fin du Traitement : " + new Date());
+		logger.debug("Fin du Traitement : " + new Date());
 	}
 
 	public static void job(CustomConfigComptage config) throws IOException {
@@ -68,13 +70,13 @@ public class ComptagePDF {
 		listDirectory(Traitement.withSlash(config.getPath()), "", resultat);
 		
 		if(config.getExportcsv() != "") {
-			Logger.print(LogLevel.INFO, "Export du resultat en CSV : " + config.getExportcsv());
+			logger.info("Export du resultat en CSV : " + config.getExportcsv());
 			exportToCsv(config.getExportcsv(), resultat);
 		}
 
 		long endTime = System.nanoTime();
 
-		Logger.print(LogLevel.INFO, "Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	private static void exportToCsv(String csvFile, ArrayList<ConfigExportCSV> resultat) throws IOException {
@@ -107,7 +109,7 @@ public class ComptagePDF {
 					listDirectory(dirToList, currentFileName, resultat);
 				} else if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
 					Integer nbTemp = nbPagesPdf(Traitement.withSlash(dirToList) + currentFileName);
-					Logger.print(LogLevel.INFO, "[Dossier : " + dirToList + "][Fichier : " + currentFileName + "][Nombre de page : " + nbTemp + "]");
+					logger.info("[Dossier : " + dirToList + "][Fichier : " + currentFileName + "][Nombre de page : " + nbTemp + "]");
 					resultat.add(new ConfigExportCSV(dirToList, currentFileName, nbTemp));
 				}
 			}

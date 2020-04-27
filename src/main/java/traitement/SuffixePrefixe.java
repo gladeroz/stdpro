@@ -6,15 +6,17 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import enums.Extension;
-import enums.LogLevel;
 import model.ConfigItem;
 import traitement.config.CustomConfigSuffixe;
 import traitement.enums.CustomEnumSuffixe;
-import utils.Logger;
 import utils.Traitement;
 
 public class SuffixePrefixe {
+	
+	private static Logger logger = Logger.getLogger(SuffixePrefixe.class);
 
 	public static CustomConfigSuffixe initConfig(Collection<ConfigItem> config) {
 		CustomConfigSuffixe cc = new CustomConfigSuffixe();
@@ -40,35 +42,35 @@ public class SuffixePrefixe {
 	}
 
 	public static void traitement(Collection<ConfigItem> config) {
-		Logger.print(LogLevel.INFO, "Traitement 'Suffixe et Prefixe' en cours");
+		logger.info("Traitement 'Suffixe et Prefixe' en cours");
 
-		Logger.print(LogLevel.DEBUG, "Configuration en cours de traitement");
+		logger.debug("Configuration en cours de traitement");
 		CustomConfigSuffixe conf = initConfig(config);
 
 		if(conf == null) {
-			Logger.print(LogLevel.ERROR, "La Configuration comporte des erreurs ou il manque un parametre");
+			logger.error("La Configuration comporte des erreurs ou il manque un parametre");
 			return;
 		}
 
-		Logger.print(LogLevel.DEBUG, "Lancement du Traitement : " + new Date());
+		logger.debug("Lancement du Traitement : " + new Date());
 		try{
 			job(conf);
 		}catch (Exception e) {
-			System.err.println(e);
+			logger.error(e);
 		}
-		Logger.print(LogLevel.DEBUG, "Fin du Traitement : " + new Date());
+		logger.debug("Fin du Traitement : " + new Date());
 	}
 
 	public static void job(CustomConfigSuffixe config) throws IOException {
 		long startTime = System.nanoTime();
 
 		if(config.getPrefixe() == null && config.getPrefixe() == null) {
-			Logger.print(LogLevel.INFO, "Aucun suffixe ou prefixe n'a ete renseigne");
+			logger.info("Aucun suffixe ou prefixe n'a ete renseigne");
 			return;
 		} 
 		
 		if(config.getPath() == null) {
-			Logger.print(LogLevel.INFO, "Le chemin de traitement n'est pas valide");
+			logger.info("Le chemin de traitement n'est pas valide");
 			return;
 		}
 
@@ -76,7 +78,7 @@ public class SuffixePrefixe {
 
 		long endTime = System.nanoTime();
 
-		Logger.print(LogLevel.INFO, "Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) throws IOException {
@@ -96,7 +98,7 @@ public class SuffixePrefixe {
 				if (aFile.isDirectory()) {
 					listDirectory(config, dirToList, currentFileName);
 				} else if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
-					Logger.print(LogLevel.INFO, "OLD : [Dossier : " + dirToList + "][Fichier : " + currentFileName + "]");
+					logger.info("OLD : [Dossier : " + dirToList + "][Fichier : " + currentFileName + "]");
 					String NEWFILE = Traitement.withSlash(dirToList) + currentFileName;
 
 					/** Partie Prefixe **/
@@ -113,9 +115,9 @@ public class SuffixePrefixe {
 					/** save new file **/
 					boolean success = aFile.renameTo(new File(NEWFILE));
 					if (!success) {
-						System.err.println("FAILED to rename " + aFile.getName() + " to " + NEWFILE);
+						logger.error("FAILED to rename " + aFile.getName() + " to " + NEWFILE);
 					} else {
-						Logger.print(LogLevel.INFO, "NEW : [Deplace vers : " + NEWFILE + "]");
+						logger.info("NEW : [Deplace vers : " + NEWFILE + "]");
 					}
 				}
 			}
