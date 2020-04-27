@@ -14,6 +14,7 @@ import enums.Options;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
@@ -41,6 +42,7 @@ public class ConfigurationController implements Initializable {
 
 	@FXML private GridPane gridComptage;
 	@FXML private GridPane gridSuffixe;
+	@FXML private GridPane gridOcr;
 
 	@FXML public TextArea LogArea;
 
@@ -60,6 +62,7 @@ public class ConfigurationController implements Initializable {
 		
 		createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, config.getConfigComptagePdf());
 		createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, config.getConfigSuffixPrefix());
+		createSectionAccordion(Job.OCR, gridOcr, config.getConfigOcr());
 
 		executeTraitement.setOnAction(this::handleExecuteButtonAction);
 		exportConfButton.setOnAction(this::defaultSaveButtonAction);
@@ -85,51 +88,18 @@ public class ConfigurationController implements Initializable {
 
 		createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, cc.getConfigComptagePdf());
 		createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, cc.getConfigSuffixPrefix());
+		createSectionAccordion(Job.OCR, gridOcr, cc.getConfigOcr());
 		
 		config = cc;
 	}
 
 	@FXML
 	private void defaultSaveButtonAction(ActionEvent event){
-		Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
-
-		Collection<ConfigItem> cc = config.getSpecificConfig(Job.COMPTAGE_PDF);
-
-		for(Node node : gridComptage.getChildren()) {
-			if(node instanceof TextField) {
-				String[] id = ((TextField) node).getId().split("#");
-
-				for(ConfigItem c : cc) {
-					String value = ((TextField) node).getText();
-					if(c.getId().equals(Integer.valueOf(id[2])) && !c.getValue().equals(value)) {
-						Logger.print(LogLevel.DEBUG, "[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
-						c.setValue(value);
-					}
-				}
-			}
-		}
-
-		config.setConfigComptagePdf(cc);
-
-		Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.SUFFIX_PREFIX);
-
-		cc = config.getSpecificConfig(Job.SUFFIX_PREFIX);
-
-		for(Node node : gridSuffixe.getChildren()) {
-			if(node instanceof TextField) {
-				String[] id = ((TextField) node).getId().split("#");
-
-				for(ConfigItem c : cc) {
-					String value = ((TextField) node).getText();
-					if(c.getId().equals(Integer.valueOf(id[2])) && !c.getValue().equals(value)) {
-						Logger.print(LogLevel.DEBUG, "[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
-						c.setValue(value);
-					}
-				}
-			}
-		}
-
-		config.setConfigSuffixPrefix(cc);
+		config.setConfigComptagePdf(saveOneConfig(Job.COMPTAGE_PDF, gridComptage));
+		
+		config.setConfigSuffixPrefix(saveOneConfig(Job.SUFFIX_PREFIX, gridSuffixe));
+		
+		config.setConfigOcr(saveOneConfig(Job.OCR, gridOcr));
 
 		try {
 			Yaml.saveConfig(config, stage);
@@ -137,15 +107,40 @@ public class ConfigurationController implements Initializable {
 			System.err.println(e);
 		}
 	}
+	
+	private Collection<ConfigItem> saveOneConfig(Job job, GridPane grid) {
+		Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
+
+		Collection<ConfigItem> cc = config.getSpecificConfig(job);
+		for(Node node : grid.getChildren()) {
+			if(node instanceof TextField) {
+				String[] id = ((TextField) node).getId().split("#");
+
+				for(ConfigItem c : cc) {
+					String value = ((TextField) node).getText();
+					if(c.getId().equals(Integer.valueOf(id[2])) && !c.getValue().equals(value)) {
+						Logger.print(LogLevel.DEBUG, "[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
+						c.setValue(value);
+					}
+				}
+			}
+		}
+		return cc;
+	}
 
 	private void createSectionAccordion(Job job, GridPane grid, Collection<ConfigItem> children) {
 		
 		grid.getChildren().clear();
+
+		grid.setHgap(10);
+		grid.setVgap(10);
 		
+		int  count = 0;
+
 		for (ConfigItem child : children) {
 		
 			Label l = new Label((child.getMandatory()) ? child.getLabel() : child.getLabel()+"*");
-			GridPane.setConstraints(l, 0, child.getId());
+			GridPane.setConstraints(l, 0, count);
 			grid.getChildren().add(l);
 
 			switch (child.getType()) {
@@ -157,12 +152,12 @@ public class ConfigurationController implements Initializable {
 				name.setText(child.getValue());
 				name.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
 
-				GridPane.setConstraints(name, 1, child.getId());
+				GridPane.setConstraints(name, 1, count);
 				grid.getChildren().add(name);
 
 				//Defining the Submit button
 				Button spath = new Button("...");
-				GridPane.setConstraints(spath, 2, child.getId());
+				GridPane.setConstraints(spath, 2, count);
 				grid.getChildren().add(spath);
 
 				spath.setOnAction(e -> createFileChooserEvent(name, child));
@@ -170,7 +165,7 @@ public class ConfigurationController implements Initializable {
 
 			case DATE_TIME :
 				DatePicker f = createDatePickerEvent();
-				GridPane.setConstraints(f, 1, child.getId());
+				GridPane.setConstraints(f, 1, count);
 				grid.getChildren().add(f);
 				break;
 
@@ -182,12 +177,16 @@ public class ConfigurationController implements Initializable {
 				def.setText(child.getValue());
 				def.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
 
-				GridPane.setConstraints(def, 1, child.getId());
+				GridPane.setConstraints(def, 1, count);
 				grid.getChildren().add(def);
 
 				break;
 			}
+			
+			count++;
 		}
+		
+		grid.setAlignment(Pos.TOP_LEFT);
 	}
 
 	private DatePicker createDatePickerEvent() {

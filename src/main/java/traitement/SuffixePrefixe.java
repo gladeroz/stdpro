@@ -12,6 +12,7 @@ import model.ConfigItem;
 import traitement.config.CustomConfigSuffixe;
 import traitement.enums.CustomEnumSuffixe;
 import utils.Logger;
+import utils.Traitement;
 
 public class SuffixePrefixe {
 
@@ -71,7 +72,7 @@ public class SuffixePrefixe {
 			return;
 		}
 
-		listDirectory(config, config.getPath(), "");
+		listDirectory(config, Traitement.withoutSlash(config.getPath()), "");
 
 		long endTime = System.nanoTime();
 
@@ -81,7 +82,7 @@ public class SuffixePrefixe {
 	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) throws IOException {
 		String dirToList = parentDir;
 		if (!currentDir.equals("")) {
-			dirToList += checkTrailingSlash(currentDir);
+			dirToList += Traitement.withSlash(currentDir);
 		}
 
 		File f =  new File(dirToList); 
@@ -96,7 +97,7 @@ public class SuffixePrefixe {
 					listDirectory(config, dirToList, currentFileName);
 				} else if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
 					Logger.print(LogLevel.INFO, "OLD : [Dossier : " + dirToList + "][Fichier : " + currentFileName + "]");
-					String NEWFILE = checkTrailingSlash(dirToList) + currentFileName;
+					String NEWFILE = Traitement.withSlash(dirToList) + currentFileName;
 
 					/** Partie Prefixe **/
 					if(config.getPrefixe() != null) {
@@ -121,7 +122,5 @@ public class SuffixePrefixe {
 		}
 	}
 	
-	private static String checkTrailingSlash(String path) {
-	    return path.endsWith(File.separator) ? path : path + File.separator;
-	}
+	
 }

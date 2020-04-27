@@ -19,6 +19,7 @@ import traitement.config.CustomConfigComptage;
 import traitement.enums.CustomEnumComptage;
 import utils.CSVUtils;
 import utils.Logger;
+import utils.Traitement;
 
 public class ComptagePDF {
 
@@ -64,9 +65,9 @@ public class ComptagePDF {
 		ArrayList<ConfigExportCSV> resultat = new ArrayList<>();
 		long startTime = System.nanoTime();
 
-		listDirectory(config.getPath(), "", resultat);
+		listDirectory(Traitement.withSlash(config.getPath()), "", resultat);
 		
-		if(config.getExportcsv() != null) {
+		if(config.getExportcsv() != "") {
 			Logger.print(LogLevel.INFO, "Export du resultat en CSV : " + config.getExportcsv());
 			exportToCsv(config.getExportcsv(), resultat);
 		}
@@ -89,9 +90,9 @@ public class ComptagePDF {
 	}
 
 	public static void listDirectory(String parentDir, String currentDir, ArrayList<ConfigExportCSV> resultat) throws IOException {
-		String dirToList = parentDir;
+		String dirToList = Traitement.withSlash(parentDir);
 		if (!currentDir.equals("")) {
-			dirToList += (currentDir.endsWith(File.separator)) ? currentDir : File.separator + currentDir;
+			dirToList += Traitement.withSlash(currentDir);
 		}
 
 		File f =  new File(dirToList); 
@@ -105,7 +106,7 @@ public class ComptagePDF {
 				if (aFile.isDirectory()) {
 					listDirectory(dirToList, currentFileName, resultat);
 				} else if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
-					Integer nbTemp = nbPagesPdf(dirToList + File.separator + currentFileName);
+					Integer nbTemp = nbPagesPdf(Traitement.withSlash(dirToList) + currentFileName);
 					Logger.print(LogLevel.INFO, "[Dossier : " + dirToList + "][Fichier : " + currentFileName + "][Nombre de page : " + nbTemp + "]");
 					resultat.add(new ConfigExportCSV(dirToList, currentFileName, nbTemp));
 				}

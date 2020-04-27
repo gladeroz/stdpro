@@ -74,6 +74,9 @@ public class Yaml {
 	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException {
 		FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showSaveDialog(stage);
+		
+		if(file == null) return;
+		
 		PrintWriter pwriter = new PrintWriter(file.getPath());
 
 		if (file != null) {

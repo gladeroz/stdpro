@@ -9,6 +9,8 @@ public class ConfigCollection {
 	private Collection<ConfigItem> configComptagePdf;
 
 	private Collection<ConfigItem> configSuffixPrefix;
+	
+	private Collection<ConfigItem> configOcr;
 
 	public Collection<ConfigItem> getSpecificConfig(Job job){
 		switch (job) {
@@ -16,6 +18,8 @@ public class ConfigCollection {
 			return getConfigComptagePdf();
 		case SUFFIX_PREFIX:
 			return getConfigSuffixPrefix();
+		case OCR:
+			return getConfigOcr();
 		default:
 			return null;
 		}
@@ -35,5 +39,13 @@ public class ConfigCollection {
 
 	public void setConfigSuffixPrefix(Collection<ConfigItem> configSuffixPrefix) {
 		this.configSuffixPrefix = configSuffixPrefix;
+	}
+	
+	public Collection<ConfigItem> getConfigOcr() {
+		return configOcr;
+	}
+
+	public void setConfigOcr(Collection<ConfigItem> configOcr) {
+		this.configOcr = configOcr;
 	}
 }
