@@ -66,7 +66,7 @@ public class Yaml {
 			JsonElement je = jp.parse(Mapper.getInstance().writeValueAsString(config));
 			logger.info(gson.toJson(je));
 		} catch (JsonProcessingException e) {
-			System.err.println(e);
+			logger.error(e);
 		}
 
 		logger.info("Fin de l'affichage de la configuration");
