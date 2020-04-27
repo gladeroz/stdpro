@@ -10,15 +10,14 @@ import traitement.ComptagePDF;
 import traitement.Ocr;
 import traitement.SuffixePrefixe;
 
-public class Traitement {
+public class Traitement implements Runnable  {
 	
 	private static Logger logger = Logger.getLogger(Traitement.class);
 	private static ConfigCollection config;
 	private static Job action;
 	
-	public void traitement() {}
-	
-	public static void doJob() {
+	@Override
+	public void run() {
 		if(action == null) {
 			logger.warn("Aucune action valide n'a ete selectionnee");
 			return;
@@ -43,15 +42,15 @@ public class Traitement {
 		return action;
 	}
 
-	public static void setAction(Job action) {
+	public void setAction(Job action) {
 		Traitement.action = action;
 	}
 
-	public static ConfigCollection getConfig() {
+	public ConfigCollection getConfig() {
 		return config;
 	}
 
-	public static void setConfig(ConfigCollection config) {
+	public void setConfig(ConfigCollection config) {
 		Traitement.config = config;
 	}
 	
@@ -67,5 +66,5 @@ public class Traitement {
 		    return path.substring(0, path.length() - 1);
 		}
 		return path;
-	}	
+	}
 }

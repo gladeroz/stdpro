@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
-import utils.Traitement;
 import utils.Yaml;
 
 public class MainController implements Initializable {
@@ -66,13 +65,13 @@ public class MainController implements Initializable {
 		CheckMenuItem item = (CheckMenuItem)event.getSource();
 		
 		if(item.equals(tCompt)) {
-			Traitement.setAction(Job.COMPTAGE_PDF);
+			cc.setJob(Job.COMPTAGE_PDF);
 		} else if (item.equals(tSuffix)) {
-			Traitement.setAction(Job.SUFFIX_PREFIX);
+			cc.setJob(Job.SUFFIX_PREFIX);
 		} else if (item.equals(tOcr)) {
-			Traitement.setAction(Job.OCR);
+			cc.setJob(Job.OCR);
 		} 
-		
+
 		item.setSelected(true);
 	}
 	
