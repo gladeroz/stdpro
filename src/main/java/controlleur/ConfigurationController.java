@@ -8,8 +8,9 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 import enums.Job;
-import enums.LogLevel;
 import enums.Options;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import model.ConfigCollection;
 import model.ConfigItem;
-import utils.Logger;
+import utils.LoggerArea;
 import utils.Traitement;
 import utils.Yaml;
 import javafx.stage.DirectoryChooser;
@@ -33,7 +34,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class ConfigurationController implements Initializable {
-
+	
 	@FXML private Accordion configuration;
 
 	@FXML private Button executeTraitement;
@@ -45,9 +46,9 @@ public class ConfigurationController implements Initializable {
 	@FXML private GridPane gridOcr;
 
 	@FXML public TextArea LogArea;
-
+	
+	private static Logger logger = Logger.getLogger(ConfigurationController.class);
 	private ConfigCollection config;
-
 	private Stage stage;
 
 	public ConfigurationController(ConfigCollection config, Stage stage) {
@@ -58,7 +59,8 @@ public class ConfigurationController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		Logger.setConsoleLogscreen(LogArea);
+		LoggerArea.logTextArea = LogArea;
+		//Logger.setConsoleLogscreen(LogArea);
 		
 		createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, config.getConfigComptagePdf());
 		createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, config.getConfigSuffixPrefix());
@@ -109,7 +111,8 @@ public class ConfigurationController implements Initializable {
 	}
 	
 	private Collection<ConfigItem> saveOneConfig(Job job, GridPane grid) {
-		Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
+		//Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
+		logger.debug("Sauvegarde en cours "+ Job.COMPTAGE_PDF);
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
 		for(Node node : grid.getChildren()) {
@@ -119,7 +122,8 @@ public class ConfigurationController implements Initializable {
 				for(ConfigItem c : cc) {
 					String value = ((TextField) node).getText();
 					if(c.getId().equals(Integer.valueOf(id[2])) && !c.getValue().equals(value)) {
-						Logger.print(LogLevel.DEBUG, "[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
+						//Logger.print(LogLevel.DEBUG, "[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
+						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
 						c.setValue(value);
 					}
 				}
