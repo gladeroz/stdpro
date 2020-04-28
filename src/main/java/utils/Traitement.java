@@ -18,23 +18,28 @@ public class Traitement implements Runnable  {
 	
 	@Override
 	public void run() {
-		if(action == null) {
-			logger.warn("Aucune action valide n'a ete selectionnee");
-			return;
-		}
-		
-		switch (action) {
-			case COMPTAGE_PDF:
-				ComptagePDF.traitement(config.getSpecificConfig(action));
-				break;
-			case SUFFIX_PREFIX:
-				SuffixePrefixe.traitement(config.getSpecificConfig(action));
-				break;
-			case OCR:
-				Ocr.traitement(config.getSpecificConfig(action));
-				break;
-			default:
-				logger.error("L'action n'est pas implementee");
+		try {
+			if(action == null) {
+				logger.warn("Aucune action valide n'a ete selectionnee");
+				return;
+			}
+			
+			switch (action) {
+				case COMPTAGE_PDF:
+					ComptagePDF.traitement(config.getSpecificConfig(action));
+					break;
+				case SUFFIX_PREFIX:
+					SuffixePrefixe.traitement(config.getSpecificConfig(action));
+					break;
+				case OCR:
+					Ocr.traitement(config.getSpecificConfig(action));
+					break;
+				default:
+					logger.error("L'action n'est pas implementee");
+			}
+		}catch (Exception | UnsatisfiedLinkError e) {
+			logger.error(e);
+			Thread.currentThread().isInterrupted();
 		}
 	}
 
