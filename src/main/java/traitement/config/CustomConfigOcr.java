@@ -3,6 +3,7 @@ package traitement.config;
 public class CustomConfigOcr {
 	private String path;
 	private String tess4j;
+	private String pattern;
 	
 	public String getPath() {
 		return path;
@@ -15,5 +16,11 @@ public class CustomConfigOcr {
 	}
 	public void setTess4j(String tess4j) {
 		this.tess4j = tess4j;
+	}
+	public String getPattern() {
+		return pattern;
+	}
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
 	}
 }

@@ -104,13 +104,12 @@ public class ConfigurationController implements Initializable {
 	@FXML
 	private void defaultSaveButtonAction(ActionEvent event){
 		config.setConfigComptagePdf(saveOneConfig(Job.COMPTAGE_PDF, gridComptage));
-		
 		config.setConfigSuffixPrefix(saveOneConfig(Job.SUFFIX_PREFIX, gridSuffixe));
-		
 		config.setConfigOcr(saveOneConfig(Job.OCR, gridOcr));
 
 		try {
 			Yaml.saveConfig(config, stage);
+			logger.debug("Fin de la sauvegarde");
 		} catch (FileNotFoundException | URISyntaxException e) {
 			logger.error(e);
 		}
@@ -118,7 +117,7 @@ public class ConfigurationController implements Initializable {
 	
 	private Collection<ConfigItem> saveOneConfig(Job job, GridPane grid) {
 		//Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
-		logger.debug("Sauvegarde en cours "+ Job.COMPTAGE_PDF);
+		logger.debug("Sauvegarde en cours ... Veuillez patienter ...");
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
 		for(Node node : grid.getChildren()) {
@@ -128,7 +127,6 @@ public class ConfigurationController implements Initializable {
 				for(ConfigItem c : cc) {
 					String value = ((TextField) node).getText();
 					if(c.getId().equals(Integer.valueOf(id[2])) && !c.getValue().equals(value)) {
-						//Logger.print(LogLevel.DEBUG, "[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
 						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
 						c.setValue(value);
 					}
@@ -256,4 +254,7 @@ public class ConfigurationController implements Initializable {
 		this.job = job;
 	}
 
+	public static ExecutorService getExecutor() {
+		return executor;
+	}
 }

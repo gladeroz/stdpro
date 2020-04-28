@@ -2,6 +2,7 @@ package controlleur;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 
 import enums.Job;
 import javafx.event.ActionEvent;
@@ -14,21 +15,21 @@ import utils.Yaml;
 
 public class MainController implements Initializable {
 	@FXML private MenuItem closeMenu;
-	
+
 	@FXML private MenuItem clearMenu;
-	
+
 	@FXML private MenuItem printConfig;
-	
+
 	@FXML private CheckMenuItem tCompt;
-	
+
 	@FXML private CheckMenuItem tSuffix;
-	
+
 	@FXML private CheckMenuItem tOcr;
-	
+
 	private Stage primaryStage;
-	
+
 	private ConfigurationController cc;
-	
+
 	public MainController(Stage primaryStage) {
 		super();
 		this.primaryStage = primaryStage;
@@ -39,31 +40,49 @@ public class MainController implements Initializable {
 		closeMenu.setOnAction(this::handleCloseMenuAction);
 		clearMenu.setOnAction(this::handleClearMenuAction);
 		printConfig.setOnAction(this::handlePrintConfigMenuAction);
+
+		primaryStage.setOnCloseRequest(evt -> {
+			// prevent window from closing
+			evt.consume();
+
+			// execute own shutdown procedure
+			shutdown();
+		});
 	}
-	
+
 	@FXML
 	private void handleCloseMenuAction(ActionEvent event){
+		ExecutorService executor = ConfigurationController.getExecutor();
+		if(executor != null) {
+			executor.shutdownNow();
+		}
+
 		((Stage)primaryStage.getScene().getWindow()).close();
+		System.exit(0);
 	}
-	
+
+	private void shutdown() {
+		handleCloseMenuAction(null);
+	}
+
 	@FXML
 	private void handleClearMenuAction(ActionEvent event){
 		cc.LogArea.clear();
 	}
-	
+
 	@FXML
 	private void handlePrintConfigMenuAction(ActionEvent event){
 		Yaml.printConfig(Yaml.getConfig());
 	}
-	
+
 	@FXML
 	private void validateTraitement(ActionEvent event){
 		tCompt.setSelected(false);
 		tSuffix.setSelected(false);
 		tOcr.setSelected(false);
-		
+
 		CheckMenuItem item = (CheckMenuItem)event.getSource();
-		
+
 		if(item.equals(tCompt)) {
 			cc.setJob(Job.COMPTAGE_PDF);
 		} else if (item.equals(tSuffix)) {
@@ -74,7 +93,7 @@ public class MainController implements Initializable {
 
 		item.setSelected(true);
 	}
-	
+
 	public void setConfigurationController(ConfigurationController cc) {
 		this.cc = cc;
 	}

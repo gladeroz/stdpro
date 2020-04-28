@@ -39,7 +39,8 @@ public class Traitement implements Runnable  {
 			}
 		}catch (Exception | UnsatisfiedLinkError e) {
 			logger.error(e);
-			Thread.currentThread().isInterrupted();
+		}finally {
+			Thread.currentThread().interrupt();
 		}
 	}
 

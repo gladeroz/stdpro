@@ -4,16 +4,18 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
 import enums.Extension;
 import model.ConfigItem;
-import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.PdfUtilities;
 import traitement.config.CustomConfigOcr;
 import traitement.enums.CustomEnumOcr;
+import utils.CustomTesserac;
 import utils.Traitement;
 
 public class Ocr {
@@ -32,6 +34,11 @@ public class Ocr {
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
 				if(item.getValue() == null) return null;
 				cc.setTess4j(item.getValue());
+			}
+
+			if(item.getConfigName().equals(CustomEnumOcr.PATTERN.getValue())) {
+				if(item.getValue() == null) return null;
+				cc.setPattern(item.getValue());
 			}
 		}
 
@@ -65,25 +72,9 @@ public class Ocr {
 	}
 
 	private static void ocr(CustomConfigOcr config) throws Exception, UnsatisfiedLinkError {
-
-		Tesseract tesseract = new Tesseract(); 
-		tesseract.setDatapath(Traitement.withoutSlash(config.getTess4j())); 
-		tesseract.setLanguage("fra");
-		tesseract.setTessVariable("user_defined_dpi", "300");      
-
-		if (System.getProperty("os.name").contains("Windows")) {
-			boolean is64bit = (System.getenv("ProgramFiles(x86)") != null);
-			if(is64bit) {
-				System.load(Traitement.withSlash(config.getTess4j()) + "lib"+ File.separator + "win32-x86-64" + File.separator + "gsdll64.dll");
-			} else {
-				System.load(Traitement.withSlash(config.getTess4j()) + "lib"+ File.separator + "win32-x86" + File.separator + "gsdll32.dll");
-			}
-		} 
-
-
+		CustomTesserac.setConfig(config);
 		try { 
-
-			File f =  new File(config.getPath()); 
+			File f = new File(config.getPath()); 
 			File[] subFiles = f.listFiles();
 
 			if (subFiles != null && subFiles.length > 0) {
@@ -102,15 +93,32 @@ public class Ocr {
 
 						// the path of your tess data folder 
 						// inside the extracted file 
-						String text = tesseract.doOCR(png[0]); 
+						String text = CustomTesserac.getInstance().doOCR(png[0]); 
 
-						// path of your image file 
-						logger.info("[OCR] " + text); 
+						if(config.getPattern() == "") {
+							// path of your image file 
+							logger.info("[OCR] " + text); 
+						} else {
+							if(text == null || text == "") {
+								logger.error("Texte vide");
+								continue;
+							}
+							
+							String regex = config.getPattern();
+							Pattern pattern = Pattern.compile(regex);
+							Matcher matcher = pattern.matcher(text);
+
+							if (matcher.find()) {
+								logger.info("Le text (" + matcher.group() + ") correspond au filtre de recherche");
+							}else {
+								logger.warn("La chaine n'a pas ete retrouvee dans le document pdf");
+							}
+						}
 					}
 				}
 			}
 		} catch (TesseractException e) { 
 			logger.error(e); 
-		} 
+		}
 	}
 }
