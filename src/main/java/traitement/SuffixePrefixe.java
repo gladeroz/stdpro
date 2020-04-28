@@ -1,7 +1,6 @@
 package traitement;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +40,7 @@ public class SuffixePrefixe {
 		return cc;
 	}
 
-	public static void traitement(Collection<ConfigItem> config) {
+	public static void traitement(Collection<ConfigItem> config) throws Exception {
 		logger.info("Traitement 'Suffixe et Prefixe' en cours");
 
 		logger.debug("Configuration en cours de traitement");
@@ -53,15 +52,11 @@ public class SuffixePrefixe {
 		}
 
 		logger.debug("Lancement du Traitement : " + new Date());
-		try{
-			job(conf);
-		}catch (Exception e) {
-			logger.error(e);
-		}
+		job(conf);
 		logger.debug("Fin du Traitement : " + new Date());
 	}
 
-	public static void job(CustomConfigSuffixe config) throws IOException {
+	public static void job(CustomConfigSuffixe config) throws Exception {
 		long startTime = System.nanoTime();
 
 		if(config.getPrefixe() == null && config.getPrefixe() == null) {
@@ -81,7 +76,7 @@ public class SuffixePrefixe {
 		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
-	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) throws IOException {
+	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) throws Exception {
 		String dirToList = parentDir;
 		if (!currentDir.equals("")) {
 			dirToList += Traitement.withSlash(currentDir);
@@ -123,6 +118,4 @@ public class SuffixePrefixe {
 			}
 		}
 	}
-	
-	
 }
