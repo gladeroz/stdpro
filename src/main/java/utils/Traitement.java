@@ -2,6 +2,7 @@ package utils;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import enums.Job;
@@ -72,5 +73,9 @@ public class Traitement implements Runnable  {
 		    return path.substring(0, path.length() - 1);
 		}
 		return path;
+	}
+	
+	public static boolean variableExist(String variable) {
+		return ( ! StringUtils.isBlank(variable));
 	}
 }

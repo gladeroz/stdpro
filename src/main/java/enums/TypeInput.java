@@ -5,5 +5,6 @@ public enum TypeInput {
 	STRING,
 	DATEPICKER,
 	EMAIL, 
-	DATE_TIME
+	DATE_TIME, 
+	CHECKBOX
 }

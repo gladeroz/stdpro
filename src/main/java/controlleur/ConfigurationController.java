@@ -2,6 +2,7 @@ package controlleur;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -36,7 +38,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class ConfigurationController implements Initializable {
-	
+
 	@FXML private Accordion configuration;
 
 	@FXML private Button executeTraitement;
@@ -48,7 +50,7 @@ public class ConfigurationController implements Initializable {
 	@FXML private GridPane gridOcr;
 
 	@FXML public TextArea LogArea;
-	
+
 	private static Logger logger = Logger.getLogger(ConfigurationController.class);
 	private static ExecutorService executor = Executors.newFixedThreadPool(5);
 	private ConfigCollection config;
@@ -65,7 +67,7 @@ public class ConfigurationController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		LoggerArea.logTextArea = LogArea;
 		//Logger.setConsoleLogscreen(LogArea);
-		
+
 		createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, config.getConfigComptagePdf());
 		createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, config.getConfigSuffixPrefix());
 		createSectionAccordion(Job.OCR, gridOcr, config.getConfigOcr());
@@ -97,7 +99,7 @@ public class ConfigurationController implements Initializable {
 		createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, cc.getConfigComptagePdf());
 		createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, cc.getConfigSuffixPrefix());
 		createSectionAccordion(Job.OCR, gridOcr, cc.getConfigOcr());
-		
+
 		config = cc;
 	}
 
@@ -110,17 +112,30 @@ public class ConfigurationController implements Initializable {
 		try {
 			Yaml.saveConfig(config, stage);
 			logger.debug("Fin de la sauvegarde");
-		} catch (FileNotFoundException | URISyntaxException e) {
+		} catch (FileNotFoundException | URISyntaxException | UnsupportedEncodingException e) {
 			logger.error(e);
 		}
 	}
-	
+
 	private Collection<ConfigItem> saveOneConfig(Job job, GridPane grid) {
 		//Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
 		logger.debug("Sauvegarde en cours ... Veuillez patienter ...");
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
 		for(Node node : grid.getChildren()) {
+			if(node instanceof CheckBox) {
+				String[] id = ((CheckBox) node).getId().split("#");
+				for(ConfigItem c : cc) {
+
+					Boolean value = ((CheckBox) node).isSelected();
+					if(c.getId().equals(Integer.valueOf(id[2])))  {
+						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
+						c.setValue(value.toString());
+					}
+				}
+			}
+
+
 			if(node instanceof TextField) {
 				String[] id = ((TextField) node).getId().split("#");
 
@@ -137,16 +152,16 @@ public class ConfigurationController implements Initializable {
 	}
 
 	private void createSectionAccordion(Job job, GridPane grid, Collection<ConfigItem> children) {
-		
+
 		grid.getChildren().clear();
 
 		grid.setHgap(10);
 		grid.setVgap(10);
-		
+
 		int  count = 0;
 
 		for (ConfigItem child : children) {
-		
+
 			Label l = new Label((child.getMandatory()) ? child.getLabel() : child.getLabel()+"*");
 			GridPane.setConstraints(l, 0, count);
 			grid.getChildren().add(l);
@@ -177,6 +192,14 @@ public class ConfigurationController implements Initializable {
 				grid.getChildren().add(f);
 				break;
 
+			case CHECKBOX :
+				CheckBox c = new CheckBox();
+				c.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
+				c.setSelected(new Boolean(child.getValue()));	
+				GridPane.setConstraints(c, 1, count);
+				grid.getChildren().add(c);
+				break;
+
 			default:
 				//Defining the Name text field
 				final TextField def = new TextField();
@@ -190,10 +213,10 @@ public class ConfigurationController implements Initializable {
 
 				break;
 			}
-			
+
 			count++;
 		}
-		
+
 		grid.setAlignment(Pos.TOP_LEFT);
 	}
 
@@ -232,20 +255,20 @@ public class ConfigurationController implements Initializable {
 		if(child.getOptions().contains(Options.FILECHOOSER_FILE)) {
 			FileChooser fileChooser = new FileChooser();
 			File file = null;
-			
+
 			if (child.getOptions().contains(Options.FILECHOOSER_SAVE)) {
 				file = fileChooser.showSaveDialog(stage);
 			}else {
 				file = fileChooser.showOpenDialog(stage);
 			}
-			
+
 			if (file != null) {
 				name.setText(file.getAbsolutePath());
 				child.setValue(file.getAbsolutePath());
 			}
 		}
 	}
-	
+
 	public Job getJob() {
 		return job;
 	}

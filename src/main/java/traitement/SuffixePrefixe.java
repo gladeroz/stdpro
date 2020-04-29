@@ -22,17 +22,17 @@ public class SuffixePrefixe {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumSuffixe.PATH.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumSuffixe.SUFFIXE.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setSuffixe(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumSuffixe.PREFIXE.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPrefixe(item.getValue());
 			}
 		}
@@ -59,12 +59,12 @@ public class SuffixePrefixe {
 	public static void job(CustomConfigSuffixe config) throws Exception {
 		long startTime = System.nanoTime();
 
-		if(config.getPrefixe() == null && config.getPrefixe() == null) {
+		if( ! Traitement.variableExist(config.getPrefixe())) {
 			logger.info("Aucun suffixe ou prefixe n'a ete renseigne");
 			return;
 		} 
 		
-		if(config.getPath() == null) {
+		if( ! Traitement.variableExist(config.getPath())) {
 			logger.info("Le chemin de traitement n'est pas valide");
 			return;
 		}
