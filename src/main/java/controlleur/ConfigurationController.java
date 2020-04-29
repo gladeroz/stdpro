@@ -66,7 +66,6 @@ public class ConfigurationController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		LoggerArea.logTextArea = LogArea;
-		//Logger.setConsoleLogscreen(LogArea);
 
 		createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, config.getConfigComptagePdf());
 		createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, config.getConfigSuffixPrefix());
@@ -118,7 +117,6 @@ public class ConfigurationController implements Initializable {
 	}
 
 	private Collection<ConfigItem> saveOneConfig(Job job, GridPane grid) {
-		//Logger.print(LogLevel.DEBUG, "Sauvegarde en cours "+ Job.COMPTAGE_PDF);
 		logger.debug("Sauvegarde en cours ... Veuillez patienter ...");
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
@@ -126,9 +124,8 @@ public class ConfigurationController implements Initializable {
 			if(node instanceof CheckBox) {
 				String[] id = ((CheckBox) node).getId().split("#");
 				for(ConfigItem c : cc) {
-
 					Boolean value = ((CheckBox) node).isSelected();
-					if(c.getId().equals(Integer.valueOf(id[2])))  {
+					if(c.getId().equals(Integer.valueOf(id[2])) && ! new Boolean(c.getValue()).equals(value))  {
 						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
 						c.setValue(value.toString());
 					}
