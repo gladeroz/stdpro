@@ -30,12 +30,12 @@ public class ComptagePDF {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumComptage.PATH.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPath(item.getValue());
 			}
 			
 			if(item.getConfigName().equals(CustomEnumComptage.EXPORTCSV.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setExportcsv(item.getValue());
 			}
 		}
@@ -69,7 +69,7 @@ public class ComptagePDF {
 
 		listDirectory(Traitement.withSlash(config.getPath()), "", resultat);
 		
-		if(config.getExportcsv() != "") {
+		if(Traitement.variableExist(config.getExportcsv())) {
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
 			exportToCsv(config.getExportcsv(), resultat);
 		}

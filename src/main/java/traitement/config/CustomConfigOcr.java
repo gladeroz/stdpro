@@ -4,6 +4,8 @@ public class CustomConfigOcr {
 	private String path;
 	private String tess4j;
 	private String pattern;
+	private String subSearch;
+	private Boolean rename;
 	
 	public String getPath() {
 		return path;
@@ -22,5 +24,17 @@ public class CustomConfigOcr {
 	}
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
+	}
+	public String getSubSearch() {
+		return subSearch;
+	}
+	public void setSubSearch(String subSearch) {
+		this.subSearch = subSearch;
+	}
+	public Boolean getRename() {
+		return rename;
+	}
+	public void setRename(Boolean rename) {
+		this.rename = rename;
 	}
 }

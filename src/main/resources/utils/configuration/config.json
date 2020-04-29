@@ -72,6 +72,22 @@
 	 		"type":"STRING",
 	 		"value":"",
 	 		"mandatory":false
+		},
+		{
+			"configName": "subSearch",
+	 		"id": 23,
+	 		"label":"Sous recherche",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "rename",
+	 		"id": 24,
+	 		"label":"Renommer les documents",
+	 		"type":"CHECKBOX",
+	 		"value":"",
+	 		"mandatory":false
 		}
 	]
 }

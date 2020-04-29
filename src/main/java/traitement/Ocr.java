@@ -1,11 +1,13 @@
 package traitement;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -16,6 +18,7 @@ import net.sourceforge.tess4j.util.PdfUtilities;
 import traitement.config.CustomConfigOcr;
 import traitement.enums.CustomEnumOcr;
 import utils.CustomTesserac;
+import utils.RegexMatcher;
 import utils.Traitement;
 
 public class Ocr {
@@ -27,18 +30,28 @@ public class Ocr {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumOcr.PATH.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setTess4j(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.PATTERN.getValue())) {
-				if(item.getValue() == null) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPattern(item.getValue());
+			}
+			
+			if(item.getConfigName().equals(CustomEnumOcr.SUBSEARCH.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setSubSearch(item.getValue());
+			}
+			
+			if(item.getConfigName().equals(CustomEnumOcr.RENAME.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setRename(new Boolean(item.getValue()));
 			}
 		}
 
@@ -87,16 +100,15 @@ public class Ocr {
 					if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
 						String NEWFILE = Traitement.withSlash(config.getPath()) + currentFileName;
 						logger.info("[Fichier en cours : " + NEWFILE + "]");
+						
 						File[] png = PdfUtilities.convertPdf2Png(new File(NEWFILE));
-
 						logger.info("[Fichier convertit en png]");
 
 						// the path of your tess data folder 
 						// inside the extracted file 
 						String text = CustomTesserac.getInstance().doOCR(png[0]); 
 
-						if(config.getPattern() == "") {
-							// path of your image file 
+						if( ! Traitement.variableExist(config.getPattern())) {
 							logger.info("[OCR] " + text); 
 						} else {
 							if(text == null || text == "") {
@@ -104,12 +116,35 @@ public class Ocr {
 								continue;
 							}
 							
-							String regex = config.getPattern();
-							Pattern pattern = Pattern.compile(regex);
-							Matcher matcher = pattern.matcher(text);
+							Matcher matcher = RegexMatcher.get(config.getPattern(), text);
 
 							if (matcher.find()) {
-								logger.info("Le text (" + matcher.group() + ") correspond au filtre de recherche");
+								String resultat = matcher.group();
+								
+								logger.info("Le text (" + resultat + ") correspond au filtre de recherche");
+								if ( ! Traitement.variableExist(config.getSubSearch())) {
+									if (Boolean.TRUE.equals(config.getRename())) {
+										Path source = Paths.get(NEWFILE);
+										String output = resultat + ".pdf";
+										Files.move(source, source.resolveSibling(output));
+										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
+									}
+								}else {
+									matcher = RegexMatcher.get(config.getSubSearch(), resultat);
+									
+									if (matcher.find()) {
+										resultat = matcher.group();
+										logger.info("Le text (" + resultat + ") correspond à la sous recherche");
+										if (Boolean.TRUE.equals(config.getRename())) {
+											Path source = Paths.get(NEWFILE);
+											String output = resultat + ".pdf";
+											Files.move(source, source.resolveSibling(output));
+											logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
+										}
+									} else {
+										logger.warn("La sous-chaine n'a pas ete trouvee");
+									}
+								} 
 							}else {
 								logger.warn("La chaine n'a pas ete retrouvee dans le document pdf");
 							}

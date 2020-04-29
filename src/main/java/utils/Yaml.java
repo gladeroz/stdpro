@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 import org.apache.log4j.Logger;
@@ -72,13 +73,13 @@ public class Yaml {
 		logger.info("Fin de l'affichage de la configuration");
 	}
 
-	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException {
+	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException, UnsupportedEncodingException {
 		FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showSaveDialog(stage);
 		
 		if(file == null) return;
 		
-		PrintWriter pwriter = new PrintWriter(file.getPath());
+		PrintWriter pwriter = new PrintWriter(file.getPath(), java.nio.charset.StandardCharsets.UTF_8.name());
 
 		if (file != null) {
 			try {
