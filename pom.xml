@@ -45,8 +45,6 @@
 
 
 	<dependencies>
-<<<<<<< HEAD
-
 		<!-- https://mvnrepository.com/artifact/com.microsoft.ews-java-api/ews-java-api -->
 		<dependency>
 			<groupId>com.microsoft.ews-java-api</groupId>
@@ -54,8 +52,6 @@
 			<version>2.0</version>
 		</dependency>
 
-=======
->>>>>>> branch 'master' of https://github.com/gladeroz/stdpro.git
 		<!-- https://mvnrepository.com/artifact/net.sourceforge.lept4j/lept4j -->
 		<dependency>
 			<groupId>net.sourceforge.lept4j</groupId>
