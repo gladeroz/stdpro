@@ -59,7 +59,7 @@ public class SuffixePrefixe {
 	public static void job(CustomConfigSuffixe config) throws Exception {
 		long startTime = System.nanoTime();
 
-		if( ! Traitement.variableExist(config.getPrefixe())) {
+		if( ! Traitement.variableExist(config.getPrefixe()) && ! Traitement.variableExist(config.getSuffixe())) {
 			logger.info("Aucun suffixe ou prefixe n'a ete renseigne");
 			return;
 		} 

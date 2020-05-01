@@ -17,8 +17,8 @@ import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.PdfUtilities;
 import traitement.config.CustomConfigOcr;
 import traitement.enums.CustomEnumOcr;
-import utils.CustomTesserac;
-import utils.RegexMatcher;
+import utils.TesseracService;
+import utils.RegexService;
 import utils.Traitement;
 
 public class Ocr {
@@ -85,7 +85,7 @@ public class Ocr {
 	}
 
 	private static void ocr(CustomConfigOcr config) throws Exception, UnsatisfiedLinkError {
-		CustomTesserac.setConfig(config);
+		TesseracService.setConfig(config);
 		try { 
 			File f = new File(config.getPath()); 
 			File[] subFiles = f.listFiles();
@@ -106,7 +106,7 @@ public class Ocr {
 
 						// the path of your tess data folder 
 						// inside the extracted file 
-						String text = CustomTesserac.getInstance().doOCR(png[0]); 
+						String text = TesseracService.getInstance().doOCR(png[0]); 
 
 						if( ! Traitement.variableExist(config.getPattern())) {
 							logger.info("[OCR] " + text); 
@@ -116,7 +116,7 @@ public class Ocr {
 								continue;
 							}
 							
-							Matcher matcher = RegexMatcher.get(config.getPattern(), text);
+							Matcher matcher = RegexService.get(config.getPattern(), text);
 
 							if (matcher.find()) {
 								String resultat = matcher.group();
@@ -130,7 +130,7 @@ public class Ocr {
 										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
 									}
 								}else {
-									matcher = RegexMatcher.get(config.getSubSearch(), resultat);
+									matcher = RegexService.get(config.getSubSearch(), resultat);
 									
 									if (matcher.find()) {
 										resultat = matcher.group();

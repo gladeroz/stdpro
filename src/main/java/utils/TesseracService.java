@@ -7,14 +7,14 @@ import org.apache.log4j.Logger;
 import net.sourceforge.tess4j.Tesseract;
 import traitement.config.CustomConfigOcr;
 
-public class CustomTesserac {
-	private static Logger logger = Logger.getLogger(CustomTesserac.class);
+public class TesseracService {
+	private static Logger logger = Logger.getLogger(TesseracService.class);
 	
 	private static Tesseract tesseract;
 	
 	private static CustomConfigOcr config;
 
-	private CustomTesserac(){}
+	private TesseracService(){}
 
 	public static Tesseract getInstance() throws UnsatisfiedLinkError {
 		if(tesseract == null) {
@@ -39,7 +39,7 @@ public class CustomTesserac {
 
 	public static void setConfig(CustomConfigOcr config) {
 		logger.warn("Initialisation de la configuration de Tesserac");
-		CustomTesserac.config = config;
+		TesseracService.config = config;
 		tesseract = null;
 	}
 }

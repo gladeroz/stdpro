@@ -44,9 +44,9 @@ public class Yaml {
 		try{
 			ConfigCollection cc = null;
 			if(ressources) {
-				cc = Mapper.getInstance().readValue(Yaml.class.getResource(path), ConfigCollection.class);
+				cc = JsonService.getInstance().readValue(Yaml.class.getResource(path), ConfigCollection.class);
 			} else {
-				cc = Mapper.getInstance().readValue(new File(path), ConfigCollection.class);
+				cc = JsonService.getInstance().readValue(new File(path), ConfigCollection.class);
 			}
 			logger.info("Fin de la lecture de la configuration "+ path);
 			setConfig(cc);
@@ -64,7 +64,7 @@ public class Yaml {
 		try {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
-			JsonElement je = jp.parse(Mapper.getInstance().writeValueAsString(config));
+			JsonElement je = jp.parse(JsonService.getInstance().writeValueAsString(config));
 			logger.info(gson.toJson(je));
 		} catch (JsonProcessingException e) {
 			logger.error(e);
@@ -83,7 +83,7 @@ public class Yaml {
 
 		if (file != null) {
 			try {
-				ObjectWriter writer = Mapper.getInstance().writer(new DefaultPrettyPrinter());
+				ObjectWriter writer = JsonService.getInstance().writer(new DefaultPrettyPrinter());
 				writer.writeValue(pwriter, cc);
 			} catch (IOException e) {
 				logger.error(e);

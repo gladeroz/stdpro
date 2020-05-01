@@ -95,6 +95,30 @@
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
+                                    <TitledPane animated="false" layoutX="10.0" layoutY="60.0" text="Envoyer des mails">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox layoutX="99.0" layoutY="63.0" prefHeight="608.0" prefWidth="398.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <GridPane fx:id="gridSendMail">
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.99999237060547" minWidth="10.0" prefWidth="118.00000762939453" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="225.99999237060547" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="106.0" minWidth="10.0" prefWidth="35.0" />
+                                                         </columnConstraints>
+                                                         <rowConstraints>
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                      </GridPane>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </TitledPane>
                                 </panes>
                               </Accordion>
                            </children>
@@ -123,6 +147,8 @@
                         <Separator layoutX="146.0" layoutY="10.0" orientation="VERTICAL" />
                         <Button fx:id="exportConfButton" layoutX="156.0" layoutY="36.0" mnemonicParsing="false" text="Exporter la configuration" />
                         <Separator layoutX="292.0" layoutY="10.0" orientation="VERTICAL" />
+                        <Button fx:id="applyConfButton" layoutX="173.0" layoutY="-20.0" mnemonicParsing="false" text="Appliquer la configuration" />
+                        <Separator layoutX="324.0" layoutY="-13.0" orientation="VERTICAL" />
                     </items>
                   </ToolBar>
                </children>

@@ -5,7 +5,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 import javafx.scene.control.TextArea;
 
-public class LoggerArea extends WriterAppender {
+public class LoggerService extends WriterAppender {
 
 	public static TextArea logTextArea;
 

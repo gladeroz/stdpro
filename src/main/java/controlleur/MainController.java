@@ -21,10 +21,9 @@ public class MainController implements Initializable {
 	@FXML private MenuItem printConfig;
 
 	@FXML private CheckMenuItem tCompt;
-
 	@FXML private CheckMenuItem tSuffix;
-
 	@FXML private CheckMenuItem tOcr;
+	@FXML private CheckMenuItem tSendMail;
 
 	private Stage primaryStage;
 
@@ -80,6 +79,7 @@ public class MainController implements Initializable {
 		tCompt.setSelected(false);
 		tSuffix.setSelected(false);
 		tOcr.setSelected(false);
+		tSendMail.setSelected(false);
 
 		CheckMenuItem item = (CheckMenuItem)event.getSource();
 
@@ -89,7 +89,9 @@ public class MainController implements Initializable {
 			cc.setJob(Job.SUFFIX_PREFIX);
 		} else if (item.equals(tOcr)) {
 			cc.setJob(Job.OCR);
-		} 
+		} else if(item.equals(tSendMail)) {
+			cc.setJob(Job.SEND_MAIL);
+		}
 
 		item.setSelected(true);
 	}

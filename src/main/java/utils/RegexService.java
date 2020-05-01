@@ -3,9 +3,9 @@ package utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexMatcher {
+public class RegexService {
 	
-	private RegexMatcher(){}
+	private RegexService(){}
 
 	public static Matcher get(String regex, String value){
 		Pattern pattern = Pattern.compile(regex);

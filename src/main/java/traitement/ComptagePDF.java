@@ -18,7 +18,7 @@ import model.ConfigExportCSV;
 import model.ConfigItem;
 import traitement.config.CustomConfigComptage;
 import traitement.enums.CustomEnumComptage;
-import utils.CSVUtils;
+import utils.CSVService;
 import utils.Traitement;
 
 public class ComptagePDF {
@@ -82,9 +82,9 @@ public class ComptagePDF {
 	private static void exportToCsv(String csvFile, ArrayList<ConfigExportCSV> resultat) throws IOException {
 		FileWriter writer = new FileWriter(csvFile);
 		
-		CSVUtils.writeLine(writer, Arrays.asList("FOLDER", "FILE NAME", "LINE COUNT"));
+		CSVService.writeLine(writer, Arrays.asList("FOLDER", "FILE NAME", "LINE COUNT"));
 		for(ConfigExportCSV line : resultat ) {
-			CSVUtils.writeLine(writer, Arrays.asList(line.getDirectory(), line.getFileName(), line.getNombrePage().toString()));
+			CSVService.writeLine(writer, Arrays.asList(line.getDirectory(), line.getFileName(), line.getNombrePage().toString()));
 		}
 		
 		writer.flush();

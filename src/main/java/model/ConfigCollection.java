@@ -11,6 +11,8 @@ public class ConfigCollection {
 	private Collection<ConfigItem> configSuffixPrefix;
 	
 	private Collection<ConfigItem> configOcr;
+	
+	private Collection<ConfigItem> configSendMail;
 
 	public Collection<ConfigItem> getSpecificConfig(Job job){
 		switch (job) {
@@ -20,6 +22,8 @@ public class ConfigCollection {
 			return getConfigSuffixPrefix();
 		case OCR:
 			return getConfigOcr();
+		case SEND_MAIL:
+			return getConfigSendMail();
 		default:
 			return null;
 		}
@@ -47,5 +51,13 @@ public class ConfigCollection {
 
 	public void setConfigOcr(Collection<ConfigItem> configOcr) {
 		this.configOcr = configOcr;
+	}
+
+	public Collection<ConfigItem> getConfigSendMail() {
+		return configSendMail;
+	}
+
+	public void setConfigSendMail(Collection<ConfigItem> configSendMail) {
+		this.configSendMail = configSendMail;
 	}
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class CSVUtils {
+public class CSVService {
 
     private static final char DEFAULT_SEPARATOR = ';';
 

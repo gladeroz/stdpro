@@ -9,6 +9,7 @@ import enums.Job;
 import model.ConfigCollection;
 import traitement.ComptagePDF;
 import traitement.Ocr;
+import traitement.SendMail;
 import traitement.SuffixePrefixe;
 
 public class Traitement implements Runnable  {
@@ -35,6 +36,8 @@ public class Traitement implements Runnable  {
 				case OCR:
 					Ocr.traitement(config.getSpecificConfig(action));
 					break;
+				case SEND_MAIL:
+					SendMail.traitement(config.getConfigSendMail());
 				default:
 					logger.error("L'action n'est pas implementee");
 			}

@@ -89,5 +89,48 @@
 	 		"value":"",
 	 		"mandatory":false
 		}
+	],
+	"configSendMail" : [
+		{
+			"configName": "path",
+	 		"id": 30,
+	 		"label":"Chemin OCR",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "mailEmetteur",
+	 		"id": 31,
+	 		"label":"Mail emetteur",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "mailDestinataire",
+	 		"id": 32,
+	 		"label":"Mail destinataire",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "passEmetteur",
+	 		"id": 33,
+	 		"label":"Mot de passe emetteur",
+	 		"type":"PASSWORD",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "serveurMail",
+	 		"id": 34,
+	 		"label":"Url du serveur mail",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":true
+		}
 	]
 }

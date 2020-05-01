@@ -3,11 +3,11 @@ package utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Mapper {
+public class JsonService {
 
 	private static ObjectMapper mapper;
 
-	private Mapper(){}
+	private JsonService(){}
 
 	public static ObjectMapper getInstance(){
 		if(mapper == null) {
