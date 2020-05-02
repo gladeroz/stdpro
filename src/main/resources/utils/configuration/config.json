@@ -123,14 +123,6 @@
 	 		"type":"PASSWORD",
 	 		"value":"",
 	 		"mandatory":true
-		},
-		{
-			"configName": "serveurMail",
-	 		"id": 34,
-	 		"label":"Url du serveur mail",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":true
 		}
 	]
 } 
