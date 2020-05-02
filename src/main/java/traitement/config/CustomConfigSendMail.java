@@ -5,7 +5,6 @@ public class CustomConfigSendMail {
 	private String mailEmetteur;
 	private String mailDestinataire;
 	private String passEmetteur;
-	private String serveurMail;
 	
 	public String getPath() {
 		return path;
@@ -30,11 +29,5 @@ public class CustomConfigSendMail {
 	}
 	public void setPassEmetteur(String passEmetteur) {
 		this.passEmetteur = passEmetteur;
-	}
-	public String getServeurMail() {
-		return serveurMail;
-	}
-	public void setServeurMail(String serveurMail) {
-		this.serveurMail = serveurMail;
 	}
 }

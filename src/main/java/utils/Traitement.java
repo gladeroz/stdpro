@@ -38,6 +38,7 @@ public class Traitement implements Runnable  {
 					break;
 				case SEND_MAIL:
 					SendMail.traitement(config.getConfigSendMail());
+					break;
 				default:
 					logger.error("L'action n'est pas implementee");
 			}

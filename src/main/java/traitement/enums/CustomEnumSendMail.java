@@ -4,8 +4,7 @@ public enum CustomEnumSendMail {
 	PATH ("path"),
 	MAIL_EMETTEUR ("mailEmetteur"),
 	MAIL_DESTINATAIRE ("mailDestinataire"),
-	PASS_EMETTEUR ("passEmetteur"),
-	URL_SERVEUR ("serveurMail");
+	PASS_EMETTEUR ("passEmetteur");
 	
 	private String value;
 
