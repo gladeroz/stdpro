@@ -13,11 +13,9 @@ import org.apache.log4j.Logger;
 
 import enums.Extension;
 import model.ConfigItem;
-import net.sourceforge.tess4j.TesseractException;
-import net.sourceforge.tess4j.util.PdfUtilities;
 import traitement.config.CustomConfigOcr;
 import traitement.enums.CustomEnumOcr;
-import utils.TesseracService;
+import utils.PdfService;
 import utils.RegexService;
 import utils.Traitement;
 
@@ -34,24 +32,49 @@ public class Ocr {
 				cc.setPath(item.getValue());
 			}
 
-			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
-				cc.setTess4j(item.getValue());
-			}
-
 			if(item.getConfigName().equals(CustomEnumOcr.PATTERN.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPattern(item.getValue());
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOcr.SUBSEARCH.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setSubSearch(item.getValue());
 			}
 			
+			if(item.getConfigName().equals(CustomEnumOcr.Y.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setY(item.getValue());
+			}
+
+			if(item.getConfigName().equals(CustomEnumOcr.X.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setX(item.getValue());
+			}
+
+			if(item.getConfigName().equals(CustomEnumOcr.WIDTH.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setWidth(item.getValue());
+			}
+
+			if(item.getConfigName().equals(CustomEnumOcr.HEIGHT.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setHeight(item.getValue());
+			}
+
 			if(item.getConfigName().equals(CustomEnumOcr.RENAME.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setRename(new Boolean(item.getValue()));
+			}
+			
+			if(item.getConfigName().equals(CustomEnumOcr.OCR.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setOcr(new Boolean(item.getValue()));
+			}
+			
+			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setTess4j(item.getValue());
 			}
 		}
 
@@ -81,79 +104,70 @@ public class Ocr {
 
 		long endTime = System.nanoTime();
 
-		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	private static void ocr(CustomConfigOcr config) throws Exception, UnsatisfiedLinkError {
-		TesseracService.setConfig(config);
-		try { 
-			File f = new File(config.getPath()); 
-			File[] subFiles = f.listFiles();
+		//TesseracService.setConfig(config);
+		File f = new File(config.getPath()); 
+		File[] subFiles = f.listFiles();
 
-			if (subFiles != null && subFiles.length > 0) {
-				for (File aFile : subFiles) {
-					String currentFileName = aFile.getName();
-					if (currentFileName.equals(".") || currentFileName.equals("..")) {
-						continue;
-					}
+		if (subFiles != null && subFiles.length > 0) {
+			for (File aFile : subFiles) {
+				String currentFileName = aFile.getName();
+				if (currentFileName.equals(".") || currentFileName.equals("..")) {
+					continue;
+				}
 
-					if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
-						String NEWFILE = Traitement.withSlash(config.getPath()) + currentFileName;
-						logger.info("[Fichier en cours : " + NEWFILE + "]");
-						
-						File[] png = PdfUtilities.convertPdf2Png(new File(NEWFILE));
-						logger.info("[Fichier convertit en png]");
+				if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
+					String NEWFILE = Traitement.withSlash(config.getPath()) + currentFileName;
+					logger.info("[Fichier en cours : " + NEWFILE + "]");
 
-						// the path of your tess data folder 
-						// inside the extracted file 
-						String text = TesseracService.getInstance().doOCR(png[0]); 
+					String text = PdfService.getText(aFile, config.getX(), config.getY(), config.getWidth(), config.getHeight(), config.getOcr(), config.getTess4j());
 
-						if( ! Traitement.variableExist(config.getPattern())) {
-							logger.info("[OCR] " + text); 
-						} else {
-							if(text == null || text == "") {
-								logger.error("Texte vide");
-								continue;
-							}
-							
-							Matcher matcher = RegexService.get(config.getPattern(), text);
+					if( ! Traitement.variableExist(config.getPattern())) {
+						logger.info("[OCR] " + text); 
+					} else {
+						if(text == null || text == "") {
+							logger.error("Texte vide");
+							continue;
+						}
 
-							if (matcher.find()) {
-								String resultat = matcher.group();
-								
-								logger.info("Le text (" + resultat + ") correspond au filtre de recherche");
-								if ( ! Traitement.variableExist(config.getSubSearch())) {
+						Matcher matcher = RegexService.get(config.getPattern(), text);
+
+						if (matcher.find()) {
+							String resultat = matcher.group();
+
+							logger.info("Le text (" + resultat + ") correspond au filtre de recherche");
+							if ( ! Traitement.variableExist(config.getSubSearch())) {
+								if (Boolean.TRUE.equals(config.getRename())) {
+									Path source = Paths.get(NEWFILE);
+									String output = resultat + ".pdf";
+									Files.move(source, source.resolveSibling(output));
+									logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
+								}
+							}else {
+								matcher = RegexService.get(config.getSubSearch(), resultat);
+
+								if (matcher.find()) {
+									resultat = matcher.group();
+									logger.info("Le text (" + resultat + ") correspond à la sous recherche");
 									if (Boolean.TRUE.equals(config.getRename())) {
 										Path source = Paths.get(NEWFILE);
 										String output = resultat + ".pdf";
 										Files.move(source, source.resolveSibling(output));
 										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
 									}
-								}else {
-									matcher = RegexService.get(config.getSubSearch(), resultat);
-									
-									if (matcher.find()) {
-										resultat = matcher.group();
-										logger.info("Le text (" + resultat + ") correspond à la sous recherche");
-										if (Boolean.TRUE.equals(config.getRename())) {
-											Path source = Paths.get(NEWFILE);
-											String output = resultat + ".pdf";
-											Files.move(source, source.resolveSibling(output));
-											logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
-										}
-									} else {
-										logger.warn("La sous-chaine n'a pas ete trouvee");
-									}
-								} 
-							}else {
-								logger.warn("La chaine n'a pas ete retrouvee dans le document pdf");
-							}
+								} else {
+									logger.warn("La sous-chaine n'a pas ete trouvee");
+								}
+							} 
+						}else {
+							logger.warn("La chaine n'a pas ete retrouvee dans le document pdf");
 						}
 					}
 				}
 			}
-		} catch (TesseractException e) { 
-			logger.error(e); 
 		}
 	}
 }

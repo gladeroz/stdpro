@@ -7,12 +7,10 @@ import enums.Job;
 public class ConfigCollection {
 	
 	private Collection<ConfigItem> configComptagePdf;
-
 	private Collection<ConfigItem> configSuffixPrefix;
-	
 	private Collection<ConfigItem> configOcr;
-	
 	private Collection<ConfigItem> configSendMail;
+	private Collection<ConfigItem>  configExtractZone;
 
 	public Collection<ConfigItem> getSpecificConfig(Job job){
 		switch (job) {
@@ -24,6 +22,8 @@ public class ConfigCollection {
 			return getConfigOcr();
 		case SEND_MAIL:
 			return getConfigSendMail();
+		case EXTRACT_ZONE:
+			return getConfigExtractZone();
 		default:
 			return null;
 		}
@@ -59,5 +59,13 @@ public class ConfigCollection {
 
 	public void setConfigSendMail(Collection<ConfigItem> configSendMail) {
 		this.configSendMail = configSendMail;
+	}
+
+	public Collection<ConfigItem> getConfigExtractZone() {
+		return configExtractZone;
+	}
+
+	public void setConfigExtractZone(Collection<ConfigItem> configExtractZone) {
+		this.configExtractZone = configExtractZone;
 	}
 }

@@ -1,16 +1,14 @@
 package traitement.config;
 
-public class CustomConfigOcr {
+public class CustomConfigExtractZone {
 	private String path;
 	private String tess4j;
-	private String pattern;
-	private String subSearch;
-	private Boolean rename;
-	private Boolean ocr;
 	private String x;
 	private String y;
 	private String width;
 	private String height;
+	private String exportcsv;
+	private Boolean ocr;
 	
 	public String getPath() {
 		return path;
@@ -23,30 +21,6 @@ public class CustomConfigOcr {
 	}
 	public void setTess4j(String tess4j) {
 		this.tess4j = tess4j;
-	}
-	public String getPattern() {
-		return pattern;
-	}
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
-	}
-	public String getSubSearch() {
-		return subSearch;
-	}
-	public void setSubSearch(String subSearch) {
-		this.subSearch = subSearch;
-	}
-	public Boolean getRename() {
-		return rename;
-	}
-	public void setRename(Boolean rename) {
-		this.rename = rename;
-	}
-	public Boolean getOcr() {
-		return ocr;
-	}
-	public void setOcr(Boolean ocr) {
-		this.ocr = ocr;
 	}
 	public String getX() {
 		return x;
@@ -71,5 +45,17 @@ public class CustomConfigOcr {
 	}
 	public void setHeight(String height) {
 		this.height = height;
+	}
+	public String getExportcsv() {
+		return exportcsv;
+	}
+	public void setExportcsv(String exportcsv) {
+		this.exportcsv = exportcsv;
+	}
+	public Boolean getOcr() {
+		return ocr;
+	}
+	public void setOcr(Boolean ocr) {
+		this.ocr = ocr;
 	}
 }

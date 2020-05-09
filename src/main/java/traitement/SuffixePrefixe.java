@@ -73,7 +73,7 @@ public class SuffixePrefixe {
 
 		long endTime = System.nanoTime();
 
-		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) throws Exception {

@@ -4,5 +4,6 @@ public enum Job {
 	COMPTAGE_PDF ,
 	SUFFIX_PREFIX, 
 	OCR, 
-	SEND_MAIL;
+	SEND_MAIL, 
+	EXTRACT_ZONE;
 }

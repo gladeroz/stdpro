@@ -1,7 +1,6 @@
 package traitement;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +17,6 @@ import model.ConfigExportCSV;
 import model.ConfigItem;
 import traitement.config.CustomConfigComptage;
 import traitement.enums.CustomEnumComptage;
-import utils.CSVService;
 import utils.Traitement;
 
 public class ComptagePDF {
@@ -58,7 +56,7 @@ public class ComptagePDF {
 		try{
 			job(conf);
 		}catch (Exception e) {
-			logger.error(e);
+			logger.error(e.getMessage());
 		}
 		logger.debug("Fin du Traitement : " + new Date());
 	}
@@ -71,24 +69,12 @@ public class ComptagePDF {
 		
 		if(Traitement.variableExist(config.getExportcsv())) {
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
-			exportToCsv(config.getExportcsv(), resultat);
+			Traitement.exportToCsv(config.getExportcsv(), resultat, Arrays.asList("FOLDER", "FILE NAME", "LINE COUNT"));
 		}
 
 		long endTime = System.nanoTime();
 
-		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
-	}
-
-	private static void exportToCsv(String csvFile, ArrayList<ConfigExportCSV> resultat) throws IOException {
-		FileWriter writer = new FileWriter(csvFile);
-		
-		CSVService.writeLine(writer, Arrays.asList("FOLDER", "FILE NAME", "LINE COUNT"));
-		for(ConfigExportCSV line : resultat ) {
-			CSVService.writeLine(writer, Arrays.asList(line.getDirectory(), line.getFileName(), line.getNombrePage().toString()));
-		}
-		
-		writer.flush();
-        writer.close();
+		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	public static void listDirectory(String parentDir, String currentDir, ArrayList<ConfigExportCSV> resultat) throws IOException {

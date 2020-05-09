@@ -57,17 +57,8 @@
 	 		"mandatory":true
 		},
 		{
-			"configName": "tess4j",
-	 		"id": 21,
-	 		"label":"tess4j Location",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
-		},
-		{
 			"configName": "pattern",
-	 		"id": 22,
+	 		"id": 21,
 	 		"label":"Pattern de recherche",
 	 		"type":"STRING",
 	 		"value":"",
@@ -75,22 +66,71 @@
 		},
 		{
 			"configName": "subSearch",
-	 		"id": 23,
+	 		"id": 22,
 	 		"label":"Sous recherche",
 	 		"type":"STRING",
 	 		"value":"",
 	 		"mandatory":false
 		},
 		{
-			"configName": "rename",
+			"configName": "axisX",
+	 		"id": 23,
+	 		"label":"Axe x (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "axisY",
 	 		"id": 24,
+	 		"label":"Axe y (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "width",
+	 		"id": 25,
+	 		"label":"Largeur (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "height",
+	 		"id": 26,
+	 		"label":"Hauteur (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "rename",
+	 		"id": 27,
 	 		"label":"Renommer les documents",
 	 		"type":"CHECKBOX",
 	 		"value":"",
 	 		"mandatory":false
+		},
+		{
+			"configName": "ocr",
+	 		"id": 28,
+	 		"label":"Forcer l'OCR",
+	 		"type":"CHECKBOX",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "tess4j",
+	 		"id": 29,
+	 		"label":"tess4j Location",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
 		}
 	],
-	"configSendMail" : [
+	"configExtractZone" : [
 		{
 			"configName": "path",
 	 		"id": 30,
@@ -101,8 +141,77 @@
 	 		"mandatory":true
 		},
 		{
-			"configName": "mailEmetteur",
+			"configName": "axisX",
 	 		"id": 31,
+	 		"label":"Axe x (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "axisY",
+	 		"id": 32,
+	 		"label":"Axe y (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "width",
+	 		"id": 33,
+	 		"label":"Largeur (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "height",
+	 		"id": 34,
+	 		"label":"Hauteur (en cm)",
+	 		"type":"STRING",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "exportcsv",
+	 		"id": 35,
+	 		"label":"Chemin CSV",
+	 		"options":["FILECHOOSER_FILE", "FILECHOOSER_SAVE"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "ocr",
+	 		"id": 36,
+	 		"label":"Forcer l'OCR",
+	 		"type":"CHECKBOX",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "tess4j",
+	 		"id": 37,
+	 		"label":"tess4j Location",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		}
+	],
+	"configSendMail" : [
+		{
+			"configName": "path",
+	 		"id": 40,
+	 		"label":"Chemin OCR",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "mailEmetteur",
+	 		"id": 41,
 	 		"label":"Mail emetteur",
 	 		"type":"STRING",
 	 		"value":"",
@@ -110,7 +219,7 @@
 		},
 		{
 			"configName": "mailDestinataire",
-	 		"id": 32,
+	 		"id": 42,
 	 		"label":"Mail destinataire",
 	 		"type":"STRING",
 	 		"value":"",
@@ -118,7 +227,7 @@
 		},
 		{
 			"configName": "passEmetteur",
-	 		"id": 33,
+	 		"id": 43,
 	 		"label":"Mot de passe emetteur",
 	 		"type":"PASSWORD",
 	 		"value":"",
