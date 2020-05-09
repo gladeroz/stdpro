@@ -1,20 +1,18 @@
 package traitement.enums;
 
-public enum CustomEnumOcr {
+public enum CustomEnumExtractZone {
 	PATH ("path"),
-	TESS4J ("tess4j"), 
-	PATTERN ("pattern"), 
-	SUBSEARCH ("subSearch"),
-	RENAME ("rename"),
-	OCR("ocr"),
 	X ("axisX"), 
 	Y ("axisY"),
 	HEIGHT("height"),
-	WIDTH("width"),;
+	WIDTH("width"),
+	OCR("ocr"), 
+	EXPORTCSV ("exportcsv"),
+	TESS4J ("tess4j");
 
 	private String value;
 
-	CustomEnumOcr(String str) {
+	CustomEnumExtractZone(String str) {
 		this.value = str;
 	}
 

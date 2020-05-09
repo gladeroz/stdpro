@@ -72,7 +72,7 @@ public class SendMail {
 
 		long endTime = System.nanoTime();
 
-		logger.info("Temps de Traiment : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
 	private static void sendPdf(CustomConfigSendMail config) throws URISyntaxException, Exception {
