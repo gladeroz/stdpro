@@ -19,7 +19,7 @@ public class TesseracService {
 
 	public static Tesseract getInstance() throws UnsatisfiedLinkError {
 		if(tesseract == null) {
-			logger.warn("Initialisation de Tesserac");
+			//logger.warn("Initialisation de Tesserac");
 			
 			tesseract = new Tesseract(); 
 			tesseract.setDatapath(Traitement.withoutSlash(tess4j)); 
@@ -39,7 +39,7 @@ public class TesseracService {
 	}
 
 	public static void setConfig(String tess4j) {
-		logger.warn("Initialisation de la configuration de Tesserac");
+		//logger.warn("Initialisation de la configuration de Tesserac");
 		TesseracService.tess4j = tess4j;
 		tesseract = null;
 	}

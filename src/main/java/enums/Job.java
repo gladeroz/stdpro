@@ -5,5 +5,6 @@ public enum Job {
 	SUFFIX_PREFIX, 
 	OCR, 
 	SEND_MAIL, 
-	EXTRACT_ZONE;
+	EXTRACT_ZONE, 
+	CODE_BARRE;
 }

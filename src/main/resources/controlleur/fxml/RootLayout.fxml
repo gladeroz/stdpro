@@ -20,8 +20,9 @@
               <items>
                   <CheckMenuItem fx:id="tCompt" mnemonicParsing="false" onAction="#validateTraitement" text="Compter les PDFs" />
                   <CheckMenuItem fx:id="tSuffix" mnemonicParsing="false" onAction="#validateTraitement" text="Prefixe et Suffixe" />
-                  <CheckMenuItem fx:id="tOcr" mnemonicParsing="false" onAction="#validateTraitement" text="Utiliser l'OCR" />
-                  <CheckMenuItem fx:id="tExtractZone" mnemonicParsing="false" onAction="#validateTraitement" text="Extraire zone" />
+                  <CheckMenuItem fx:id="tOcr" mnemonicParsing="false" onAction="#validateTraitement" text="Renommer les PDFs (recherche texte)" />
+                  <CheckMenuItem fx:id="tCodeBarre" mnemonicParsing="false" onAction="#validateTraitement" text="Renommer les PDFs (recherche code barre)" />
+                  <CheckMenuItem fx:id="tExtractZone" mnemonicParsing="false" onAction="#validateTraitement" text="Extraire une zone des PDFs" />
                   <CheckMenuItem fx:id="tSendMail" mnemonicParsing="false" onAction="#validateTraitement" text="Envoi de mail" />
               </items>
             </Menu>

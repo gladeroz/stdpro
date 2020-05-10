@@ -9,6 +9,7 @@ public class ConfigCollection {
 	private Collection<ConfigItem> configComptagePdf;
 	private Collection<ConfigItem> configSuffixPrefix;
 	private Collection<ConfigItem> configOcr;
+	private Collection<ConfigItem> configCodeBarre;
 	private Collection<ConfigItem> configSendMail;
 	private Collection<ConfigItem>  configExtractZone;
 
@@ -24,6 +25,8 @@ public class ConfigCollection {
 			return getConfigSendMail();
 		case EXTRACT_ZONE:
 			return getConfigExtractZone();
+		case CODE_BARRE:
+			return getConfigCodeBarre();
 		default:
 			return null;
 		}
@@ -67,5 +70,13 @@ public class ConfigCollection {
 
 	public void setConfigExtractZone(Collection<ConfigItem> configExtractZone) {
 		this.configExtractZone = configExtractZone;
+	}
+
+	public Collection<ConfigItem> getConfigCodeBarre() {
+		return configCodeBarre;
+	}
+
+	public void setConfigCodeBarre(Collection<ConfigItem> configCodeBarre) {
+		this.configCodeBarre = configCodeBarre;
 	}
 }

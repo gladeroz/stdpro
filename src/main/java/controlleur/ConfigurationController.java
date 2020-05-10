@@ -50,6 +50,7 @@ public class ConfigurationController implements Initializable {
 	@FXML private GridPane gridComptage;
 	@FXML private GridPane gridSuffixe;
 	@FXML private GridPane gridOcr;
+	@FXML private GridPane gridCodeBarre;
 	@FXML private GridPane gridSendMail;
 	@FXML private GridPane gridExtractZone;
 
@@ -123,6 +124,7 @@ public class ConfigurationController implements Initializable {
 			createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, cc.getConfigComptagePdf());
 			createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, cc.getConfigSuffixPrefix());
 			createSectionAccordion(Job.OCR, gridOcr, cc.getConfigOcr());
+			createSectionAccordion(Job.CODE_BARRE, gridCodeBarre, cc.getConfigCodeBarre());
 			createSectionAccordion(Job.EXTRACT_ZONE, gridExtractZone, cc.getConfigExtractZone());
 			createSectionAccordion(Job.SEND_MAIL, gridSendMail, cc.getConfigSendMail());
 			logger.debug("Fin de la creation des onglets de sauvegarde");
@@ -135,13 +137,14 @@ public class ConfigurationController implements Initializable {
 		cc.setConfigComptagePdf(saveOneConfig(Job.COMPTAGE_PDF, gridComptage));
 		cc.setConfigSuffixPrefix(saveOneConfig(Job.SUFFIX_PREFIX, gridSuffixe));
 		cc.setConfigOcr(saveOneConfig(Job.OCR, gridOcr));
+		cc.setConfigCodeBarre(saveOneConfig(Job.CODE_BARRE, gridCodeBarre));
 		cc.setConfigExtractZone(saveOneConfig(Job.EXTRACT_ZONE, gridExtractZone));
 		cc.setConfigSendMail(saveOneConfig(Job.SEND_MAIL, gridSendMail));
 		logger.debug("Fin du chargement de la sauvegarde");
 	}
 
 	private Collection<ConfigItem> saveOneConfig(Job job, GridPane grid) {
-		logger.debug("Sauvegarde en cours du job ["+ job + "]... Veuillez patienter ...");
+		//logger.debug("Sauvegarde en cours du job ["+ job + "]... Veuillez patienter ...");
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
 		for(Node node : grid.getChildren()) {
