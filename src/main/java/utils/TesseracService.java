@@ -2,12 +2,12 @@ package utils;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import net.sourceforge.tess4j.Tesseract;
 
 public class TesseracService {
-	private static Logger logger = Logger.getLogger(TesseracService.class);
+	//private static Logger logger = Logger.getLogger(TesseracService.class);
 	
 	private static Tesseract tesseract;
 	
