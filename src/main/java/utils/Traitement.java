@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import enums.Job;
 import model.ConfigCollection;
 import model.ConfigExportCSV;
+import traitement.CodeBarre;
 import traitement.ComptagePDF;
 import traitement.ExtractZone;
 import traitement.Ocr;
@@ -53,6 +54,9 @@ public class Traitement implements Runnable  {
 				break;
 			case SEND_MAIL:
 				SendMail.traitement(config.getConfigSendMail());
+				break;
+			case CODE_BARRE:
+				CodeBarre.traitement(config.getConfigCodeBarre());
 				break;
 			default:
 				logger.error("L'action n'est pas implementee");

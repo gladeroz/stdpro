@@ -25,7 +25,7 @@
                            <children>
                               <Accordion fx:id="configuration" prefHeight="740.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <panes>
-                                  <TitledPane animated="false" text="Configuration pour Compter les PDFs">
+                                  <TitledPane animated="false" text="Compter les PDFs">
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
@@ -48,7 +48,7 @@
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
-                                    <TitledPane animated="false" text="Suffixe / Prefixe">
+                                    <TitledPane animated="false" text="Prefixe et Suffixe">
                                        <content>
                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
@@ -72,7 +72,7 @@
                                           </AnchorPane>
                                        </content>
                                     </TitledPane>
-                                  <TitledPane animated="false" text="Renommer les PDFs en OCR">
+                                  <TitledPane animated="false" text="Renommer les PDFs (recherche texte)">
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
@@ -95,7 +95,31 @@
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
-                                    <TitledPane animated="false" text="Extraire Zone dans les PDFs">
+                                    <TitledPane animated="false" layoutX="10.0" layoutY="60.0" text="Renommer les PDFs (recherche code barre)">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox layoutX="99.0" layoutY="63.0" prefHeight="608.0" prefWidth="398.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <GridPane fx:id="gridCodeBarre">
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.99999237060547" minWidth="10.0" prefWidth="118.00000762939453" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="225.99999237060547" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="106.0" minWidth="10.0" prefWidth="35.0" />
+                                                         </columnConstraints>
+                                                         <rowConstraints>
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                      </GridPane>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                    </TitledPane>
+                                    <TitledPane animated="false" text="Extraire une zone des PDFs">
                                        <content>
                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
@@ -119,7 +143,7 @@
                                           </AnchorPane>
                                        </content>
                                     </TitledPane>
-                                    <TitledPane animated="false" layoutX="10.0" layoutY="60.0" text="Envoyer des mails">
+                                    <TitledPane animated="false" layoutX="10.0" layoutY="60.0" text="Envoi de mail">
                                        <content>
                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>

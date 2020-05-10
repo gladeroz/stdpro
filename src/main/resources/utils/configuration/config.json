@@ -233,5 +233,33 @@
 	 		"value":"",
 	 		"mandatory":true
 		}
+	],
+	"configCodeBarre" : [
+		{
+			"configName": "path",
+	 		"id": 50,
+	 		"label":"Chemin OCR",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":true
+		},
+		{
+			"configName": "tess4j",
+	 		"id": 51,
+	 		"label":"tess4j Location",
+	 		"options":["FILECHOOSER_DIRECTORY"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "rename",
+	 		"id": 52,
+	 		"label":"Renommer les documents",
+	 		"type":"CHECKBOX",
+	 		"value":"",
+	 		"mandatory":false
+		}
 	]
 } 

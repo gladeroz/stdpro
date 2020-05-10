@@ -108,7 +108,6 @@ public class Ocr {
 	}
 
 	private static void ocr(CustomConfigOcr config) throws Exception, UnsatisfiedLinkError {
-		//TesseracService.setConfig(config);
 		File f = new File(config.getPath()); 
 		File[] subFiles = f.listFiles();
 
