@@ -6,5 +6,6 @@ public enum Job {
 	OCR, 
 	SEND_MAIL, 
 	EXTRACT_ZONE, 
-	CODE_BARRE;
+	CODE_BARRE, 
+	ODR;
 }

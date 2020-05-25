@@ -11,7 +11,8 @@ public class ConfigCollection {
 	private Collection<ConfigItem> configOcr;
 	private Collection<ConfigItem> configCodeBarre;
 	private Collection<ConfigItem> configSendMail;
-	private Collection<ConfigItem>  configExtractZone;
+	private Collection<ConfigItem> configExtractZone;
+	private Collection<ConfigItem> configOdr;
 
 	public Collection<ConfigItem> getSpecificConfig(Job job){
 		switch (job) {
@@ -27,6 +28,8 @@ public class ConfigCollection {
 			return getConfigExtractZone();
 		case CODE_BARRE:
 			return getConfigCodeBarre();
+		case ODR:
+			return getConfigOdr();
 		default:
 			return null;
 		}
@@ -78,5 +81,13 @@ public class ConfigCollection {
 
 	public void setConfigCodeBarre(Collection<ConfigItem> configCodeBarre) {
 		this.configCodeBarre = configCodeBarre;
+	}
+
+	public Collection<ConfigItem> getConfigOdr() {
+		return configOdr;
+	}
+
+	public void setConfigOdr(Collection<ConfigItem> configOdr) {
+		this.configOdr = configOdr;
 	}
 }

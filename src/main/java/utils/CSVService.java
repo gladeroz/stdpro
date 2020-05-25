@@ -4,9 +4,29 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.dataformat.csv.CsvFactory;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvParser;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+
+import model.ConfigOdr;
+
 public class CSVService {
 
     private static final char DEFAULT_SEPARATOR = ';';
+    
+    public static MappingIterator<ConfigOdr> getOdrdata() throws IOException {
+		CsvFactory csvFactory = new CsvFactory();
+		csvFactory.enable(CsvParser.Feature.TRIM_SPACES);
+		csvFactory.enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS);
+		CsvMapper mapper = new CsvMapper(csvFactory);
+		mapper.disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
+
+		CsvSchema schema = mapper.schemaFor(ConfigOdr.class).withHeader().withColumnSeparator(';').withoutEscapeChar();
+		return mapper.readerFor(ConfigOdr.class).with(schema).readValues(CSVService.class.getResource("configuration/Assurant_20170623.csv"));
+    }
 
     public static void writeLine(Writer w, List<String> values) throws IOException {
         writeLine(w, values, DEFAULT_SEPARATOR, ' ');

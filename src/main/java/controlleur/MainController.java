@@ -26,6 +26,7 @@ public class MainController implements Initializable {
 	@FXML private CheckMenuItem tSendMail;
 	@FXML private CheckMenuItem tExtractZone;
 	@FXML private CheckMenuItem tCodeBarre;
+	@FXML private CheckMenuItem tOdr;
 
 	private Stage primaryStage;
 
@@ -84,6 +85,7 @@ public class MainController implements Initializable {
 		tSendMail.setSelected(false);
 		tExtractZone.setSelected(false);
 		tCodeBarre.setSelected(false);
+		tOdr.setSelected(false);
 
 		CheckMenuItem item = (CheckMenuItem)event.getSource();
 
@@ -99,6 +101,8 @@ public class MainController implements Initializable {
 			cc.setJob(Job.EXTRACT_ZONE);
 		} else if(item.equals(tCodeBarre)) {
 			cc.setJob(Job.CODE_BARRE);
+		} else if(item.equals(tOdr)) {
+			cc.setJob(Job.ODR);
 		}
 
 		item.setSelected(true);
