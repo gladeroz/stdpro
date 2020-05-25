@@ -53,6 +53,7 @@ public class ConfigurationController implements Initializable {
 	@FXML private GridPane gridCodeBarre;
 	@FXML private GridPane gridSendMail;
 	@FXML private GridPane gridExtractZone;
+	@FXML private GridPane gridOdr;
 
 	@FXML public TextArea LogArea;
 
@@ -127,6 +128,7 @@ public class ConfigurationController implements Initializable {
 			createSectionAccordion(Job.CODE_BARRE, gridCodeBarre, cc.getConfigCodeBarre());
 			createSectionAccordion(Job.EXTRACT_ZONE, gridExtractZone, cc.getConfigExtractZone());
 			createSectionAccordion(Job.SEND_MAIL, gridSendMail, cc.getConfigSendMail());
+			createSectionAccordion(Job.ODR, gridOdr, cc.getConfigOdr());
 			logger.debug("Fin de la creation des onglets de sauvegarde");
 		}catch(Exception e) {
 			logger.error(e);
@@ -140,6 +142,7 @@ public class ConfigurationController implements Initializable {
 		cc.setConfigCodeBarre(saveOneConfig(Job.CODE_BARRE, gridCodeBarre));
 		cc.setConfigExtractZone(saveOneConfig(Job.EXTRACT_ZONE, gridExtractZone));
 		cc.setConfigSendMail(saveOneConfig(Job.SEND_MAIL, gridSendMail));
+		cc.setConfigOdr(saveOneConfig(Job.ODR, gridOdr));
 		logger.debug("Fin du chargement de la sauvegarde");
 	}
 

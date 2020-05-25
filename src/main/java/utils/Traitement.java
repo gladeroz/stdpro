@@ -17,6 +17,7 @@ import traitement.CodeBarre;
 import traitement.ComptagePDF;
 import traitement.ExtractZone;
 import traitement.Ocr;
+import traitement.Odr;
 import traitement.SendMail;
 import traitement.SuffixePrefixe;
 
@@ -57,6 +58,9 @@ public class Traitement implements Runnable  {
 				break;
 			case CODE_BARRE:
 				CodeBarre.traitement(config.getConfigCodeBarre());
+				break;
+			case ODR:
+				Odr.traitement(config.getConfigOdr());
 				break;
 			default:
 				logger.error("L'action n'est pas implementee");
