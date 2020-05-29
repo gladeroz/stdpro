@@ -3,13 +3,13 @@ package model;
 import java.util.List;
 
 public class ConfigStore {
-	private List<ConfigOdr> store;
+	private List<ConfigOdrJson> store;
 
-	public List<ConfigOdr> getStore() {
+	public List<ConfigOdrJson> getStore() {
 		return store;
 	}
 
-	public void setStore(List<ConfigOdr> store) {
+	public void setStore(List<ConfigOdrJson> store) {
 		this.store = store;
 	}	
 }

@@ -1,6 +1,7 @@
 package model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({
@@ -47,7 +48,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 	"Nbr Contract Redbox"
 })
 
-public class ConfigOdr {
+public class ConfigOdrCsv {
 	private String seqNumber;
 	private String recordType;
 	private String subsidiaryCode;

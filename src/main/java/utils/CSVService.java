@@ -11,21 +11,25 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-import model.ConfigOdr;
+import model.ConfigOdrCsv;
 
 public class CSVService {
 
     private static final char DEFAULT_SEPARATOR = ';';
     
-    public static MappingIterator<ConfigOdr> getOdrdata() throws IOException {
+    public static MappingIterator<ConfigOdrCsv> getOdrdata() throws IOException {
+    	return getOdrdata("configuration/Assurant.csv");
+    }
+    
+    public static MappingIterator<ConfigOdrCsv> getOdrdata(String path) throws IOException {
 		CsvFactory csvFactory = new CsvFactory();
 		csvFactory.enable(CsvParser.Feature.TRIM_SPACES);
 		csvFactory.enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS);
 		CsvMapper mapper = new CsvMapper(csvFactory);
 		mapper.disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
 
-		CsvSchema schema = mapper.schemaFor(ConfigOdr.class).withHeader().withColumnSeparator(';').withoutEscapeChar();
-		return mapper.readerFor(ConfigOdr.class).with(schema).readValues(CSVService.class.getResource("configuration/Assurant_20170623.csv"));
+		CsvSchema schema = mapper.schemaFor(ConfigOdrCsv.class).withHeader().withColumnSeparator(';').withoutEscapeChar();
+		return mapper.readerFor(ConfigOdrCsv.class).with(schema).readValues(CSVService.class.getResource(path));
     }
 
     public static void writeLine(Writer w, List<String> values) throws IOException {
