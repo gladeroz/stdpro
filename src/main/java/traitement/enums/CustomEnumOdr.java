@@ -1,7 +1,10 @@
 package traitement.enums;
 
 public enum CustomEnumOdr {
-	DELTA ("delta"),;
+	DELTA ("delta"), 
+	DOC_TRAITE("doc_traite"),
+	EXPORTCSV("exportcsv"), 
+	REFERENTIAL("referential");
 
 	private String value;
 

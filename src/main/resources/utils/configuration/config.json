@@ -261,5 +261,43 @@
 	 		"value":"",
 	 		"mandatory":false
 		}
+	],
+	"configOdr" : [
+		{
+			"configName": "referential",
+	 		"id": 60,
+	 		"label":"Base de donnees initiale",
+	 		"options":["FILECHOOSER_FILE"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "delta",
+	 		"id": 61,
+	 		"label":"Mise a jour du referentiel",
+	 		"options":["FILECHOOSER_FILE"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "doc_traite",
+	 		"id": 62,
+	 		"label":"Prise en compte des documents traites",
+	 		"options":["FILECHOOSER_FILE"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		},
+		{
+			"configName": "exportcsv",
+	 		"id": 63,
+	 		"label":"Chemin CSV",
+	 		"options":["FILECHOOSER_FILE", "FILECHOOSER_SAVE"],
+	 		"type":"PATH",
+	 		"value":"",
+	 		"mandatory":false
+		}
 	]
 } 
