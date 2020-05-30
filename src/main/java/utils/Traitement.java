@@ -3,16 +3,25 @@ package utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import enums.Job;
+import enums.OdrType;
 import model.ConfigCollection;
 import model.ConfigExportCSV;
+import model.ConfigOdrJson;
+import model.ConfigOdrRefCsv;
+import model.ConfigOdrTraiteCsv;
+import model.ConfigStore;
 import traitement.CodeBarre;
 import traitement.ComptagePDF;
 import traitement.ExtractZone;
@@ -20,6 +29,7 @@ import traitement.Ocr;
 import traitement.Odr;
 import traitement.SendMail;
 import traitement.SuffixePrefixe;
+import traitement.config.CustomConfigOdr;
 
 public class Traitement implements Runnable  {
 
@@ -134,5 +144,76 @@ public class Traitement implements Runnable  {
 
 		writer.flush();
 		writer.close();
+	}
+
+	public static void exportToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
+		FileWriter writer = new FileWriter(csvFile);
+		
+		CSVService.writeLine(writer, Arrays.asList("NumeroContratRedBox", "DateEffet", "Nom", "Prenom", "Adresse", "CodePostal", "Ville", "Ctry", "IBAN", "Bic", "Montant"));
+
+		for(ConfigOdrJson line : store.getStore() ) {
+			ConfigOdrRefCsv odr = line.getOdr();
+
+			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"))) {
+
+				CSVService.writeLine(writer,
+						Arrays.asList(odr.getNbrContractRedbox(), dateFormat.format(odr.getProductSalesDate()),	odr.getClientName(),odr.getCustomerFirstName(),
+								odr.getNbrInTheTrack() + " " + odr.getTrackCodeType() + " " + odr.getTrackName(),
+								odr.getPostalCode(), odr.getLocation(),"FR",	"",	"",	"30")
+						);
+			}
+		}
+
+		writer.flush();
+		writer.close();
+	}
+
+	private static boolean valideDateEligible(CustomConfigOdr config, ConfigOdrJson line, DateFormat dateFormat) throws ParseException {
+		
+		Calendar cInterval = Calendar.getInstance();
+		Calendar cCurrent = Calendar.getInstance();
+
+		boolean minExist = Traitement.variableExist(config.getIntervalMin());
+		boolean maxExist = Traitement.variableExist(config.getIntervalMax());
+		
+		ConfigOdrTraiteCsv trait = line.getTraitement();
+		
+		boolean dateReception = trait.getDateReception() != null;
+
+		if(trait == null 
+				|| trait.getBulletin() == null 
+				|| trait.getFacture() == null 
+				|| trait.getFormulaire() == null 
+				|| trait.getRib() == null) {
+			return false;
+		}
+		
+		if(minExist && dateReception) {
+			cInterval.setTime(dateFormat.parse(config.getIntervalMin()));
+			cCurrent.setTime(trait.getDateReception());
+			
+			if(cCurrent.before(cInterval)) {
+				return false;
+			}
+		}
+		
+		if(maxExist && dateReception) {
+			cInterval.setTime(dateFormat.parse(config.getIntervalMax()));
+			cCurrent.setTime(trait.getDateReception());
+			
+			if(cCurrent.after(cInterval)) {
+				return false;
+			}
+		}
+
+		if(trait.getBulletin().equals(OdrType.S) 
+				&& trait.getFacture().equals(OdrType.S) 
+				&& trait.getFormulaire().equals(OdrType.S) 
+				&& trait.getRib().equals(OdrType.S) 
+				) {
+			return true;
+		}
+
+		return false;
 	}
 }

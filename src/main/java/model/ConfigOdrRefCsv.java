@@ -1,7 +1,10 @@
 package model;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({
@@ -48,7 +51,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 	"Nbr Contract Redbox"
 })
 
-public class ConfigOdrCsv {
+public class ConfigOdrRefCsv {
 	private String seqNumber;
 	private String recordType;
 	private String subsidiaryCode;
@@ -58,8 +61,13 @@ public class ConfigOdrCsv {
 	private String transactionType;
 	private String storeName;
 	private String paymentType;
-	private String productSalesDate;
-	private String warrantySalesDate;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+	private Date productSalesDate;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+	private Date warrantySalesDate;
+
 	private String familyInsuranceCode;
 	private String familyInsuranceLabel;
 	private String nameofService;
@@ -163,19 +171,19 @@ public class ConfigOdrCsv {
 		this.paymentType = paymentType;
 	}
 
-	public String getProductSalesDate() {
+	public Date getProductSalesDate() {
 		return productSalesDate;
 	}
 
-	public void setProductSalesDate(String productSalesDate) {
+	public void setProductSalesDate(Date productSalesDate) {
 		this.productSalesDate = productSalesDate;
 	}
 
-	public String getWarrantySalesDate() {
+	public Date getWarrantySalesDate() {
 		return warrantySalesDate;
 	}
 
-	public void setWarrantySalesDate(String warrantySalesDate) {
+	public void setWarrantySalesDate(Date warrantySalesDate) {
 		this.warrantySalesDate = warrantySalesDate;
 	}
 

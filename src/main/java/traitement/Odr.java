@@ -1,11 +1,16 @@
 package traitement;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -13,14 +18,20 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import enums.OdrType;
+import enums.TransactionType;
 import model.ConfigItem;
-import model.ConfigOdrCsv;
 import model.ConfigOdrJson;
+import model.ConfigOdrRefCsv;
+import model.ConfigOdrTraiteCsv;
 import model.ConfigStore;
+import model.ConfigStoreTraite;
 import traitement.config.CustomConfigOdr;
 import traitement.enums.CustomEnumOdr;
 import utils.CSVService;
@@ -53,6 +64,16 @@ public class Odr {
 			if(item.getConfigName().equals(CustomEnumOdr.EXPORTCSV.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setExportcsv(item.getValue());
+			}
+			
+			if(item.getConfigName().equals(CustomEnumOdr.INTERVALMIN.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setIntervalMin(item.getValue());
+			}
+			
+			if(item.getConfigName().equals(CustomEnumOdr.INTERVALMAX.getValue())) {
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				cc.setIntervalMax(item.getValue());
 			}
 		}
 
@@ -87,72 +108,211 @@ public class Odr {
 
 	private static void odr(CustomConfigOdr config) throws Exception, UnsatisfiedLinkError {
 
-		File json = Traitement.variableExist(config.getReferential()) ? new File(config.getReferential()) : prepareCsvToJsonBdd() ;
-
+		File json = Traitement.variableExist(config.getReferential()) ? new File(config.getReferential()) : prepareCsvToJsonRef() ;
 		ConfigStore store = JsonService.getInstance().readValue(json, ConfigStore.class);
-		//for (ConfigOdrJson tmp : store.getStore()) {
-			//ConfigOdrCsv odr = tmp.getOdr();
 
-			//			if(odr.getProductBrandCode().equals("ASUS") && odr.getTransactionType().equals("VTE")) {
-			//				logger.info(odr.getNbrContractRedbox());
-			//				odr.setTransactionType("RES");
-			//			}
-		//}
+		majDelta(config, store);
 
-		updateJsonBdd(json, store);
+		majDocTraite(config, store);
+
+		updateJsonRef(json, store);
+
+		exportToCsv(config, store);
 	}
 
-	private static File prepareCsvToJsonBdd() throws Exception, UnsatisfiedLinkError {
-		logger.info("La BDD a ete cree");
+	private static void exportToCsv(CustomConfigOdr config, ConfigStore store) throws IOException, ParseException {
+		if(Traitement.variableExist(config.getExportcsv())) {
+			DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-		List<String> eligiblite = new ArrayList<String>(Arrays.asList(
-				"24021","24023","24024","24026","24028",
-				"24032","24053","24054","22368","22370",
-				"22372","22374","22375","22377","22379",
-				"22380","18274","18275","18276","18277",
-				"22382","22385","22384","22387","24064",
-				"24066","24065","24067"	
-		));
+			logger.info("Export du resultat en CSV : " + config.getExportcsv());
+			Traitement.exportToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
+		}
+	}
 
+	private static void majDocTraite(CustomConfigOdr config, ConfigStore store) throws JsonParseException, JsonMappingException, UnsatisfiedLinkError, IOException, Exception {
+		if(Traitement.variableExist(config.getDocTraite())) {
 
-		MappingIterator<ConfigOdrCsv> it = CSVService.getOdrdata();
-		ConfigStore store = new ConfigStore();
-		//store.setStore(it.readAll());
+			logger.info("Mise a jour de la BDD avec les documents traites");
+			ConfigStoreTraite traitement = JsonService.getInstance().readValue(prepareCsvToJsonTraite(config.getDocTraite()), ConfigStoreTraite.class);
 
-		store.setStore(new ArrayList<ConfigOdrJson>());
+			List<String> eligiblite = new ArrayList<String>(Arrays.asList(
+					"24021","24023","24024","24026","24028",
+					"24032","24053","24054","22368","22370",
+					"22372","22374","22375","22377","22379",
+					"22380","18274","18275","18276","18277",
+					"22382","22385","22384","22387","24064",
+					"24066","24065","24067"	
+					));
 
-		//int i = 0;
+			for(ConfigOdrTraiteCsv importCsv : traitement.getStore()) {
+
+				boolean venteExist = false;
+				ConfigOdrTraiteCsv tmpTraite = null;
+				ConfigOdrJson tmpLine = null;
+
+				for (ConfigOdrJson line : store.getStore()) {
+					if(importCsv.getNbrContractRedbox().equals(line.getContrat())) {
+
+						if(! eligiblite.contains(line.getOdr().getProductCode())) {
+							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [product code :" + line.getOdr().getProductCode() + " ]");
+							importCsv.setBulletin(OdrType.NS);
+						}
+
+						Calendar dRef = Calendar.getInstance();
+						dRef.setTime(line.getOdr().getProductSalesDate());
+						dRef.add(Calendar.DAY_OF_MONTH, 30);
+
+						Calendar dImport = Calendar.getInstance();
+						dImport.setTime(importCsv.getDateReception());
+
+						if(dImport.after(dRef)) {
+							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee]");
+							importCsv.setBulletin(OdrType.NS);
+						}
+
+						if(line.getOdr().getTransactionType().equals(TransactionType.RES.toString())) {
+							importCsv.setBulletin(OdrType.NS);
+							line.setTraitement(importCsv);
+							venteExist = false;
+							continue;
+						}else if(line.getOdr().getTransactionType().equals(TransactionType.VTE.toString())){
+							tmpTraite = importCsv;
+							tmpLine = line;
+							venteExist = true;
+						}
+					}
+				}
+
+				if(venteExist) {
+					tmpLine.setTraitement(tmpTraite);
+				}
+			}
+		}
+	}
+
+	private static void majDelta(CustomConfigOdr config, ConfigStore store) throws Exception {
+		if(Traitement.variableExist(config.getDelta())) {
+
+			logger.info("Mise a jour de la BDD avec un delta");
+			ConfigStore delta = JsonService.getInstance().readValue(prepareCsvToJsonRef(config.getDelta(), true), ConfigStore.class);
+
+			for(ConfigOdrJson importCsv : delta.getStore()) {
+				ConfigOdrRefCsv odrDelta = importCsv.getOdr();
+
+				String msg = "";
+				for (ConfigOdrJson line : store.getStore()) {
+					ConfigOdrRefCsv odrLine = line.getOdr();
+
+					//si trouve
+					if(odrDelta.getNbrContractRedbox().equals(line.getContrat())) {
+						if(odrDelta.getTransactionType().equals(TransactionType.VTE.toString()) && odrLine.getTransactionType().equals(odrDelta.getTransactionType())) {
+							// => rejet
+							throw new Exception("[ Vente deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
+						}
+
+						if(odrDelta.getTransactionType().equals(TransactionType.RES.toString()) && odrLine.getTransactionType().equals(odrDelta.getTransactionType())) {
+							// => rejet
+							throw new Exception("[ Resilliation deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
+						}
+
+						if(odrDelta.getTransactionType().equals(TransactionType.RES.toString()) && ! odrLine.getTransactionType().equals(odrDelta.getTransactionType())) {
+							msg = "La vente du contrat " + odrDelta.getNbrContractRedbox() + " a ete resilliee";
+						}
+					}
+				}
+
+				if(! msg.isEmpty()) {
+					logger.warn(msg);
+				}
+
+				store.getStore().add(importCsv);
+			}
+		}
+	}
+
+	//apply traitement
+	private static File prepareCsvToJsonTraite(String path) throws Exception, UnsatisfiedLinkError {
+		return prepareCsvToJsonTraite(CSVService.getOdrdata(path, false, ConfigOdrTraiteCsv.class));
+	}
+
+	//apply delta
+	private static File prepareCsvToJsonRef(String path, boolean print) throws Exception, UnsatisfiedLinkError {
+		return prepareCsvToJsonRef(CSVService.getOdrdata(path, false, ConfigOdrRefCsv.class), print);
+	}
+
+	//init referential
+	private static File prepareCsvToJsonRef() throws Exception, UnsatisfiedLinkError {
+		return prepareCsvToJsonRef(CSVService.getOdrdata(), false);	
+	}
+
+	private static File prepareCsvToJsonTraite(MappingIterator<ConfigOdrTraiteCsv> it) throws Exception, UnsatisfiedLinkError {
+		ConfigStoreTraite store = new ConfigStoreTraite();
+		store.setStore(new ArrayList<ConfigOdrTraiteCsv>());
+
+		int i = 0;
 		while (it.hasNext()) {
-			//i++;
-			ConfigOdrCsv c = it.next();
+			i++;
+
+			ConfigOdrTraiteCsv c = it.next();
 
 			if(c.getNbrContractRedbox().isEmpty()) {
-				//logger.warn("Ligne " + i + " ignoree [cause : contrat red box vide]");
+				logger.warn("Ligne " + i + " ignoree [cause : contrat red box vide]");
 				continue;
 			}
 
-			if(c.getCodeINSEE().isEmpty()) {
-				//logger.warn("Ligne " + i + " ignoree [cause : code insee vide]");
+			if(c.getDateReception() == null) {
+				logger.warn("Ligne " + i + " ignoree [cause : date de contrat vide]");
 				continue;
 			}
 
-			//if(! eligiblite.contains(c.getProductCode())) {
-				//logger.info("Le contrat [" + c.getNbrContractRedbox() + "] n est pas valide [product code :" + c.getProductCode() + " ]");
-				//continue;
-			//}
-
-			store.getStore().add(new ConfigOdrJson(c));
+			store.getStore().add(c);
 		}
 
 		Path tempDirWithPrefix = Files.createTempFile("std", null);
 		logger.info(tempDirWithPrefix);
 
-		updateJsonBdd(tempDirWithPrefix.toFile(), store);
+		updateJsonRef(tempDirWithPrefix.toFile(), store);
 
 		return tempDirWithPrefix.toFile();
 	}
 
-	private static void updateJsonBdd(File output, ConfigStore store) throws Exception, UnsatisfiedLinkError {
+
+	private static File prepareCsvToJsonRef(MappingIterator<ConfigOdrRefCsv> it, boolean print) throws UnsatisfiedLinkError, Exception {
+		ConfigStore store = new ConfigStore();
+		//store.setStore(it.readAll());
+
+		store.setStore(new ArrayList<ConfigOdrJson>());
+
+		int i = 0;
+		while (it.hasNext()) {
+			i++;
+
+			ConfigOdrRefCsv c = it.next();
+
+			if(c.getNbrContractRedbox().isEmpty()) {
+				if (print) {
+					logger.warn("Ligne " + i + " ignoree [cause : contrat red box vide]");
+				}
+				continue;
+			}
+
+			if(c.getProductCode().isEmpty()) {
+				logger.warn("Ligne " + i + " ignoree [cause : code produit vide]");
+				continue;
+			}
+
+			store.getStore().add(new ConfigOdrJson(c.getNbrContractRedbox(), c, new ConfigOdrTraiteCsv()));
+		}
+
+		Path tempDirWithPrefix = Files.createTempFile("std", null);
+		logger.info(tempDirWithPrefix);
+
+		updateJsonRef(tempDirWithPrefix.toFile(), store);
+
+		return tempDirWithPrefix.toFile();
+	}
+
+	private static void updateJsonRef(File output, Object store) throws Exception, UnsatisfiedLinkError {
 		logger.info("La BDD a ete mise a jour");
 
 		PrintWriter pwriter = new PrintWriter(output, java.nio.charset.StandardCharsets.UTF_8.name());

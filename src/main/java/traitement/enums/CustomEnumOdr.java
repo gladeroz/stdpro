@@ -4,7 +4,9 @@ public enum CustomEnumOdr {
 	DELTA ("delta"), 
 	DOC_TRAITE("doc_traite"),
 	EXPORTCSV("exportcsv"), 
-	REFERENTIAL("referential");
+	REFERENTIAL("referential"), 
+	INTERVALMIN("intervalmin"), 
+	INTERVALMAX("intervalmax");
 
 	private String value;
 

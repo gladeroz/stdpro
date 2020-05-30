@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -29,14 +30,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import model.ConfigCollection;
 import model.ConfigItem;
 import utils.LoggerService;
 import utils.Traitement;
 import utils.Yaml;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 public class ConfigurationController implements Initializable {
 
@@ -151,6 +152,18 @@ public class ConfigurationController implements Initializable {
 
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
 		for(Node node : grid.getChildren()) {
+			if(node instanceof DatePicker) {
+				String[] id = ((DatePicker) node).getId().split("#");
+				for(ConfigItem c : cc) {
+					LocalDate value = ((DatePicker) node).getValue();
+					String eq = value == null ? null : value.toString();
+					if(c.getId().equals(Integer.valueOf(id[2])))  {
+						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
+						c.setValue(eq);
+					}
+				}
+			}
+
 			if(node instanceof CheckBox) {
 				String[] id = ((CheckBox) node).getId().split("#");
 				for(ConfigItem c : cc) {
@@ -174,7 +187,7 @@ public class ConfigurationController implements Initializable {
 					}
 				}
 			}
-			
+
 			if(node instanceof PasswordField) {
 				String[] id = ((PasswordField) node).getId().split("#");
 
@@ -224,14 +237,19 @@ public class ConfigurationController implements Initializable {
 				grid.getChildren().add(spath);
 
 				spath.setOnAction(e -> createFileChooserEvent(name, child));
-				
+
 				break;
 
 			case DATEPICKER :
 				DatePicker f = createDatePickerEvent();
+				f.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
+				final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				if(child.getValue() != null) {
+					f.setValue(LocalDate.parse(child.getValue(), dtf));
+				}
 				GridPane.setConstraints(f, 1, count);
 				grid.getChildren().add(f);
-				
+
 				break;
 
 			case CHECKBOX :
@@ -240,7 +258,7 @@ public class ConfigurationController implements Initializable {
 				c.setSelected(new Boolean(child.getValue()));	
 				GridPane.setConstraints(c, 1, count);
 				grid.getChildren().add(c);
-				
+
 				break;
 
 			case PASSWORD :
