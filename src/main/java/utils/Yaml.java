@@ -1,5 +1,14 @@
 package utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -12,17 +21,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.ConfigCollection;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-
-import org.apache.log4j.Logger;
-
 public class Yaml {
-	
+
 	private static Logger logger = Logger.getLogger(Yaml.class);
 	private static String path = "configuration/config.json";
 	private static ConfigCollection config;
@@ -76,9 +76,9 @@ public class Yaml {
 	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException, UnsupportedEncodingException {
 		FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showSaveDialog(stage);
-		
+
 		if(file == null) return;
-		
+
 		PrintWriter pwriter = new PrintWriter(file.getPath(), java.nio.charset.StandardCharsets.UTF_8.name());
 
 		if (file != null) {

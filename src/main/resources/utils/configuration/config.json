@@ -1,303 +1,351 @@
 {
-	"configComptagePdf" : [
-		 {
+	"configComptagePdf": [
+		{
 			"configName": "path",
-	 		"id": 1,
-	 		"label":"Chemin du dossier",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 1,
+			"label": "Chemin du dossier",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "exportcsv",
-	 		"id": 2,
-	 		"label":"Chemin CSV",
-	 		"options":["FILECHOOSER_FILE", "FILECHOOSER_SAVE"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 2,
+			"label": "Chemin CSV",
+			"options": [
+				"FILECHOOSER_FILE",
+				"FILECHOOSER_SAVE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		}
 	],
-	"configSuffixPrefix" : [
+	"configSuffixPrefix": [
 		{
 			"configName": "prefixe",
-	 		"id": 10,
-	 		"label":"Prefixe",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 10,
+			"label": "Prefixe",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "suffixe",
-	 		"id": 11,
-	 		"label":"Suffixe",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 11,
+			"label": "Suffixe",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "path",
-	 		"id": 12,
-	 		"label":"Chemin du dossier",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 12,
+			"label": "Chemin du dossier",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": true
 		}
 	],
-	"configOcr" : [
+	"configOcr": [
 		{
 			"configName": "path",
-	 		"id": 20,
-	 		"label":"Chemin OCR",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 20,
+			"label": "Chemin OCR",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "pattern",
-	 		"id": 21,
-	 		"label":"Pattern de recherche",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 21,
+			"label": "Pattern de recherche",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "subSearch",
-	 		"id": 22,
-	 		"label":"Sous recherche",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 22,
+			"label": "Sous recherche",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "axisX",
-	 		"id": 23,
-	 		"label":"Axe x (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 23,
+			"label": "Axe x (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "axisY",
-	 		"id": 24,
-	 		"label":"Axe y (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 24,
+			"label": "Axe y (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "width",
-	 		"id": 25,
-	 		"label":"Largeur (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 25,
+			"label": "Largeur (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "height",
-	 		"id": 26,
-	 		"label":"Hauteur (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 26,
+			"label": "Hauteur (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "rename",
-	 		"id": 27,
-	 		"label":"Renommer les documents",
-	 		"type":"CHECKBOX",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 27,
+			"label": "Renommer les documents",
+			"type": "CHECKBOX",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "ocr",
-	 		"id": 28,
-	 		"label":"Forcer l'OCR",
-	 		"type":"CHECKBOX",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 28,
+			"label": "Forcer l'OCR",
+			"type": "CHECKBOX",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "tess4j",
-	 		"id": 29,
-	 		"label":"tess4j Location",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 29,
+			"label": "tess4j Location",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		}
 	],
-	"configExtractZone" : [
+	"configExtractZone": [
 		{
 			"configName": "path",
-	 		"id": 30,
-	 		"label":"Chemin OCR",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 30,
+			"label": "Chemin OCR",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "axisX",
-	 		"id": 31,
-	 		"label":"Axe x (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 31,
+			"label": "Axe x (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "axisY",
-	 		"id": 32,
-	 		"label":"Axe y (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 32,
+			"label": "Axe y (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "width",
-	 		"id": 33,
-	 		"label":"Largeur (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 33,
+			"label": "Largeur (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "height",
-	 		"id": 34,
-	 		"label":"Hauteur (en cm)",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 34,
+			"label": "Hauteur (en cm)",
+			"type": "STRING",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "exportcsv",
-	 		"id": 35,
-	 		"label":"Chemin CSV",
-	 		"options":["FILECHOOSER_FILE", "FILECHOOSER_SAVE"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 35,
+			"label": "Chemin CSV",
+			"options": [
+				"FILECHOOSER_FILE",
+				"FILECHOOSER_SAVE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "ocr",
-	 		"id": 36,
-	 		"label":"Forcer l'OCR",
-	 		"type":"CHECKBOX",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 36,
+			"label": "Forcer l'OCR",
+			"type": "CHECKBOX",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "tess4j",
-	 		"id": 37,
-	 		"label":"tess4j Location",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 37,
+			"label": "tess4j Location",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		}
 	],
-	"configSendMail" : [
+	"configSendMail": [
 		{
 			"configName": "path",
-	 		"id": 40,
-	 		"label":"Chemin OCR",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 40,
+			"label": "Chemin OCR",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "mailEmetteur",
-	 		"id": 41,
-	 		"label":"Mail emetteur",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 41,
+			"label": "Mail emetteur",
+			"type": "STRING",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "mailDestinataire",
-	 		"id": 42,
-	 		"label":"Mail destinataire",
-	 		"type":"STRING",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 42,
+			"label": "Mail destinataire",
+			"type": "STRING",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "passEmetteur",
-	 		"id": 43,
-	 		"label":"Mot de passe emetteur",
-	 		"type":"PASSWORD",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 43,
+			"label": "Mot de passe emetteur",
+			"type": "PASSWORD",
+			"value": "",
+			"mandatory": true
 		}
 	],
-	"configCodeBarre" : [
+	"configCodeBarre": [
 		{
 			"configName": "path",
-	 		"id": 50,
-	 		"label":"Chemin OCR",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":true
+			"id": 50,
+			"label": "Chemin OCR",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": true
 		},
 		{
 			"configName": "tess4j",
-	 		"id": 51,
-	 		"label":"tess4j Location",
-	 		"options":["FILECHOOSER_DIRECTORY"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 51,
+			"label": "tess4j Location",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "rename",
-	 		"id": 52,
-	 		"label":"Renommer les documents",
-	 		"type":"CHECKBOX",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 52,
+			"label": "Renommer les documents",
+			"type": "CHECKBOX",
+			"value": "",
+			"mandatory": false
 		}
 	],
-	"configOdr" : [
+	"configOdr": [
 		{
 			"configName": "referential",
-	 		"id": 60,
-	 		"label":"Base de donnees initiale",
-	 		"options":["FILECHOOSER_FILE"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 60,
+			"label": "Base de donnees initiale",
+			"options": [
+				"FILECHOOSER_FILE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "delta",
-	 		"id": 61,
-	 		"label":"Mise a jour du referentiel",
-	 		"options":["FILECHOOSER_FILE"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 61,
+			"label": "Mise a jour du referentiel",
+			"options": [
+				"FILECHOOSER_FILE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "doc_traite",
-	 		"id": 62,
-	 		"label":"Prise en compte des documents traites",
-	 		"options":["FILECHOOSER_FILE"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 62,
+			"label": "Prise en compte des documents traites",
+			"options": [
+				"FILECHOOSER_FILE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
 		},
 		{
 			"configName": "exportcsv",
-	 		"id": 63,
-	 		"label":"Chemin CSV",
-	 		"options":["FILECHOOSER_FILE", "FILECHOOSER_SAVE"],
-	 		"type":"PATH",
-	 		"value":"",
-	 		"mandatory":false
+			"id": 63,
+			"label": "Chemin CSV",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
+		},
+		{
+			"id": 64,
+			"label": "Interval minimum",
+			"type": "DATEPICKER",
+			"value": "",
+			"configName": "intervalmin",
+			"mandatory": false
+		},
+		{
+			"id": 65,
+			"label": "Interval maximum",
+			"type": "DATEPICKER",
+			"value": "",
+			"configName": "intervalmax",
+			"mandatory": false
 		}
 	]
 } 

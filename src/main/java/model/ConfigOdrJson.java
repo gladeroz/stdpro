@@ -1,96 +1,58 @@
 package model;
 
-import java.util.Date;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import enums.OdrType;
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-	"csv"
+	"contrat",
+	"csv",
+	"traitement"
 })
 public class ConfigOdrJson {
 	
+	@JsonProperty("contrat")
+	private String nbrContractRedbox;
+
 	@JsonProperty("csv")
-	private ConfigOdrCsv odr;
-	
-	private String filler;
-	private OdrType facture;
-	private OdrType formulaire;
-	private OdrType bulletin;
-	private OdrType rib;
-	private Date dateReception;
-	
+	private ConfigOdrRefCsv odr;
+
+	@JsonProperty("traitement")
+	private ConfigOdrTraiteCsv traitement;
+
 	public ConfigOdrJson() {}
 
-	public ConfigOdrJson(ConfigOdrCsv c) {
+	public ConfigOdrJson(String contrat, ConfigOdrRefCsv c, ConfigOdrTraiteCsv traitement) {
+		this.nbrContractRedbox = contrat;
 		this.odr = c;
-		this.formulaire = OdrType.NV;
-		this.bulletin = OdrType.NV;
-		this.facture = OdrType.NV;
-		this.rib = OdrType.S;
-		this.dateReception = new Date();
+		this.traitement = traitement;
 	}
 
-	public ConfigOdrCsv getOdr() {
+	public ConfigOdrRefCsv getOdr() {
 		return odr;
 	}
-	
-	public void setOdr(ConfigOdrCsv odr) {
+
+	public void setOdr(ConfigOdrRefCsv odr) {
 		this.odr = odr;
 	}
 
-	public OdrType getFormulaire() {
-		return formulaire;
+	public ConfigOdrTraiteCsv getTraitement() {
+		return traitement;
 	}
 
-	public void setFormulaire(OdrType formulaire) {
-		this.formulaire = formulaire;
-	}
-
-	public OdrType getBulletin() {
-		return bulletin;
-	}
-
-	public void setBulletin(OdrType bulletin) {
-		this.bulletin = bulletin;
-	}
-
-	public OdrType getRib() {
-		return rib;
-	}
-
-	public void setRib(OdrType rib) {
-		this.rib = rib;
-	}
-
-	public Date getDateReception() {
-		return dateReception;
-	}
-
-	public void setDateReception(Date dateReception) {
-		this.dateReception = dateReception;
+	public void setTraitement(ConfigOdrTraiteCsv traitement) {
+		this.traitement = traitement;
 	}
 	
-	public OdrType getFacture() {
-		return facture;
+	public String getContrat() {
+		return nbrContractRedbox;
 	}
 
-	public void setFacture(OdrType facture) {
-		this.facture = facture;
-	}
-	
-	public String getFiller() {
-		return filler;
-	}
-
-	public void setFiller(String filler) {
-		this.filler = filler;
+	public void setContrat(String contrat) {
+		this.nbrContractRedbox = contrat;
 	}
 
 	@Override
