@@ -244,7 +244,7 @@ public class ConfigurationController implements Initializable {
 				DatePicker f = createDatePickerEvent();
 				f.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
 				final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				if(child.getValue() != null) {
+				if(child.getValue() != null && child.getValue() != "") {
 					f.setValue(LocalDate.parse(child.getValue(), dtf));
 				}
 				GridPane.setConstraints(f, 1, count);
