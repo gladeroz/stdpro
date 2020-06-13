@@ -40,7 +40,7 @@ public class CSVService {
 		}
 		
     }
-
+    
     public static void writeLine(Writer w, List<String> values) throws IOException {
         writeLine(w, values, DEFAULT_SEPARATOR, ' ');
     }
@@ -86,4 +86,5 @@ public class CSVService {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMMdd", Locale.ENGLISH);
 		return dateFormat.format(date);
     }
+
 }

@@ -127,6 +127,9 @@ public class BulletinAdhesion {
 
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
+			
+			logger.info("Export Full du resultat en CSV : " + config.getExportcsv());
+			Traitement.exportFullToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
 		}
 	}
 
@@ -151,8 +154,12 @@ public class BulletinAdhesion {
 				ConfigOdrTraiteCsv tmpTraite = null;
 				ConfigOdrJson tmpLine = null;
 
+				boolean exist = false;
+				
 				for (ConfigOdrJson line : store.getStore()) {
 					if(importCsv.getNbrContractRedbox().equals(line.getContrat())) {
+						
+						exist = true;
 
 						if(! eligiblite.contains(line.getOdr().getProductCode())) {
 							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [product code :" + line.getOdr().getProductCode() + " ]");
@@ -200,6 +207,10 @@ public class BulletinAdhesion {
 
 				if(venteExist) {
 					tmpLine.setTraitement(tmpTraite);
+				}
+				
+				if(! exist) {
+					logger.warn("Le numero de contrat "+ importCsv.getNbrContractRedbox() +" n est pas dans la base");
 				}
 			}
 		}
