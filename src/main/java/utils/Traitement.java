@@ -26,7 +26,7 @@ import traitement.CodeBarre;
 import traitement.ComptagePDF;
 import traitement.ExtractZone;
 import traitement.Ocr;
-import traitement.Odr;
+import traitement.BulletinAdhesion;
 import traitement.SendMail;
 import traitement.SuffixePrefixe;
 import traitement.config.CustomConfigOdr;
@@ -70,7 +70,7 @@ public class Traitement implements Runnable  {
 				CodeBarre.traitement(config.getConfigCodeBarre());
 				break;
 			case ODR:
-				Odr.traitement(config.getConfigOdr());
+				BulletinAdhesion.traitement(config.getConfigOdr());
 				break;
 			default:
 				logger.error("L'action n'est pas implementee");
