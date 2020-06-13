@@ -22,11 +22,11 @@ import model.ConfigOdrJson;
 import model.ConfigOdrRefCsv;
 import model.ConfigOdrTraiteCsv;
 import model.ConfigStore;
+import traitement.BulletinAdhesion;
 import traitement.CodeBarre;
 import traitement.ComptagePDF;
 import traitement.ExtractZone;
 import traitement.Ocr;
-import traitement.BulletinAdhesion;
 import traitement.SendMail;
 import traitement.SuffixePrefixe;
 import traitement.config.CustomConfigOdr;
@@ -148,13 +148,13 @@ public class Traitement implements Runnable  {
 
 	public static void exportToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
-		
+
 		CSVService.writeLine(writer, Arrays.asList("NumeroContratRedBox", "DateEffet", "Nom", "Prenom", "Adresse", "CodePostal", "Ville", "Ctry", "IBAN", "Bic", "Montant"));
 
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"))) {
+			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), false)) {
 
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getNbrContractRedbox(), dateFormat.format(odr.getProductSalesDate()),	odr.getClientName(),odr.getCustomerFirstName(),
@@ -168,49 +168,119 @@ public class Traitement implements Runnable  {
 		writer.close();
 	}
 
-	private static boolean valideDateEligible(CustomConfigOdr config, ConfigOdrJson line, DateFormat dateFormat) throws ParseException {
-		
+	public static void exportFullToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
+		FileWriter writer = new FileWriter(csvFile);
+
+		CSVService.writeLine(writer, Arrays.asList("Sequence number","Record Type","Subsidiary code","Store Code","Purchase Order Number",
+				"Line number","Transaction Type","Store Name","Payment Type","Product Sales Date","Warranty Sales Date","Family Insurance Code",
+				"Family Insurance Label","Name of service","Product Code","Quantity sold","PrixUnit -provision","Family-product code","Family-product label",
+				"Product Brand Code","Brand name product","Product reference","Codic","Product Qty","PrixUnit -Product","Product-prixtotal",
+				"Client-ID","Customer Title","Client name","Customer first name","Nbr in the track","Track code type","Track name","Postal code",
+				"Code INSEE","Location","IMEI Number","Type of sale","Sales channel","E-mail adress","Nbr Contract Redbox","Filler","Formulaire",
+				"Bulletin d adhesion","Facture","RIB","Date reception"));
+
+		for(ConfigOdrJson line : store.getStore() ) {
+			ConfigOdrRefCsv odr = line.getOdr();
+			ConfigOdrTraiteCsv traitement = line.getTraitement();
+
+			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), true)) {
+				CSVService.writeLine(writer, Arrays.asList(
+						odr.getSeqNumber(), 
+						odr.getRecordType(), 
+						odr.getSubsidiaryCode(), 
+						odr.getStoreCode(), 
+						odr.getPurchaseOrderNumber(), 
+						odr.getLinenumber(), 
+						odr.getTransactionType(), 
+						odr.getStoreName(), 
+						odr.getPaymentType(), 
+						dateFormat.format(odr.getProductSalesDate()),
+						dateFormat.format(odr.getWarrantySalesDate()),
+						odr.getFamilyInsuranceCode(), 
+						odr.getFamilyInsuranceLabel(),
+						odr.getNameofService(), 
+						odr.getProductCode(),
+						odr.getQuantitySold(),
+						odr.getPrixUnitProvision(),
+						odr.getFamilyProductCode(),
+						odr.getFamilyProductLabel(),
+						odr.getProductBrandCode(),
+						odr.getBrandNameProduct(),
+						odr.getProductReference(), 
+						odr.getCodic(), 
+						odr.getProductQty(), 
+						odr.getPrixUnitProduct(), 
+						odr.getProductPrixTotal(), 
+						odr.getClientID(), 
+						odr.getCustomerTitle(), 
+						odr.getClientName(), 
+						odr.getCustomerFirstName(), 
+						odr.getNbrInTheTrack(), 
+						odr.getTrackCodeType(), 
+						odr.getTrackName(), 
+						odr.getPostalCode(), 
+						odr.getCodeINSEE(), 
+						odr.getLocation(), 
+						odr.getImeiNumber(), 
+						odr.getTypeOfSale(), 
+						odr.getSalesChannel(),
+						odr.getEmailAdress(), 
+						odr.getNbrContractRedbox(), 
+						traitement.getFiller().toString(), traitement.getFormulaire().toString(), traitement.getBulletin().toString(), traitement.getFacture().toString(), traitement.getRib().toString(), dateFormat.format(traitement.getDateReception())));
+			}
+		}
+
+		writer.flush();
+		writer.close();
+	}
+
+	private static boolean valideDateEligible(CustomConfigOdr config, ConfigOdrJson line, DateFormat dateFormat, boolean full) throws ParseException {
+
 		Calendar cInterval = Calendar.getInstance();
 		Calendar cCurrent = Calendar.getInstance();
 
 		boolean minExist = Traitement.variableExist(config.getIntervalMin());
 		boolean maxExist = Traitement.variableExist(config.getIntervalMax());
-		
+
 		ConfigOdrTraiteCsv trait = line.getTraitement();
-		
+
 		boolean dateReception = trait.getDateReception() != null;
 
-		if(trait == null 
-				|| trait.getBulletin() == null 
-				|| trait.getFacture() == null 
-				|| trait.getFormulaire() == null 
-				|| trait.getRib() == null) {
-			return false;
-		}
-		
 		if(minExist && dateReception) {
 			cInterval.setTime(dateFormat.parse(config.getIntervalMin()));
 			cCurrent.setTime(trait.getDateReception());
-			
+
 			if(cCurrent.before(cInterval)) {
 				return false;
 			}
 		}
-		
+
 		if(maxExist && dateReception) {
 			cInterval.setTime(dateFormat.parse(config.getIntervalMax()));
 			cCurrent.setTime(trait.getDateReception());
-			
+
 			if(cCurrent.after(cInterval)) {
 				return false;
 			}
 		}
 
-		if(trait.getBulletin().equals(OdrType.S) 
+		if(!full && (trait == null 
+				|| trait.getBulletin() == null 
+				|| trait.getFacture() == null 
+				|| trait.getFormulaire() == null 
+				|| trait.getRib() == null)) {
+			return false;
+		}
+
+		if(!full && (trait.getBulletin().equals(OdrType.S) 
 				&& trait.getFacture().equals(OdrType.S) 
 				&& trait.getFormulaire().equals(OdrType.S) 
-				&& trait.getRib().equals(OdrType.S) 
+				&& trait.getRib().equals(OdrType.S))
 				) {
+			return true;
+		}
+
+		if(full && (trait.getBulletin() != null || trait.getFacture() != null || trait.getFormulaire() != null || trait.getRib() != null)) {
 			return true;
 		}
 
