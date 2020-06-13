@@ -8,10 +8,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import enums.OdrType;
+import enums.Offre;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigOdrTraiteCsv {
 
+	private Offre offre;
 	private String nbrContractRedbox;
 	private String filler;
 	private OdrType facture;
@@ -87,6 +89,14 @@ public class ConfigOdrTraiteCsv {
 
 	public void setFiller(String filler) {
 		this.filler = filler;
+	}
+	
+	public Offre getOffre() {
+		return offre;
+	}
+
+	public void setOffre(Offre offre) {
+		this.offre = offre;
 	}
 
 	@Override

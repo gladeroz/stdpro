@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 import enums.OdrType;
+import enums.Offre;
 import enums.TransactionType;
 import model.ConfigItem;
 import model.ConfigOdrJson;
@@ -38,9 +39,9 @@ import utils.CSVService;
 import utils.JsonService;
 import utils.Traitement;
 
-public class Odr {
+public class BulletinAdhesion {
 
-	private static Logger logger = Logger.getLogger(Odr.class);
+	private static Logger logger = Logger.getLogger(BulletinAdhesion.class);
 
 	public static CustomConfigOdr initConfig(Collection<ConfigItem> config) {
 		CustomConfigOdr cc = new CustomConfigOdr();
@@ -160,14 +161,28 @@ public class Odr {
 
 						Calendar dRef = Calendar.getInstance();
 						dRef.setTime(line.getOdr().getProductSalesDate());
-						dRef.add(Calendar.DAY_OF_MONTH, 30);
-
+						
 						Calendar dImport = Calendar.getInstance();
 						dImport.setTime(importCsv.getDateReception());
 
-						if(dImport.after(dRef)) {
-							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee]");
-							importCsv.setBulletin(OdrType.NS);
+						if(importCsv.getOffre().equals(Offre.ODR)) {
+							dRef.add(Calendar.DAY_OF_MONTH, 30);
+							if(dImport.after(dRef)) {
+								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODR]");
+								importCsv.setBulletin(OdrType.NS);
+							}
+						} else if(importCsv.getOffre().equals(Offre.ODF)) {
+							dRef.add(Calendar.MONTH, 12);
+							if(dImport.before(dRef)) {
+								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date anterieure a 12 mois]");
+								importCsv.setBulletin(OdrType.NS);
+							}
+
+							dRef.add(Calendar.MONTH, 2);
+							if(dImport.after(dRef)) {
+								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODF]");
+								importCsv.setBulletin(OdrType.NS);
+							}
 						}
 
 						if(line.getOdr().getTransactionType().equals(TransactionType.RES.toString())) {
