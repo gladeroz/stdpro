@@ -171,13 +171,25 @@ public class Traitement implements Runnable  {
 	public static void exportFullToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
-		CSVService.writeLine(writer, Arrays.asList("Sequence number","Record Type","Subsidiary code","Store Code","Purchase Order Number",
+		/*CSVService.writeLine(writer, Arrays.asList("Sequence number","Record Type","Subsidiary code","Store Code","Purchase Order Number",
 				"Line number","Transaction Type","Store Name","Payment Type","Product Sales Date","Warranty Sales Date","Family Insurance Code",
 				"Family Insurance Label","Name of service","Product Code","Quantity sold","PrixUnit -provision","Family-product code","Family-product label",
 				"Product Brand Code","Brand name product","Product reference","Codic","Product Qty","PrixUnit -Product","Product-prixtotal",
 				"Client-ID","Customer Title","Client name","Customer first name","Nbr in the track","Track code type","Track name","Postal code",
 				"Code INSEE","Location","IMEI Number","Type of sale","Sales channel","E-mail adress","Nbr Contract Redbox","Filler","Formulaire",
-				"Bulletin d adhesion","Facture","RIB","Date reception"));
+				"Bulletin d adhesion","Facture","RIB","Date reception"));*/
+		
+		CSVService.writeLine(writer, Arrays.asList("Sequence","Type SPB","Code ste","Code magasin","N vente","N ligne","Type acte",
+				"Nom magasin","Type offre","Date operation","Date delivrance",
+				"Code famille","Libelle famille","Ref prestation","Code prestation",
+				"Qte prestation","PrixUnit prestation","Code famille produit","Libelle famille produit",
+				"Code marque produit","Libelle marque produit","Reference produit","Codic",
+				"Qte produit","PrixUnit produit","Produit prixtotal","Id client adresse",
+				"Titre client","Nom client","Prenom","N voie","Code type voie",
+				"Libelle voie","Code postal","Code insee","Localite",
+				"N IMEI","Contexte","Canal","Adresse mail","N contrat redbox","Filler","Formulaire",
+				"Bulletin d adhesion","Facture","RIB","Date reception"
+		));
 
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
@@ -185,12 +197,12 @@ public class Traitement implements Runnable  {
 
 			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), true)) {
 				CSVService.writeLine(writer, Arrays.asList(
-						odr.getSeqNumber(), 
-						odr.getRecordType(), 
+						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())), 
+						Integer.toString((Integer.parseInt(odr.getRecordType()))), 
 						odr.getSubsidiaryCode(), 
-						odr.getStoreCode(), 
+						String.format("%03d" , Integer.parseInt(odr.getStoreCode())), 
 						odr.getPurchaseOrderNumber(), 
-						odr.getLinenumber(), 
+						String.format("%05d" , Integer.parseInt(odr.getLinenumber())), 
 						odr.getTransactionType(), 
 						odr.getStoreName(), 
 						odr.getPaymentType(), 
@@ -200,7 +212,7 @@ public class Traitement implements Runnable  {
 						odr.getFamilyInsuranceLabel(),
 						odr.getNameofService(), 
 						odr.getProductCode(),
-						odr.getQuantitySold(),
+						String.format("%05d" , Integer.parseInt(odr.getQuantitySold())),
 						odr.getPrixUnitProvision(),
 						odr.getFamilyProductCode(),
 						odr.getFamilyProductLabel(),
@@ -208,7 +220,7 @@ public class Traitement implements Runnable  {
 						odr.getBrandNameProduct(),
 						odr.getProductReference(), 
 						odr.getCodic(), 
-						odr.getProductQty(), 
+						String.format("%05d" , Integer.parseInt(odr.getProductQty())), 
 						odr.getPrixUnitProduct(), 
 						odr.getProductPrixTotal(), 
 						odr.getClientID(), 
