@@ -32,7 +32,7 @@ public class CSVService {
 		CsvMapper mapper = new CsvMapper(csvFactory);
 		mapper.disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
 
-		CsvSchema schema = mapper.schemaFor(classType).withHeader().withColumnSeparator(';').withoutEscapeChar();
+		CsvSchema schema = mapper.schemaFor(classType).withHeader().withColumnSeparator(DEFAULT_SEPARATOR).withoutEscapeChar();
 		if(ressource) {
 			return mapper.readerFor(classType).with(schema).readValues(CSVService.class.getResource(path));
 		} else {
@@ -78,7 +78,9 @@ public class CSVService {
 
             first = false;
         }
-        sb.append("\n");
+        
+        // change LF (\n) to CRLF (\r\n)
+        sb.append("\r\n");
         w.append(sb.toString());
     }
     
