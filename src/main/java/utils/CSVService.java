@@ -38,7 +38,6 @@ public class CSVService {
 		} else {
 			return mapper.readerFor(classType).with(schema).readValues(new File(path));
 		}
-		
     }
     
     public static void writeLine(Writer w, List<String> values) throws IOException {
