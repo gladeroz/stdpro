@@ -256,9 +256,9 @@ public class Traitement implements Runnable  {
 
 		ConfigOdrTraiteCsv trait = line.getTraitement();
 
-		boolean dateReception = trait.getDateReception() != null;
+		boolean dateTraitement = trait.getDateTraitement() != null;
 
-		if(minExist && dateReception) {
+		if(minExist && dateTraitement) {
 			cInterval.setTime(dateFormat.parse(config.getIntervalMin()));
 			cCurrent.setTime(trait.getDateReception());
 
@@ -267,7 +267,7 @@ public class Traitement implements Runnable  {
 			}
 		}
 
-		if(maxExist && dateReception) {
+		if(maxExist && dateTraitement) {
 			cInterval.setTime(dateFormat.parse(config.getIntervalMax()));
 			cCurrent.setTime(trait.getDateReception());
 

@@ -24,6 +24,8 @@ public class ConfigOdrTraiteCsv {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private Date dateReception;
 
+	private Date dateTraitement;
+
 	public ConfigOdrTraiteCsv() {}
 
 	public ConfigOdrTraiteCsv(ConfigOdrRefCsv c) {
@@ -33,6 +35,7 @@ public class ConfigOdrTraiteCsv {
 		this.bulletin = OdrType.NV;
 		this.facture = OdrType.NV;
 		this.rib = OdrType.S;
+		this.dateTraitement = new Date();
 	}
 
 	public String getNbrContractRedbox() {
@@ -90,13 +93,21 @@ public class ConfigOdrTraiteCsv {
 	public void setFiller(String filler) {
 		this.filler = filler;
 	}
-	
+
 	public Offre getOffre() {
 		return offre;
 	}
 
 	public void setOffre(Offre offre) {
 		this.offre = offre;
+	}
+
+	public Date getDateTraitement() {
+		return dateTraitement;
+	}
+
+	public void setDateTraitement(Date dateTraitement) {
+		this.dateTraitement = dateTraitement;
 	}
 
 	@Override
