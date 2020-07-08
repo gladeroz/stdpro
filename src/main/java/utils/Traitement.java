@@ -260,7 +260,7 @@ public class Traitement implements Runnable  {
 
 		if(minExist && dateTraitement) {
 			cInterval.setTime(dateFormat.parse(config.getIntervalMin()));
-			cCurrent.setTime(trait.getDateReception());
+			cCurrent.setTime(trait.getDateTraitement());
 
 			if(cCurrent.before(cInterval)) {
 				return false;
@@ -269,7 +269,7 @@ public class Traitement implements Runnable  {
 
 		if(maxExist && dateTraitement) {
 			cInterval.setTime(dateFormat.parse(config.getIntervalMax()));
-			cCurrent.setTime(trait.getDateReception());
+			cCurrent.setTime(trait.getDateTraitement());
 
 			if(cCurrent.after(cInterval)) {
 				return false;

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import enums.OdrType;
 import enums.Offre;
+import utils.CSVService;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigOdrTraiteCsv {
@@ -24,6 +25,7 @@ public class ConfigOdrTraiteCsv {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private Date dateReception;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private Date dateTraitement;
 
 	public ConfigOdrTraiteCsv() {}
@@ -35,7 +37,6 @@ public class ConfigOdrTraiteCsv {
 		this.bulletin = OdrType.NV;
 		this.facture = OdrType.NV;
 		this.rib = OdrType.S;
-		this.dateTraitement = new Date();
 	}
 
 	public String getNbrContractRedbox() {
