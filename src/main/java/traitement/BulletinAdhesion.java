@@ -149,6 +149,8 @@ public class BulletinAdhesion {
 					));
 
 			for(ConfigOdrTraiteCsv importCsv : traitement.getStore()) {
+				
+				importCsv.setDateTraitement(new Date());
 
 				boolean venteExist = false;
 				ConfigOdrTraiteCsv tmpTraite = null;
