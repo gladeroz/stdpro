@@ -130,6 +130,9 @@ public class BulletinAdhesion {
 			
 			logger.info("Export Full du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportFullToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
+			
+			logger.info("Traitement pour les mails du resultat en CSV : " + config.getExportcsv());
+			Traitement.exportMailToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
 		}
 	}
 
@@ -149,9 +152,6 @@ public class BulletinAdhesion {
 					));
 
 			for(ConfigOdrTraiteCsv importCsv : traitement.getStore()) {
-				
-				importCsv.setDateTraitement(new Date());
-
 				boolean venteExist = false;
 				ConfigOdrTraiteCsv tmpTraite = null;
 				ConfigOdrJson tmpLine = null;
@@ -243,9 +243,9 @@ public class BulletinAdhesion {
 							throw new Exception("[ Resilliation deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
 						}
 
-						if(odrDelta.getTransactionType().equals(TransactionType.RES.toString()) && ! odrLine.getTransactionType().equals(odrDelta.getTransactionType())) {
-							msg = "La vente du contrat " + odrDelta.getNbrContractRedbox() + " a ete resilliee";
-						}
+						//if(odrDelta.getTransactionType().equals(TransactionType.RES.toString()) && ! odrLine.getTransactionType().equals(odrDelta.getTransactionType())) {
+						//	msg = "La vente du contrat " + odrDelta.getNbrContractRedbox() + " a ete resilliee";
+						//}
 					}
 				}
 

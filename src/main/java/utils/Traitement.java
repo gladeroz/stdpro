@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import enums.Job;
 import enums.OdrType;
+import enums.Offre;
 import model.ConfigCollection;
 import model.ConfigExportCSV;
 import model.ConfigOdrJson;
@@ -36,6 +38,8 @@ public class Traitement implements Runnable  {
 	private static Logger logger = Logger.getLogger(Traitement.class);
 	private static ConfigCollection config;
 	private static Job action;
+	
+	private static HashMap<Integer, Integer> odfPrice;
 
 	@Override
 	public void run() {
@@ -154,12 +158,13 @@ public class Traitement implements Runnable  {
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), false)) {
+			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), false)) { 
+				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
 
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getNbrContractRedbox(), dateFormat.format(odr.getProductSalesDate()),	odr.getClientName(),odr.getCustomerFirstName(),
 								odr.getNbrInTheTrack() + " " + odr.getTrackCodeType() + " " + odr.getTrackName(),
-								odr.getPostalCode(), odr.getLocation(),"FR",	"",	"",	"30")
+								odr.getPostalCode(), odr.getLocation(),"FR", "", "", montant)
 						);
 			}
 		}
@@ -245,6 +250,33 @@ public class Traitement implements Runnable  {
 		writer.flush();
 		writer.close();
 	}
+	
+
+	public static void exportMailToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
+		FileWriter writer = new FileWriter(csvFile);
+
+		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Titre client", "Nom ", "Prenom", "Offre", "Montant"));
+
+		for(ConfigOdrJson line : store.getStore() ) {
+			ConfigOdrRefCsv odr = line.getOdr();
+
+			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), false)) { 
+				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
+
+				ConfigOdrTraiteCsv traitement = line.getTraitement();
+				
+				CSVService.writeLine(writer,
+						Arrays.asList(odr.getEmailAdress(), odr.getNbrContractRedbox(), traitement.getFiller().toString(), traitement.getFormulaire().toString(),
+										traitement.getBulletin().toString(), traitement.getFacture().toString(), traitement.getRib().toString(), dateFormat.format(traitement.getDateReception()),
+										odr.getCustomerTitle(), odr.getClientName(),odr.getCustomerFirstName(), traitement.getOffre().toString(), montant)
+						);
+			}
+		}
+
+		writer.flush();
+		writer.close();
+		
+	}
 
 	private static boolean valideDateEligible(CustomConfigOdr config, ConfigOdrJson line, DateFormat dateFormat, boolean full) throws ParseException {
 
@@ -255,6 +287,9 @@ public class Traitement implements Runnable  {
 		boolean maxExist = Traitement.variableExist(config.getIntervalMax());
 
 		ConfigOdrTraiteCsv trait = line.getTraitement();
+		
+		if(trait == null) return false;
+		if(StringUtils.isEmpty(line.getOdr().getProductCode())) return false;
 
 		boolean dateTraitement = trait.getDateTraitement() != null;
 
@@ -297,5 +332,45 @@ public class Traitement implements Runnable  {
 		}
 
 		return false;
+	}
+
+	public static HashMap<Integer, Integer> getOdfPrice() {
+		if(odfPrice == null) {
+			odfPrice = new HashMap<Integer, Integer>();
+
+			odfPrice.put(24021, 30);
+			odfPrice.put(24023, 40);
+			odfPrice.put(24024, 60);
+			odfPrice.put(24026, 80);
+			odfPrice.put(24028, 30);
+			odfPrice.put(24032, 40);
+			odfPrice.put(24053, 60);
+			odfPrice.put(24054, 80);
+			
+			odfPrice.put(22368, 30);
+			odfPrice.put(22370, 40);
+			odfPrice.put(22372, 60);
+			odfPrice.put(22374, 80);
+			odfPrice.put(22375, 30);
+			odfPrice.put(22377, 40);
+			odfPrice.put(22379, 60);
+			odfPrice.put(22380, 80);
+			
+			odfPrice.put(18274, 30);
+			odfPrice.put(18275, 30);
+			odfPrice.put(18276, 30);
+			odfPrice.put(18277, 30);	
+			
+			odfPrice.put(22382, 60);
+			odfPrice.put(22385, 60);
+			odfPrice.put(22384, 60);
+			odfPrice.put(22387, 60);
+			
+			odfPrice.put(24064, 60);
+			odfPrice.put(24066, 60);
+			odfPrice.put(24065, 60);
+			odfPrice.put(24067, 60);
+		}
+		return odfPrice;
 	}
 }

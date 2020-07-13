@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import enums.OdrType;
 import enums.Offre;
-import utils.CSVService;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigOdrTraiteCsv {
