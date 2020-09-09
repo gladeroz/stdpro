@@ -165,7 +165,7 @@ public class BulletinAdhesion {
 
 						if(! eligiblite.contains(line.getOdr().getProductCode())) {
 							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [product code :" + line.getOdr().getProductCode() + " ]");
-							importCsv.setBulletin(OdrType.NS);
+							changeValueType(importCsv, OdrType.NS_NOT_ELI);
 						}
 
 						Calendar dRef = Calendar.getInstance();
@@ -178,24 +178,24 @@ public class BulletinAdhesion {
 							dRef.add(Calendar.DAY_OF_MONTH, 30);
 							if(dImport.after(dRef)) {
 								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODR]");
-								importCsv.setBulletin(OdrType.NS);
+								changeValueType(importCsv, OdrType.NS_ODR_HD);
 							}
 						} else if(importCsv.getOffre().equals(Offre.ODF)) {
 							dRef.add(Calendar.MONTH, 12);
 							if(dImport.before(dRef)) {
 								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date anterieure a 12 mois]");
-								importCsv.setBulletin(OdrType.NS);
+								changeValueType(importCsv, OdrType.NS_ODF_AT);
 							}
 
 							dRef.add(Calendar.MONTH, 2);
 							if(dImport.after(dRef)) {
 								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODF]");
-								importCsv.setBulletin(OdrType.NS);
+								changeValueType(importCsv, OdrType.NS_ODF_HD);
 							}
 						}
 
 						if(line.getOdr().getTransactionType().equals(TransactionType.RES.toString())) {
-							importCsv.setBulletin(OdrType.NS);
+							changeValueType(importCsv, OdrType.NS_RES);
 							line.setTraitement(importCsv);
 							venteExist = false;
 							continue;
@@ -215,6 +215,12 @@ public class BulletinAdhesion {
 					logger.warn("Le numero de contrat "+ importCsv.getNbrContractRedbox() +" n est pas dans la base");
 				}
 			}
+		}
+	}
+	
+	private static void changeValueType (ConfigOdrTraiteCsv line, OdrType type) {
+		if(!type.equals(OdrType.NV)) {
+		    line.setBulletin(type);
 		}
 	}
 
