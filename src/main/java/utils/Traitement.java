@@ -243,12 +243,34 @@ public class Traitement implements Runnable  {
 						odr.getSalesChannel(),
 						odr.getEmailAdress(), 
 						odr.getNbrContractRedbox(), 
-						traitement.getFiller().toString(), traitement.getFormulaire().toString(), traitement.getBulletin().toString(), traitement.getFacture().toString(), traitement.getRib().toString(), dateFormat.format(traitement.getDateReception())));
+						traitement.getFiller(), 
+						transfoType(traitement.getFormulaire()), 
+						transfoType(traitement.getBulletin()), 
+						transfoType(traitement.getFacture()),
+						transfoType(traitement.getRib()),
+						dateFormat.format(traitement.getDateReception())));
 			}
 		}
-
+		
 		writer.flush();
 		writer.close();
+	}
+	
+	private static String transfoType(OdrType type) {
+		switch(type) {
+			case NS_ODF_HD:
+				return OdrType.NS.toString();
+			case NS_ODR_HD:
+				return OdrType.NS.toString();
+			case NS_RES:
+				return OdrType.NS.toString();
+			case NS_ODF_AT:
+				return OdrType.NS.toString();
+			case NS_NOT_ELI:
+				return OdrType.NS.toString();
+			default:
+				return type.toString();
+		}
 	}
 	
 
@@ -260,13 +282,13 @@ public class Traitement implements Runnable  {
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), false)) { 
+			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), true)) { 
 				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
 
 				ConfigOdrTraiteCsv traitement = line.getTraitement();
 				
 				CSVService.writeLine(writer,
-						Arrays.asList(odr.getEmailAdress(), odr.getNbrContractRedbox(), traitement.getFiller().toString(), traitement.getFormulaire().toString(),
+						Arrays.asList(odr.getEmailAdress(), odr.getNbrContractRedbox(), traitement.getFiller(), traitement.getFormulaire().toString(),
 										traitement.getBulletin().toString(), traitement.getFacture().toString(), traitement.getRib().toString(), dateFormat.format(traitement.getDateReception()),
 										odr.getCustomerTitle(), odr.getClientName(),odr.getCustomerFirstName(), traitement.getOffre().toString(), montant)
 						);
