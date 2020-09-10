@@ -277,7 +277,7 @@ public class Traitement implements Runnable  {
 	public static void exportMailToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
-		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Titre client", "Nom ", "Prenom", "Offre", "Montant"));
+		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Date de traitement", "Titre client", "Nom ", "Prenom", "Offre", "Montant", "Code magasin", "Type d acte","Date operation","Date delivrance","Code prestation"));
 
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
@@ -288,10 +288,26 @@ public class Traitement implements Runnable  {
 				ConfigOdrTraiteCsv traitement = line.getTraitement();
 				
 				CSVService.writeLine(writer,
-						Arrays.asList(odr.getEmailAdress(), odr.getNbrContractRedbox(), traitement.getFiller(), traitement.getFormulaire().toString(),
-										traitement.getBulletin().toString(), traitement.getFacture().toString(), traitement.getRib().toString(), dateFormat.format(traitement.getDateReception()),
-										odr.getCustomerTitle(), odr.getClientName(),odr.getCustomerFirstName(), traitement.getOffre().toString(), montant)
-						);
+						Arrays.asList(odr.getEmailAdress(), 
+								odr.getNbrContractRedbox(), 
+								traitement.getFiller(), 
+								traitement.getFormulaire().toString(),
+								traitement.getBulletin().toString(), 
+								traitement.getFacture().toString(), 
+								traitement.getRib().toString(), 
+								dateFormat.format(traitement.getDateReception()), 
+								dateFormat.format(traitement.getDateTraitement()),
+								odr.getCustomerTitle(), 
+								odr.getClientName(),
+								odr.getCustomerFirstName(), 
+								traitement.getOffre().toString(), 
+								montant, 
+								odr.getStoreName(), 
+								odr.getTransactionType(), 
+								dateFormat.format(odr.getProductSalesDate()), 
+								dateFormat.format(odr.getWarrantySalesDate()), 
+								odr.getProductCode()
+						));
 			}
 		}
 
