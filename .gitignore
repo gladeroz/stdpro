@@ -1,3 +1,6 @@
 /target/
 /target.zip
 /std*.zip
+/pom.xml
+/.settings
+/.classpath
