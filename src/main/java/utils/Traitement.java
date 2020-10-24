@@ -244,10 +244,10 @@ public class Traitement implements Runnable  {
 						odr.getEmailAdress(), 
 						odr.getNbrContractRedbox(), 
 						traitement.getFiller(), 
-						transfoType(traitement.getFormulaire()), 
-						transfoType(traitement.getBulletin()), 
-						transfoType(traitement.getFacture()),
-						transfoType(traitement.getRib()),
+						traitement.getFormulaire().getOutput().toString(), 
+						traitement.getBulletin().getOutput().toString(), 
+						traitement.getFacture().getOutput().toString(),
+						traitement.getRib().getOutput().toString(),
 						dateFormat.format(traitement.getDateReception())));
 			}
 		}
@@ -256,24 +256,6 @@ public class Traitement implements Runnable  {
 		writer.close();
 	}
 	
-	private static String transfoType(OdrType type) {
-		switch(type) {
-			case NS_ODF_HD:
-				return OdrType.NS.toString();
-			case NS_ODR_HD:
-				return OdrType.NS.toString();
-			case NS_RES:
-				return OdrType.NS.toString();
-			case NS_ODF_AT:
-				return OdrType.NS.toString();
-			case NS_NOT_ELI:
-				return OdrType.NS.toString();
-			default:
-				return type.toString();
-		}
-	}
-	
-
 	public static void exportMailToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 

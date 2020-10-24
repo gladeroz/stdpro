@@ -24,9 +24,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import enums.OdrType;
 import enums.Offre;
 import enums.TransactionType;
+import enums.odrodf.BaType;
 import model.ConfigItem;
 import model.ConfigOdrJson;
 import model.ConfigOdrRefCsv;
@@ -42,6 +42,8 @@ import utils.Traitement;
 public class BulletinAdhesion {
 
 	private static Logger logger = Logger.getLogger(BulletinAdhesion.class);
+
+	private static int MONTHINYEAR = 12;
 
 	public static CustomConfigOdr initConfig(Collection<ConfigItem> config) {
 		CustomConfigOdr cc = new CustomConfigOdr();
@@ -66,12 +68,12 @@ public class BulletinAdhesion {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setExportcsv(item.getValue());
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOdr.INTERVALMIN.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setIntervalMin(item.getValue());
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOdr.INTERVALMAX.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setIntervalMax(item.getValue());
@@ -127,10 +129,10 @@ public class BulletinAdhesion {
 
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
-			
+
 			logger.info("Export Full du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportFullToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
-			
+
 			logger.info("Traitement pour les mails du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportMailToCsvOdr(Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + dateFormat.format(new Date())+".csv" , store, config, dateFormat);
 		}
@@ -157,20 +159,20 @@ public class BulletinAdhesion {
 				ConfigOdrJson tmpLine = null;
 
 				boolean exist = false;
-				
+
 				for (ConfigOdrJson line : store.getStore()) {
 					if(importCsv.getNbrContractRedbox().equals(line.getContrat())) {
-						
+
 						exist = true;
 
 						if(! eligiblite.contains(line.getOdr().getProductCode())) {
 							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [product code :" + line.getOdr().getProductCode() + " ]");
-							changeValueType(importCsv, OdrType.NS_NOT_ELI);
+							changeValueType(importCsv, BaType.NS_NOT_ELI);
 						}
 
 						Calendar dRef = Calendar.getInstance();
 						dRef.setTime(line.getOdr().getProductSalesDate());
-						
+
 						Calendar dImport = Calendar.getInstance();
 						dImport.setTime(importCsv.getDateReception());
 
@@ -178,24 +180,18 @@ public class BulletinAdhesion {
 							dRef.add(Calendar.DAY_OF_MONTH, 30);
 							if(dImport.after(dRef)) {
 								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODR]");
-								changeValueType(importCsv, OdrType.NS_ODR_HD);
+								changeValueType(importCsv, BaType.NS_ODR_HD);
 							}
 						} else if(importCsv.getOffre().equals(Offre.ODF)) {
-							dRef.add(Calendar.MONTH, 12);
-							if(dImport.before(dRef)) {
-								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date anterieure a 12 mois]");
-								changeValueType(importCsv, OdrType.NS_ODF_AT);
-							}
-
-							dRef.add(Calendar.MONTH, 2);
-							if(dImport.after(dRef)) {
-								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODF]");
-								changeValueType(importCsv, OdrType.NS_ODF_HD);
+							Calendar dTemp = dRef;
+							//On itere sur 5 ans
+							for(int i = 1; i <= 5; i++) {
+								intervalOdf(importCsv, dTemp, dImport, i);
 							}
 						}
 
 						if(line.getOdr().getTransactionType().equals(TransactionType.RES.toString())) {
-							changeValueType(importCsv, OdrType.NS_RES);
+							changeValueType(importCsv, BaType.NS_RES);
 							line.setTraitement(importCsv);
 							venteExist = false;
 							continue;
@@ -210,17 +206,31 @@ public class BulletinAdhesion {
 				if(venteExist) {
 					tmpLine.setTraitement(tmpTraite);
 				}
-				
+
 				if(! exist) {
 					logger.warn("Le numero de contrat "+ importCsv.getNbrContractRedbox() +" n est pas dans la base");
 				}
 			}
 		}
 	}
-	
-	private static void changeValueType (ConfigOdrTraiteCsv line, OdrType type) {
-		if(!type.equals(OdrType.NV)) {
-		    line.setBulletin(type);
+
+	private static void intervalOdf(ConfigOdrTraiteCsv importCsv, Calendar dRef, Calendar dImport, int iteration) {
+		dRef.add(Calendar.MONTH, MONTHINYEAR);
+		if(dImport.before(dRef)) {
+			logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date anterieure a "+ (MONTHINYEAR*iteration)  +" mois]");
+			changeValueType(importCsv, BaType.NS_ODF_AT);
+		}
+
+		dRef.add(Calendar.MONTH, 2);
+		if(dImport.after(dRef)) {
+			logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODF]");
+			changeValueType(importCsv, BaType.NS_ODF_HD);
+		}
+	}
+
+	private static void changeValueType (ConfigOdrTraiteCsv line, BaType type) {
+		if(!type.equals(BaType.NV)) {
+			line.setBulletin(type);
 		}
 	}
 

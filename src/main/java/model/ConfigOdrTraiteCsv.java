@@ -7,8 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import enums.OdrType;
 import enums.Offre;
+import enums.odrodf.BaType;
+import enums.odrodf.FactType;
+import enums.odrodf.FormType;
+import enums.odrodf.RibType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigOdrTraiteCsv {
@@ -16,10 +19,10 @@ public class ConfigOdrTraiteCsv {
 	private Offre offre;
 	private String nbrContractRedbox;
 	private String filler;
-	private OdrType facture;
-	private OdrType formulaire;
-	private OdrType bulletin;
-	private OdrType rib;
+	private FactType facture;
+	private FormType formulaire;
+	private BaType bulletin;
+	private RibType rib;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 	private Date dateReception;
@@ -32,10 +35,10 @@ public class ConfigOdrTraiteCsv {
 	public ConfigOdrTraiteCsv(ConfigOdrRefCsv c) {
 		this.nbrContractRedbox = c.getNbrContractRedbox();
 		this.filler = "";
-		this.formulaire = OdrType.NV;
-		this.bulletin = OdrType.NV;
-		this.facture = OdrType.NV;
-		this.rib = OdrType.S;
+		this.formulaire = FormType.NV;
+		this.bulletin = BaType.NV;
+		this.facture = FactType.NV;
+		this.rib = RibType.S;
 	}
 
 	public String getNbrContractRedbox() {
@@ -46,27 +49,27 @@ public class ConfigOdrTraiteCsv {
 		this.nbrContractRedbox = nbrContractRedbox;
 	}
 
-	public OdrType getFormulaire() {
+	public FormType getFormulaire() {
 		return formulaire;
 	}
 
-	public void setFormulaire(OdrType formulaire) {
+	public void setFormulaire(FormType formulaire) {
 		this.formulaire = formulaire;
 	}
 
-	public OdrType getBulletin() {
+	public BaType getBulletin() {
 		return bulletin;
 	}
 
-	public void setBulletin(OdrType bulletin) {
+	public void setBulletin(BaType bulletin) {
 		this.bulletin = bulletin;
 	}
 
-	public OdrType getRib() {
+	public RibType getRib() {
 		return rib;
 	}
 
-	public void setRib(OdrType rib) {
+	public void setRib(RibType rib) {
 		this.rib = rib;
 	}
 
@@ -78,11 +81,11 @@ public class ConfigOdrTraiteCsv {
 		this.dateReception = dateReception;
 	}
 
-	public OdrType getFacture() {
+	public FactType getFacture() {
 		return facture;
 	}
 
-	public void setFacture(OdrType facture) {
+	public void setFacture(FactType facture) {
 		this.facture = facture;
 	}
 
