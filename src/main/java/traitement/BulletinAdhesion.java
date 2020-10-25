@@ -43,7 +43,11 @@ public class BulletinAdhesion {
 
 	private static Logger logger = Logger.getLogger(BulletinAdhesion.class);
 
+<<<<<<< HEAD
 	private static int MAXYEARS = 5;
+=======
+	private static int MONTHINYEAR = 12;
+>>>>>>> branch 'master' of https://github.com/gladeroz/stdpro
 
 	public static CustomConfigOdr initConfig(Collection<ConfigItem> config) {
 		CustomConfigOdr cc = new CustomConfigOdr();
@@ -166,7 +170,11 @@ public class BulletinAdhesion {
 						exist = true;
 
 						if(! eligiblite.contains(line.getOdr().getProductCode())) {
+<<<<<<< HEAD
 							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [product code :" + line.getOdr().getProductCode() + "]");
+=======
+							logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [product code :" + line.getOdr().getProductCode() + " ]");
+>>>>>>> branch 'master' of https://github.com/gladeroz/stdpro
 							changeValueType(importCsv, BaType.NS_NOT_ELI);
 						}
 
@@ -183,6 +191,7 @@ public class BulletinAdhesion {
 								changeValueType(importCsv, BaType.NS_ODR_HD);
 							}
 						} else if(importCsv.getOffre().equals(Offre.ODF)) {
+<<<<<<< HEAD
 							boolean found = false;
 
 							//On itere sur 5 ans
@@ -194,6 +203,12 @@ public class BulletinAdhesion {
 							if(!found) {
 								logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [Avant Terme]");
 								changeValueType(importCsv, BaType.NS_ODF_AT);
+=======
+							Calendar dTemp = dRef;
+							//On itere sur 5 ans
+							for(int i = 1; i <= 5; i++) {
+								intervalOdf(importCsv, dTemp, dImport, i);
+>>>>>>> branch 'master' of https://github.com/gladeroz/stdpro
 							}
 						}
 
@@ -221,6 +236,7 @@ public class BulletinAdhesion {
 		}
 	}
 
+<<<<<<< HEAD
 	private static boolean intervalOdf(ConfigOdrTraiteCsv importCsv, Calendar dRef, Calendar dImport, int iteration) {
 		//SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -240,6 +256,20 @@ public class BulletinAdhesion {
 		}
 
 		return false;
+=======
+	private static void intervalOdf(ConfigOdrTraiteCsv importCsv, Calendar dRef, Calendar dImport, int iteration) {
+		dRef.add(Calendar.MONTH, MONTHINYEAR);
+		if(dImport.before(dRef)) {
+			logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date anterieure a "+ (MONTHINYEAR*iteration)  +" mois]");
+			changeValueType(importCsv, BaType.NS_ODF_AT);
+		}
+
+		dRef.add(Calendar.MONTH, 2);
+		if(dImport.after(dRef)) {
+			logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] n est pas eligible [date depassee pour le type ODF]");
+			changeValueType(importCsv, BaType.NS_ODF_HD);
+		}
+>>>>>>> branch 'master' of https://github.com/gladeroz/stdpro
 	}
 
 	private static void changeValueType (ConfigOdrTraiteCsv line, BaType type) {
