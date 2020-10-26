@@ -16,8 +16,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import enums.Job;
-import enums.OdrType;
 import enums.Offre;
+import enums.odrodf.BaType;
+import enums.odrodf.FactType;
+import enums.odrodf.FormType;
+import enums.odrodf.RibType;
 import model.ConfigCollection;
 import model.ConfigExportCSV;
 import model.ConfigOdrJson;
@@ -38,7 +41,7 @@ public class Traitement implements Runnable  {
 	private static Logger logger = Logger.getLogger(Traitement.class);
 	private static ConfigCollection config;
 	private static Job action;
-	
+
 	private static HashMap<Integer, Integer> odfPrice;
 
 	@Override
@@ -183,7 +186,7 @@ public class Traitement implements Runnable  {
 				"Client-ID","Customer Title","Client name","Customer first name","Nbr in the track","Track code type","Track name","Postal code",
 				"Code INSEE","Location","IMEI Number","Type of sale","Sales channel","E-mail adress","Nbr Contract Redbox","Filler","Formulaire",
 				"Bulletin d adhesion","Facture","RIB","Date reception"));*/
-		
+
 		CSVService.writeLine(writer, Arrays.asList("Sequence","Type SPB","Code ste","Code magasin","N vente","N ligne","Type acte",
 				"Nom magasin","Type offre","Date operation","Date delivrance",
 				"Code famille","Libelle famille","Ref prestation","Code prestation",
@@ -194,7 +197,7 @@ public class Traitement implements Runnable  {
 				"Libelle voie","Code postal","Code insee","Localite",
 				"N IMEI","Contexte","Canal","Adresse mail","N contrat redbox","Filler","Formulaire",
 				"Bulletin d adhesion","Facture","RIB","Date reception"
-		));
+				));
 
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
@@ -251,11 +254,11 @@ public class Traitement implements Runnable  {
 						dateFormat.format(traitement.getDateReception())));
 			}
 		}
-		
+
 		writer.flush();
 		writer.close();
 	}
-	
+
 	public static void exportMailToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
@@ -268,7 +271,7 @@ public class Traitement implements Runnable  {
 				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
 
 				ConfigOdrTraiteCsv traitement = line.getTraitement();
-				
+
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getEmailAdress(), 
 								odr.getNbrContractRedbox(), 
@@ -289,13 +292,13 @@ public class Traitement implements Runnable  {
 								dateFormat.format(odr.getProductSalesDate()), 
 								dateFormat.format(odr.getWarrantySalesDate()), 
 								odr.getProductCode()
-						));
+								));
 			}
 		}
 
 		writer.flush();
 		writer.close();
-		
+
 	}
 
 	private static boolean valideDateEligible(CustomConfigOdr config, ConfigOdrJson line, DateFormat dateFormat, boolean full) throws ParseException {
@@ -307,7 +310,7 @@ public class Traitement implements Runnable  {
 		boolean maxExist = Traitement.variableExist(config.getIntervalMax());
 
 		ConfigOdrTraiteCsv trait = line.getTraitement();
-		
+
 		if(trait == null) return false;
 		if(StringUtils.isEmpty(line.getOdr().getProductCode())) return false;
 
@@ -339,10 +342,10 @@ public class Traitement implements Runnable  {
 			return false;
 		}
 
-		if(!full && (trait.getBulletin().equals(OdrType.S) 
-				&& trait.getFacture().equals(OdrType.S) 
-				&& trait.getFormulaire().equals(OdrType.S) 
-				&& trait.getRib().equals(OdrType.S))
+		if(!full && (trait.getBulletin().equals(BaType.S) 
+				&& trait.getFacture().equals(FactType.S) 
+				&& trait.getFormulaire().equals(FormType.S) 
+				&& trait.getRib().equals(RibType.S))
 				) {
 			return true;
 		}
@@ -366,7 +369,7 @@ public class Traitement implements Runnable  {
 			odfPrice.put(24032, 40);
 			odfPrice.put(24053, 60);
 			odfPrice.put(24054, 80);
-			
+
 			odfPrice.put(22368, 30);
 			odfPrice.put(22370, 40);
 			odfPrice.put(22372, 60);
@@ -375,17 +378,17 @@ public class Traitement implements Runnable  {
 			odfPrice.put(22377, 40);
 			odfPrice.put(22379, 60);
 			odfPrice.put(22380, 80);
-			
+
 			odfPrice.put(18274, 30);
 			odfPrice.put(18275, 30);
 			odfPrice.put(18276, 30);
 			odfPrice.put(18277, 30);	
-			
+
 			odfPrice.put(22382, 60);
 			odfPrice.put(22385, 60);
 			odfPrice.put(22384, 60);
 			odfPrice.put(22387, 60);
-			
+
 			odfPrice.put(24064, 60);
 			odfPrice.put(24066, 60);
 			odfPrice.put(24065, 60);
