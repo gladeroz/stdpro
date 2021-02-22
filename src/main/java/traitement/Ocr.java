@@ -41,7 +41,7 @@ public class Ocr {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setSubSearch(item.getValue());
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOcr.Y.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setY(item.getValue());
@@ -66,12 +66,12 @@ public class Ocr {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setRename(new Boolean(item.getValue()));
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOcr.OCR.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setOcr(new Boolean(item.getValue()));
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setTess4j(item.getValue());
@@ -100,26 +100,31 @@ public class Ocr {
 	public static void job(CustomConfigOcr config) throws Exception {
 		long startTime = System.nanoTime();
 
-		ocr(config);
+		ocr(config, config.getPath(), "");
 
 		long endTime = System.nanoTime();
 
 		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
-	private static void ocr(CustomConfigOcr config) throws Exception, UnsatisfiedLinkError {
-		File f = new File(config.getPath()); 
-		File[] subFiles = f.listFiles();
+	private static void ocr(CustomConfigOcr config, String parentDir, String currentDir) throws Exception, UnsatisfiedLinkError {
+		String dirToList = Traitement.withSlash(parentDir);
+		if (!currentDir.equals("")) {
+			dirToList += Traitement.withSlash(currentDir);
+		}
 
+		File f = new File(dirToList); 
+		File[] subFiles = f.listFiles();
 		if (subFiles != null && subFiles.length > 0) {
 			for (File aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".") || currentFileName.equals("..")) {
 					continue;
 				}
-
-				if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
-					String NEWFILE = Traitement.withSlash(config.getPath()) + currentFileName;
+				if (aFile.isDirectory()) {
+					ocr(config, dirToList, currentFileName);
+				}else  if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
+					String NEWFILE = Traitement.withSlash(dirToList) + currentFileName;
 					logger.info("[Fichier en cours : " + NEWFILE + "]");
 
 					String text = PdfService.getText(aFile, config.getX(), config.getY(), config.getWidth(), config.getHeight(), config.getOcr(), config.getTess4j());
@@ -142,8 +147,9 @@ public class Ocr {
 								if (Boolean.TRUE.equals(config.getRename())) {
 									Path source = Paths.get(NEWFILE);
 									String output = resultat + ".pdf";
-									Files.move(source, source.resolveSibling(output));
-									logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
+									Path cible = searchIfExist(output, 0, resultat, source);
+									Files.move(source, cible);
+									logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ cible + ")");
 								}
 							}else {
 								matcher = RegexService.get(config.getSubSearch(), resultat);
@@ -154,8 +160,9 @@ public class Ocr {
 									if (Boolean.TRUE.equals(config.getRename())) {
 										Path source = Paths.get(NEWFILE);
 										String output = resultat + ".pdf";
-										Files.move(source, source.resolveSibling(output));
-										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ output+ ")");
+										Path cible = searchIfExist(output, 0, resultat, source);
+										Files.move(source, cible);
+										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ cible + ")");
 									}
 								} else {
 									logger.warn("La sous-chaine n'a pas ete trouvee");
@@ -168,5 +175,13 @@ public class Ocr {
 				}
 			}
 		}
+	}
+
+	private static Path searchIfExist(String output, int number, final String resultat, final Path source) {
+		while(source.resolveSibling(output).toFile().exists()) {
+			output = resultat + "("+ (number++) +").pdf";
+		}
+
+		return source.resolveSibling(output);
 	}
 }
