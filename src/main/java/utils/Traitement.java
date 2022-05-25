@@ -361,6 +361,11 @@ public class Traitement implements Runnable  {
 		if(odfPrice == null) {
 			odfPrice = new HashMap<Integer, Integer>();
 
+			odfPrice.put(25704, 30);
+			odfPrice.put(25706, 30);
+			odfPrice.put(25708, 30);
+			odfPrice.put(25709, 30);
+			
 			odfPrice.put(24021, 30);
 			odfPrice.put(24023, 40);
 			odfPrice.put(24024, 60);
