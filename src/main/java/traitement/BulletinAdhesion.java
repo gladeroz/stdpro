@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -34,6 +33,7 @@ import model.ConfigOdrTraiteCsv;
 import model.ConfigStore;
 import model.ConfigStoreTraite;
 import traitement.config.CustomConfigOdr;
+import traitement.config.DatabaseOdr;
 import traitement.enums.CustomEnumOdr;
 import utils.CSVService;
 import utils.JsonService;
@@ -112,13 +112,16 @@ public class BulletinAdhesion {
 	private static void odr(CustomConfigOdr config) throws Exception, UnsatisfiedLinkError {
 
 		File json = Traitement.variableExist(config.getReferential()) ? new File(config.getReferential()) : prepareCsvToJsonRef() ;
+
 		ConfigStore store = JsonService.getInstance().readValue(json, ConfigStore.class);
+
+		if(DatabaseOdr.getOdrCount() == 0) DatabaseOdr.initOdrDatabase(store, logger);
 
 		majDelta(config, store);
 
 		majDocTraite(config, store);
 
-		updateJsonRef(json, store);
+		//updateJsonRef(json, store);
 
 		exportToCsv(config, store);
 	}
@@ -144,14 +147,7 @@ public class BulletinAdhesion {
 			logger.info("Mise a jour de la BDD avec les documents traites");
 			ConfigStoreTraite traitement = JsonService.getInstance().readValue(prepareCsvToJsonTraite(config.getDocTraite()), ConfigStoreTraite.class);
 
-			List<String> eligiblite = new ArrayList<String>(Arrays.asList(
-					"24021","24023","24024","24026","24028",
-					"24032","24053","24054","22368","22370",
-					"22372","22374","22375","22377","22379",
-					"22380","18274","18275","18276","18277",
-					"22382","22385","22384","22387","24064",
-					"24066","24065","24067"	
-					));
+			List<String> eligiblite = DatabaseOdr.getAllCodeEligible();
 
 			for(ConfigOdrTraiteCsv importCsv : traitement.getStore()) {
 				boolean venteExist = false;
@@ -283,7 +279,8 @@ public class BulletinAdhesion {
 					logger.warn(msg);
 				}
 
-				store.getStore().add(importCsv);
+				//store.getStore().add(importCsv);
+				DatabaseOdr.insertRecordOdr(importCsv);
 			}
 		}
 	}
@@ -337,7 +334,6 @@ public class BulletinAdhesion {
 
 	private static File prepareCsvToJsonRef(MappingIterator<ConfigOdrRefCsv> it, boolean print) throws UnsatisfiedLinkError, Exception {
 		ConfigStore store = new ConfigStore();
-		//store.setStore(it.readAll());
 
 		store.setStore(new ArrayList<ConfigOdrJson>());
 

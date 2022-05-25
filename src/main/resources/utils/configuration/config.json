@@ -296,7 +296,7 @@
 			],
 			"type": "PATH",
 			"value": "",
-			"mandatory": false
+			"mandatory": true
 		},
 		{
 			"configName": "delta",
