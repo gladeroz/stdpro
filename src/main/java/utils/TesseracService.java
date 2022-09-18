@@ -2,6 +2,8 @@ package utils;
 
 import java.io.File;
 
+import app.traitement.Traitement;
+
 //import org.apache.log4j.Logger;
 
 import net.sourceforge.tess4j.Tesseract;

@@ -17,9 +17,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import app.model.ConfigCollection;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.ConfigCollection;
 
 public class Yaml {
 

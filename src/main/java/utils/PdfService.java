@@ -27,7 +27,8 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.multi.GenericMultipleBarcodeReader;
 import com.google.zxing.multi.MultipleBarcodeReader;
 
-import model.BarcodeInfo;
+import app.model.BarcodeInfo;
+import app.traitement.Traitement;
 import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.PdfUtilities;
 
