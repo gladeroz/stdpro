@@ -288,6 +288,14 @@
 	],
 	"configOdr": [
 		{
+			"configName": "migration",
+			"id": 59,
+			"label": "Migrer le json",
+			"type": "CHECKBOX",
+			"value": "",
+			"mandatory": false
+		},
+		{
 			"configName": "referential",
 			"id": 60,
 			"label": "Base de donnees initiale",
@@ -296,7 +304,7 @@
 			],
 			"type": "PATH",
 			"value": "",
-			"mandatory": true
+			"mandatory": false
 		},
 		{
 			"configName": "delta",

@@ -1,3 +1,0 @@
-url: jdbc:postgresql://localhost:5432/odr?currentSchema=public
-user: postgres
-password: root
