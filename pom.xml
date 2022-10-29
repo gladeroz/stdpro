@@ -20,9 +20,10 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<slf4j.version>1.7.12</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
-		<jackson.version>2.11.0</jackson.version>
+		<slf4j.version>2.0.3</slf4j.version>
+		<log4j.version>2.19.0</log4j.version>
+		<jackson.version>2.13.4</jackson.version>
+		<javafx.version>19</javafx.version>
 	</properties>
 
 	<build>
@@ -31,22 +32,40 @@
 
 		<plugins>
 			<plugin>
-				<groupId>com.zenjava</groupId>
-				<artifactId>javafx-maven-plugin</artifactId>
-				<version>8.8.3</version>
-				<configuration>
-					<mainClass>controlleur.MainApp</mainClass>
-				</configuration>
+			    <groupId>org.openjfx</groupId>
+			    <artifactId>javafx-maven-plugin</artifactId>
+			    <version>0.0.8</version>
+			    <configuration>
+			        <mainClass>controlleur.MainApp</mainClass>
+			    </configuration>
+			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-assembly-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <phase>package</phase>
+			            <goals>
+			                <goal>single</goal>
+			            </goals>
+			            <configuration>
+			                <archive>
+			                <manifest>
+			                    <mainClass>controlleur.MainApp</mainClass>
+			                </manifest>
+			                </archive>
+			                <descriptorRefs>
+			                    <descriptorRef>jar-with-dependencies</descriptorRef>
+			                </descriptorRefs>
+			            </configuration>
+			        </execution>
+			    </executions>
 			</plugin>
 		</plugins>
 	</build>
 
 
 	<dependencies>
-
-		<!-- https://mvnrepository.com/artifact/com.jayway.restassured/rest-assured 
-			<dependency> <groupId>com.jayway.restassured</groupId> <artifactId>rest-assured</artifactId> 
-			<version>2.9.0</version> </dependency> -->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.camel/camel-barcode -->
 		<dependency>
@@ -139,15 +158,18 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>javafx</groupId>
-			<artifactId>jfxrt</artifactId>
-			<version>1.8.0_202</version>
-			<scope>system</scope>
-			<systemPath>C:\Program Files\Java\jdk1.8.0_202\jre\lib\ext\jfxrt.jar</systemPath>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-controls</artifactId>
+		    <version>${javafx.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-fxml</artifactId>
+		    <version>${javafx.version}</version>
 		</dependency>
 
 	</dependencies>
-
 </project>
