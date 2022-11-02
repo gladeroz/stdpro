@@ -24,7 +24,6 @@ import app.model.ConfigOdrJson;
 import app.model.ConfigOdrRefCsv;
 import app.model.ConfigOdrTraiteCsv;
 import app.model.ConfigStore;
-import app.repository.CsvRepository;
 import app.traitement.config.CustomConfigOdr;
 import enums.Job;
 import enums.Offre;
@@ -178,10 +177,10 @@ public class Traitement implements Runnable {
 	public static void exportFullToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
-		/*CSVService.writeLine(writer, Arrays.asList("Sequence number","Record Type","Subsidiary code","Store Code","Purchase Order Number",
+		/*CSVService.writeLine(writer, Arrays.asList("Sequence number","Record Type","Subsidiary code","Storeï¿½Code","Purchase Order Number",
 				"Line number","Transaction Type","Store Name","Payment Type","Product Sales Date","Warranty Sales Date","Family Insurance Code",
-				"Family Insurance Label","Name of service","Product Code","Quantity sold","PrixUnit -provision","Family-product code","Family-product label",
-				"Product Brand Code","Brand name product","Product reference","Codic","Product Qty","PrixUnit -Product","Product-prixtotal",
+				"Family Insurance Label","Name of service","Product Code","Quantity sold","PrixUnitï¿½-provision","Family-product code","Family-product label",
+				"Product Brand Code","Brand name product","Product reference","Codic","Product Qty","PrixUnitï¿½-Product","Product-prixtotal",
 				"Client-ID","Customer Title","Client name","Customer first name","Nbr in the track","Track code type","Track name","Postal code",
 				"Code INSEE","Location","IMEI Number","Type of sale","Sales channel","E-mail adress","Nbr Contract Redbox","Filler","Formulaire",
 				"Bulletin d adhesion","Facture","RIB","Date reception"));*/
@@ -396,17 +395,15 @@ public class Traitement implements Runnable {
 		return odfPrice;
 	}
 
-	public static void exportToCsvOdr(CsvRepository csvRepository, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
+	public static void exportToCsvOdr(TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("NumeroContratRedbox", "DateEffet", "Nom", "Prenom", "Adresse", "CodePostal", "Ville", "Ctry", "IBAN", "Bic", "Montant"));
 
-		for(CsvSql odr : csvRepository.findAll() ) {
-			TraitementSql traitement = odr.getTraitement();
-
-			if(valideDateEligible(traitement, config, odr, new SimpleDateFormat("yyyy-MM-dd"), false)) { 
+		for(TraitementSql traitement : traitements) {
+			CsvSql odr = traitement.getCsv();
+			if(valideDateEligible(traitement, config, odr, false)) { 
 				String montant = traitement.getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
-
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getOdrPk().getNbrContractRedbox(), dateFormat.format(odr.getProductSalesDate()),	odr.getClientName(),odr.getCustomerFirstName(),
 								odr.getNbrInTheTrack() + " " + odr.getTrackCodeType() + " " + odr.getTrackName(),
@@ -419,7 +416,7 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportFullToCsvOdr(CsvRepository csvRepository, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws NumberFormatException, IOException, ParseException {
+	public static void exportFullToCsvOdr(TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws NumberFormatException, IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("Sequence","Type SPB","Code ste","Code magasin","N vente","N ligne","Type acte",
@@ -434,10 +431,10 @@ public class Traitement implements Runnable {
 				"Bulletin d adhesion","Facture","RIB","Date reception"
 				));
 
-		for(CsvSql odr : csvRepository.findAll() ) {
-			TraitementSql traitement = odr.getTraitement();
+		for(TraitementSql traitement : traitements) {
+			CsvSql odr = traitement.getCsv();
 
-			if(valideDateEligible(traitement, config, odr, new SimpleDateFormat("yyyy-MM-dd"), true)) {
+			if(valideDateEligible(traitement, config, odr, true)) {
 				CSVService.writeLine(writer, Arrays.asList(
 						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())), 
 						Integer.toString((Integer.parseInt(odr.getRecordType()))), 
@@ -493,15 +490,15 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportMailToCsvOdr(CsvRepository csvRepository, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
+	public static void exportMailToCsvOdr(TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Date de traitement", "Titre client", "Nom ", "Prenom", "Offre", "Montant", "Code magasin", "Type d acte","Date operation","Date delivrance","Code prestation"));
 
-		for(CsvSql odr : csvRepository.findAll() ) {
-			TraitementSql traitement = odr.getTraitement();
+		for(TraitementSql traitement : traitements) {
+			CsvSql odr = traitement.getCsv();
 
-			if(valideDateEligible(traitement, config, odr, new SimpleDateFormat("yyyy-MM-dd"), true)) { 
+			if(valideDateEligible(traitement, config, odr, true)) { 
 
 				String montant = traitement.getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
 
@@ -534,35 +531,9 @@ public class Traitement implements Runnable {
 
 	}
 
-	private static boolean valideDateEligible(TraitementSql trait, CustomConfigOdr config, CsvSql line, SimpleDateFormat dateFormat, boolean full) throws ParseException {
-		Calendar cInterval = Calendar.getInstance();
-		Calendar cCurrent = Calendar.getInstance();
-
-		boolean minExist = Traitement.variableExist(config.getIntervalMin());
-		boolean maxExist = Traitement.variableExist(config.getIntervalMax());
-
+	private static boolean valideDateEligible(TraitementSql trait, CustomConfigOdr config, CsvSql line, boolean full) throws ParseException {
 		if(trait == null) return false;
 		if(StringUtils.isEmpty(line.getProductCode())) return false;
-
-		boolean dateTraitement = trait.getDateTraitement() != null;
-
-		if(minExist && dateTraitement) {
-			cInterval.setTime(dateFormat.parse(config.getIntervalMin()));
-			cCurrent.setTime(trait.getDateTraitement());
-
-			if(cCurrent.before(cInterval)) {
-				return false;
-			}
-		}
-
-		if(maxExist && dateTraitement) {
-			cInterval.setTime(dateFormat.parse(config.getIntervalMax()));
-			cCurrent.setTime(trait.getDateTraitement());
-
-			if(cCurrent.after(cInterval)) {
-				return false;
-			}
-		}
 
 		if(!full && (trait == null 
 				|| trait.getBulletin() == null 

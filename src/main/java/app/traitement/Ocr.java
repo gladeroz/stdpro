@@ -155,7 +155,7 @@ public class Ocr {
 
 								if (matcher.find()) {
 									resultat = matcher.group();
-									logger.info("Le text (" + resultat + ") correspond à la sous recherche");
+									logger.info("Le text (" + resultat + ") correspond a la sous recherche");
 									if (Boolean.TRUE.equals(config.getRename())) {
 										Path source = Paths.get(NEWFILE);
 										String output = resultat + ".pdf";

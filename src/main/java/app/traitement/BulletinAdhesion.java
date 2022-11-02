@@ -30,7 +30,6 @@ import app.model.ConfigOdrJson;
 import app.model.ConfigOdrRefCsv;
 import app.model.ConfigOdrTraiteCsv;
 import app.model.ConfigStore;
-import app.model.ConfigStoreTraite;
 import app.repository.CodeEligibleRepository;
 import app.repository.CsvRepository;
 import app.repository.TraitementRepository;
@@ -136,7 +135,7 @@ public class BulletinAdhesion {
 			File json = new File(config.getReferential());
 			ConfigStore store = JsonService.getInstance().readValue(json, ConfigStore.class);
 
-			/** Ajout des données dans la table traitement**/
+			/** Ajout des donnï¿½es dans la table traitement**/
 			logger.info("Ajout des donnees dans la base de donnees");
 			for (ConfigOdrJson line : store.getStore()) {
 				CsvSql c = csvRepository.findByOdrPk(new OdrPk(line.getContrat(), line.getOdr().getTransactionType()));
@@ -170,16 +169,29 @@ public class BulletinAdhesion {
 
 	private void exportToCsv(TraitementRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
 		if(Traitement.variableExist(config.getExportcsv())) {
-			DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+			DateFormat exportFormat = new SimpleDateFormat("yyyyMMdd");
+			DateFormat varFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+			boolean minExist = Traitement.variableExist(config.getIntervalMin());
+			boolean maxExist = Traitement.variableExist(config.getIntervalMax());
+
+			TraitementSql[] odrs = null;
+			if(minExist && maxExist) {
+				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqualAndDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMin()), varFormat.parse(config.getIntervalMax()));
+			}else if(minExist) {
+				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqual(varFormat.parse(config.getIntervalMin()));
+			}else{
+				odrs  = traitementRepository.findAllByDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMax()));
+			}
 
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportToCsvOdr(csvRepository, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + dateFormat.format(new Date())+".csv" , config, dateFormat);
+			Traitement.exportToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 
 			logger.info("Export Full du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportFullToCsvOdr(csvRepository, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + dateFormat.format(new Date())+".csv" , config, dateFormat);
+			Traitement.exportFullToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 
 			logger.info("Traitement pour les mails du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportMailToCsvOdr(csvRepository, Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + dateFormat.format(new Date())+".csv" , config, dateFormat);
+			Traitement.exportMailToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 		}
 	}
 
@@ -199,9 +211,9 @@ public class BulletinAdhesion {
 			while(traitement.hasNext()) {
 				ConfigOdrTraiteCsv importCsv = traitement.next();
 				if(importCsv.getNbrContractRedbox().isEmpty()) continue;
-				
+
 				logger.info("Import du numero de contrat traite : {"+ importCsv.getNbrContractRedbox()+"}");
-				
+
 				CsvSql itemVte = csvRepository.findByOdrPk(new OdrPk(importCsv.getNbrContractRedbox(), TransactionType.VTE.toString()));
 				CsvSql itemRes = csvRepository.findByOdrPk(new OdrPk(importCsv.getNbrContractRedbox(), TransactionType.RES.toString()));
 
@@ -286,11 +298,11 @@ public class BulletinAdhesion {
 
 			logger.info("Mise a jour de la BDD avec un delta");
 			MappingIterator<ConfigOdrRefCsv> delta = CSVService.getOdrdata(config.getDelta(), false, ConfigOdrRefCsv.class);
-			
+
 			while(delta.hasNext()) {
 				ConfigOdrRefCsv odrDelta = delta.next();
 				if(odrDelta.getNbrContractRedbox().isEmpty()) continue;
-				
+
 				logger.info("Import du numero de contrat en delta : {"+ odrDelta.getNbrContractRedbox()+"}");
 
 				CsvSql c = csvRepository.findByOdrPk(new OdrPk(odrDelta.getNbrContractRedbox(), odrDelta.getTransactionType()));

@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -32,6 +33,8 @@ public class TraitementSql implements Serializable {
 	private Date dateTraitement;
 
 	@OneToOne
+	@JoinColumn(name="nbrContractRedbox", referencedColumnName="nbrContractRedbox")
+	@JoinColumn(name="transactionType", referencedColumnName="transactionType")
 	private CsvSql csv;
 
 	public TraitementSql() {}
@@ -113,5 +116,21 @@ public class TraitementSql implements Serializable {
 	}
 	public void setDateTraitement(Date dateTraitement) {
 		this.dateTraitement = dateTraitement;
+	}
+
+	public CsvSql getCsv() {
+		return csv;
+	}
+
+	public void setCsv(CsvSql csv) {
+		this.csv = csv;
+	}
+
+	public OdrPk getOdrPk() {
+		return odrPk;
+	}
+
+	public void setOdrPk(OdrPk odrPk) {
+		this.odrPk = odrPk;
 	}
 }
