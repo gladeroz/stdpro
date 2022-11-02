@@ -106,7 +106,7 @@ public class SendMail {
 		replymessage.setFrom(fromEmailAddress);
 		replymessage.getToRecipients().add(config.getMailDestinataire());
 		replymessage.setSubject(pjName);
-		replymessage.setBody(new MessageBody("<p>Bonne réception</p><p>KRISTINA</p>"));
+		replymessage.setBody(new MessageBody("<p>Bonne reception</p><p>KRISTINA</p>"));
 		replymessage.getAttachments().addFileAttachment(pjPath);
 		replymessage.send();
 	}

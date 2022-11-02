@@ -2,14 +2,12 @@ package app.entity.pk;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Id;
 
 @Embeddable
 public class OdrPk implements Serializable {
-	protected String nbrContractRedbox;
-	protected String transactionType;
+	private String nbrContractRedbox;
+	private String transactionType;
 
 	public OdrPk() {}
 
@@ -18,8 +16,6 @@ public class OdrPk implements Serializable {
 		this.transactionType = transactionType;
 	}
 
-	@Id
-	@Column(name = "NBR_CONTRACT_REDBOX", nullable = false)
 	public String getNbrContractRedbox() {
 		return nbrContractRedbox;
 	}
@@ -27,8 +23,6 @@ public class OdrPk implements Serializable {
 		this.nbrContractRedbox = nbrContractRedbox;
 	}
 
-	@Id
-	@Column(name = "TRANSACTION_TYPE", nullable = false)
 	public String getTransactionType() {
 		return transactionType;
 	}

@@ -10,9 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import app.entity.pk.OdrPk;
 import app.model.ConfigOdrRefCsv;
 
@@ -64,7 +61,7 @@ public class CsvSql implements Serializable {
 	private String salesChannel;
 	private String emailAdress;
 
-	@OneToOne(optional = true, cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "csv", optional = true, cascade = CascadeType.ALL)
 	private TraitementSql traitement;
 
 	public CsvSql() {}
@@ -464,17 +461,19 @@ public class CsvSql implements Serializable {
 		this.emailAdress = emailAdress;
 	}
 
-	public OdrPk getOdrPk() {
-		return odrPk;
-	}
-	public void setOdrPk(OdrPk odrPk) {
-		this.odrPk = odrPk;
-	}
-
 	public TraitementSql getTraitement() {
 		return traitement;
 	}
+
 	public void setTraitement(TraitementSql traitement) {
 		this.traitement = traitement;
+	}
+
+	public OdrPk getOdrPk() {
+		return odrPk;
+	}
+
+	public void setOdrPk(OdrPk odrPk) {
+		this.odrPk = odrPk;
 	}
 }
