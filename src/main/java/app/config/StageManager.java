@@ -3,22 +3,15 @@ package app.config;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import org.slf4j.Logger;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import app.SpringFXMLLoader;
-import app.model.ConfigCollection;
 import enums.AreaPosition;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import utils.Yaml;
 
 /**
  * Manages switching Scenes on the Primary Stage
@@ -34,14 +27,14 @@ public class StageManager {
 		this.springFXMLLoader = springFXMLLoader;
 		this.primaryStage = stage;
 	}
-	
-    public void initScene() throws IOException {
-    	rootLayout = springFXMLLoader.loadBorderPane("fxml/RootLayout.fxml", primaryStage);
-    	springFXMLLoader.loadAnchorPane(rootLayout, "fxml/AffichageLayout.fxml", AreaPosition.CENTER);
-        show(rootLayout, "STD Pro");
-    }
-    
-    private void show(final Parent rootnode, String title) {
+
+	public void initScene() throws IOException {
+		rootLayout = springFXMLLoader.loadBorderPane("fxml/RootLayout.fxml", primaryStage);
+		springFXMLLoader.loadAnchorPane(rootLayout, "fxml/AffichageLayout.fxml", AreaPosition.CENTER);
+		show(rootLayout, "STD Pro");
+	}
+
+	private void show(final Parent rootnode, String title) {
 		// Show the scene containing the root layout.
 		primaryStage.setScene(new Scene(rootLayout));
 		primaryStage.show();
@@ -49,7 +42,7 @@ public class StageManager {
 		primaryStage.setResizable(Boolean.TRUE);
 		primaryStage.setMinWidth(1280.0);
 		primaryStage.setMinHeight(800.0);
-    }
+	}
 
 	public SpringFXMLLoader getSpringFXMLLoader() {
 		return springFXMLLoader;
