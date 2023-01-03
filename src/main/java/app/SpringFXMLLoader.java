@@ -1,23 +1,20 @@
 package app;
 
 import java.io.IOException;
-import java.util.ResourceBundle;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import utils.Yaml;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import app.controller.ConfigurationController;
 import app.controller.MainController;
 import app.model.ConfigCollection;
 import enums.AreaPosition;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import utils.Yaml;
 
 /**
  * Will load the FXML hierarchy as specified in the load method and register

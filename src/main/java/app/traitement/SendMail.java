@@ -7,18 +7,38 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.mailjet.client.transactional.Attachment;
+import com.mailjet.client.transactional.SendContact;
+import com.mailjet.client.transactional.SendEmailsRequest;
+import com.mailjet.client.transactional.TransactionalEmail;
 
 import app.model.ConfigItem;
 import app.traitement.config.CustomConfigSendMail;
 import app.traitement.enums.CustomEnumSendMail;
 import enums.Extension;
-import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
-import microsoft.exchange.webservices.data.property.complex.MessageBody;
-import utils.MailService;
+import utils.MailJetService;
 
+@Component
 public class SendMail {
 	private static Logger logger = Logger.getLogger(SendMail.class);
+
+	private static final String HTML_PART  = "<p>Bonne reception</p><p>KRISTINA</p>";
+
+	private static String API_KEY_STATIC;
+	private static String API_SECRET_KEY_STATIC;
+
+	@Value("${stdpro.mail.api-key}")
+	public void setApiKeyStatic(String name){
+		API_KEY_STATIC = name;
+	}
+
+	@Value("${stdpro.mail.api-secret-key}")
+	public void setApiSecretKeyStatic(String name){
+		API_SECRET_KEY_STATIC = name;
+	}
 
 	public static CustomConfigSendMail initConfig(Collection<ConfigItem> config) {
 		CustomConfigSendMail cc = new CustomConfigSendMail();
@@ -37,11 +57,6 @@ public class SendMail {
 			if(item.getConfigName().equals(CustomEnumSendMail.MAIL_EMETTEUR.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setMailEmetteur(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumSendMail.PASS_EMETTEUR.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
-				cc.setPassEmetteur(item.getValue());
 			}
 		}
 
@@ -75,7 +90,8 @@ public class SendMail {
 	}
 
 	private static void sendPdf(CustomConfigSendMail config) throws URISyntaxException, Exception {
-		MailService service = new MailService(config.getMailEmetteur(), config.getPassEmetteur());
+		//MailService service = new MailService(config.getMailEmetteur(), config.getPassEmetteur());
+		final MailJetService client = new MailJetService(API_KEY_STATIC, API_SECRET_KEY_STATIC);
 
 		File f = new File(config.getPath()); 
 		File[] subFiles = f.listFiles();
@@ -91,7 +107,8 @@ public class SendMail {
 					String currentPathPj = Traitement.withSlash(config.getPath()) + currentFileName;
 					logger.info("[Fichier en cours : " + currentPathPj + "]");
 
-					sendMail(config, service, currentFileName, currentPathPj);
+					//sendMail(config, service, currentFileName, currentPathPj);
+					sendMail(config, currentFileName, currentPathPj, client);
 
 					logger.info("[Mail envoye : [" + currentPathPj + "]["+ config.getMailEmetteur() +"]["+ config.getMailDestinataire() +"]]");
 				}
@@ -99,16 +116,23 @@ public class SendMail {
 		}
 	}
 
+	private static void sendMail(CustomConfigSendMail config, String pjName, String pjPath, MailJetService client) throws URISyntaxException, Exception {
+		final TransactionalEmail message = TransactionalEmail
+				.builder()
+				.to(new SendContact(config.getMailDestinataire()))
+				.from(new SendContact(config.getMailEmetteur()))
+				.htmlPart(HTML_PART)
+				.subject(pjName)
+				.attachment(Attachment.fromFile(pjPath))
+				.build();
 
-	private static void sendMail(CustomConfigSendMail config, MailService service, String pjName, String pjPath) throws URISyntaxException, Exception {
-		EmailMessage replymessage = new EmailMessage(service);
-		EmailAddress fromEmailAddress = new EmailAddress(config.getMailEmetteur());
-		replymessage.setFrom(fromEmailAddress);
-		replymessage.getToRecipients().add(config.getMailDestinataire());
-		replymessage.setSubject(pjName);
-		replymessage.setBody(new MessageBody("<p>Bonne reception</p><p>KRISTINA</p>"));
-		replymessage.getAttachments().addFileAttachment(pjPath);
-		replymessage.send();
+		SendEmailsRequest request = SendEmailsRequest
+				.builder()
+				.message(message) // you can add up to 50 messages per request
+				.build();
+
+		request.sendWith(client);
+		//SendEmailsResponse response = request.sendWith(client);
+		//logger.info(response.getMessages()[0]);
 	}
-
 }

@@ -3,8 +3,7 @@ package app.traitement.enums;
 public enum CustomEnumSendMail {
 	PATH ("path"),
 	MAIL_EMETTEUR ("mailEmetteur"),
-	MAIL_DESTINATAIRE ("mailDestinataire"),
-	PASS_EMETTEUR ("passEmetteur");
+	MAIL_DESTINATAIRE ("mailDestinataire");
 	
 	private String value;
 
