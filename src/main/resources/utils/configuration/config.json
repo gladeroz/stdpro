@@ -244,14 +244,6 @@
 			"type": "STRING",
 			"value": "",
 			"mandatory": true
-		},
-		{
-			"configName": "passEmetteur",
-			"id": 43,
-			"label": "Mot de passe emetteur",
-			"type": "PASSWORD",
-			"value": "",
-			"mandatory": true
 		}
 	],
 	"configCodeBarre": [

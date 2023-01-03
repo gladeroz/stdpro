@@ -146,8 +146,17 @@ public class BulletinAdhesion {
 					if(line.getTraitement().getNbrContractRedbox() != null) {
 						c.setTraitement(new TraitementSql(line.getTraitement(), line.getOdr().getTransactionType()));
 					}
-
 					csvRepository.save(c);
+				} else if (c.getTraitement() != null) {
+					Date lineDate = line.getTraitement().getDateTraitement();
+					Date storeDate = c.getTraitement().getDateTraitement();
+
+					if(!lineDate.equals(storeDate)) {
+						Date d = lineDate.after(storeDate) ? lineDate : storeDate;
+						c.getTraitement().setDateTraitement(d);
+						logger.info("[Mise a jour de la date de traitement][" + line.getOdr().getNbrContractRedbox() + "[" + storeDate + "]] -> " + d);
+						csvRepository.save(c);
+					}
 				}
 			}
 		}

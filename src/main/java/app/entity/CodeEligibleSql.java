@@ -11,13 +11,13 @@ import javax.persistence.Table;
 @Table(name = "CODE_ELIGIBLE")
 public class CodeEligibleSql implements Serializable {
 	private String codeEligible;
-	
+
 	public CodeEligibleSql() {}
-	
+
 	public CodeEligibleSql(String codeEligible) {
 		this.codeEligible = codeEligible;
 	}
-	
+
 	@Id
 	@Column(name = "CODE_ELIGIBLE", nullable = false)
 	public String getCodeEligible() {
