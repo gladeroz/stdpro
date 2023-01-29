@@ -32,6 +32,7 @@ import enums.odrodf.FactType;
 import enums.odrodf.FormType;
 import enums.odrodf.RibType;
 import utils.CSVService;
+import utils.DateService;
 
 @Component
 public class Traitement implements Runnable {
@@ -159,7 +160,7 @@ public class Traitement implements Runnable {
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), false)) { 
+			if(valideDateEligible(config, line, DateService.getDateFormat(), false)) { 
 				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
 
 				CSVService.writeLine(writer,
@@ -201,7 +202,7 @@ public class Traitement implements Runnable {
 			ConfigOdrRefCsv odr = line.getOdr();
 			ConfigOdrTraiteCsv traitement = line.getTraitement();
 
-			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), true)) {
+			if(valideDateEligible(config, line, DateService.getDateFormat(), true)) {
 				CSVService.writeLine(writer, Arrays.asList(
 						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())), 
 						Integer.toString((Integer.parseInt(odr.getRecordType()))), 
@@ -265,7 +266,7 @@ public class Traitement implements Runnable {
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, new SimpleDateFormat("yyyy-MM-dd"), true)) { 
+			if(valideDateEligible(config, line, DateService.getDateFormat(), true)) { 
 				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
 
 				ConfigOdrTraiteCsv traitement = line.getTraitement();
