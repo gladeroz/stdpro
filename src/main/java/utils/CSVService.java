@@ -78,7 +78,7 @@ public class CSVService {
 	}
 
 	public static String formatDateForCompare(Date date) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMMdd", Locale.ENGLISH);
+		SimpleDateFormat dateFormat = DateService.getDateFormat();
 		return dateFormat.format(date);
 	}
 

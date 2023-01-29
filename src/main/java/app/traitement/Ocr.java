@@ -158,7 +158,7 @@ public class Ocr {
 									logger.info("Le text (" + resultat + ") correspond a la sous recherche");
 									if (Boolean.TRUE.equals(config.getRename())) {
 										Path source = Paths.get(NEWFILE);
-										String output = resultat + ".pdf";
+										String output = cleanString(resultat) + ".pdf";
 										Path cible = searchIfExist(output, 0, resultat, source);
 										Files.move(source, cible);
 										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ cible + ")");
@@ -175,12 +175,16 @@ public class Ocr {
 			}
 		}
 	}
+	
+	private static String cleanString(String s) {
+		return s.replace("/", "");
+	}
 
 	private static Path searchIfExist(String output, int number, final String resultat, final Path source) {
-		while(source.resolveSibling(output).toFile().exists()) {
-			output = resultat + "("+ (number++) +").pdf";
+		while(source.resolveSibling(cleanString(output)).toFile().exists()) {
+			output = cleanString(resultat + "("+ (number++) +").pdf");
 		}
 
-		return source.resolveSibling(output);
+		return source.resolveSibling(cleanString(output));
 	}
 }

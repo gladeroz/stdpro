@@ -17,6 +17,7 @@ import enums.odrodf.BaType;
 import enums.odrodf.FactType;
 import enums.odrodf.FormType;
 import enums.odrodf.RibType;
+import utils.DateService;
 
 @Entity
 @Table(name = "Traitement")
@@ -104,18 +105,18 @@ public class TraitementSql implements Serializable {
 
 	@Column(name = "DATE_RECEPTION", nullable = false)
 	public Date getDateReception() {
-		return dateReception;
+		return DateService.zeroTime(dateReception);
 	}
 	public void setDateReception(Date dateReception) {
-		this.dateReception = dateReception;
+		this.dateReception = DateService.zeroTime(dateReception);
 	}
 
 	@Column(name = "DATE_TRAITEMENT", nullable = false)
 	public Date getDateTraitement() {
-		return dateTraitement;
+		return DateService.zeroTime(dateTraitement);
 	}
 	public void setDateTraitement(Date dateTraitement) {
-		this.dateTraitement = dateTraitement;
+		this.dateTraitement = DateService.zeroTime(dateTraitement);
 	}
 
 	public CsvSql getCsv() {
