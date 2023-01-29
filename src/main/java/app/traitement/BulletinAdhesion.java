@@ -148,13 +148,13 @@ public class BulletinAdhesion {
 					}
 					csvRepository.save(c);
 				} else if (c.getTraitement() != null) {
-					Date lineDate = line.getTraitement().getDateTraitement();
-					Date storeDate = c.getTraitement().getDateTraitement();
+					Date lineDate = line.getTraitement().getDateReception();
+					Date storeDate = c.getTraitement().getDateReception();
 
 					if(!lineDate.equals(storeDate)) {
 						Date d = lineDate.after(storeDate) ? lineDate : storeDate;
-						c.getTraitement().setDateTraitement(d);
-						logger.info("[Mise a jour de la date de traitement][" + line.getOdr().getNbrContractRedbox() + "[" + storeDate + "]] -> " + d);
+						c.getTraitement().setDateReception(d);
+						logger.info("[Mise a jour de la date de traitement][" + line.getOdr().getNbrContractRedbox() + "[(old)" + storeDate + "][(new)" + d +"]]");
 						csvRepository.save(c);
 					}
 				}
@@ -233,7 +233,7 @@ public class BulletinAdhesion {
 					String numeroContrat = importCsv.getNbrContractRedbox();
 					String productCode = itemRes.getProductCode();
 
-					if(! eligiblite.contains(productCode)) {
+					if(! eligiblite.contains(new CodeEligibleSql(productCode))) {
 						logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [product code :" + productCode + "]");
 						changeValueType(importCsv, BaType.NS_NOT_ELI);
 					}
@@ -339,7 +339,6 @@ public class BulletinAdhesion {
 	}
 
 	private static boolean intervalOdf(ConfigOdrTraiteCsv importCsv, Calendar dRef, Calendar dImport, int iteration) {
-
 		Calendar dbefore = Calendar.getInstance();
 		dbefore.setTime(dRef.getTime());
 		dbefore.add(Calendar.YEAR, iteration);

@@ -17,6 +17,7 @@ import enums.odrodf.BaType;
 import enums.odrodf.FactType;
 import enums.odrodf.FormType;
 import enums.odrodf.RibType;
+import utils.DateService;
 
 @Entity
 @Table(name = "Traitement")
@@ -32,6 +33,8 @@ public class TraitementSql implements Serializable {
 	private Date dateReception;
 	private Date dateTraitement;
 
+	private DateService dateService;
+
 	@OneToOne
 	@JoinColumn(name="nbrContractRedbox", referencedColumnName="nbrContractRedbox")
 	@JoinColumn(name="transactionType", referencedColumnName="transactionType")
@@ -40,6 +43,8 @@ public class TraitementSql implements Serializable {
 	public TraitementSql() {}
 
 	public TraitementSql(ConfigOdrTraiteCsv t, String transactionType) {
+		this.dateService = new DateService();
+
 		/** ID **/
 		this.odrPk = new OdrPk(t.getNbrContractRedbox(), transactionType);
 
@@ -104,18 +109,18 @@ public class TraitementSql implements Serializable {
 
 	@Column(name = "DATE_RECEPTION", nullable = false)
 	public Date getDateReception() {
-		return dateReception;
+		return dateService.zeroTime(dateReception);
 	}
 	public void setDateReception(Date dateReception) {
-		this.dateReception = dateReception;
+		this.dateReception = dateService.zeroTime(dateReception);
 	}
 
 	@Column(name = "DATE_TRAITEMENT", nullable = false)
 	public Date getDateTraitement() {
-		return dateTraitement;
+		return dateService.zeroTime(dateTraitement);
 	}
 	public void setDateTraitement(Date dateTraitement) {
-		this.dateTraitement = dateTraitement;
+		this.dateTraitement = dateService.zeroTime(dateTraitement);
 	}
 
 	public CsvSql getCsv() {
