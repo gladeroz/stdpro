@@ -13,7 +13,7 @@ public class DateService {
 	}
 
 	public static Date zeroTime(final Date date ){
-		return setTime( date, 0, 0, 0, 0 );
+		return setTime( date, 0, 0, 0, 0);
 	}
 
 	public static Date setTime( final Date date, final int hourOfDay, final int minute, final int second, final int ms ){

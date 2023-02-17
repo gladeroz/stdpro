@@ -317,20 +317,18 @@ public class BulletinAdhesion {
 
 				CsvSql c = csvRepository.findByOdrPk(new OdrPk(odrDelta.getNbrContractRedbox(), odrDelta.getTransactionType()));
 				if(c != null) {
-					String msg = "";
-
 					if(odrDelta.getTransactionType().equals(TransactionType.VTE.toString()) && c.getOdrPk().getTransactionType().equals(odrDelta.getTransactionType())) {
 						// => rejet
-						throw new Exception("[ Vente deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
+						logger.warn("[ Vente deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
+						continue;
+						//throw new Exception("[ Vente deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
 					}
 
 					if(odrDelta.getTransactionType().equals(TransactionType.RES.toString()) && c.getOdrPk().getTransactionType().equals(odrDelta.getTransactionType())) {
 						// => rejet
-						throw new Exception("[ Resilliation deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
-					}
-
-					if(! msg.isEmpty()) {
-						logger.warn(msg);
+						logger.warn("[ Resilliation deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
+						continue;
+						//throw new Exception("[ Resilliation deja presente pour le numero de contrat "+ odrDelta.getNbrContractRedbox() +" ]");
 					}
 				}
 
