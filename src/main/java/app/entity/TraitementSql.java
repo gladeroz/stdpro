@@ -33,8 +33,6 @@ public class TraitementSql implements Serializable {
 	private Date dateReception;
 	private Date dateTraitement;
 
-	private DateService dateService;
-
 	@OneToOne
 	@JoinColumn(name="nbrContractRedbox", referencedColumnName="nbrContractRedbox")
 	@JoinColumn(name="transactionType", referencedColumnName="transactionType")
@@ -43,8 +41,6 @@ public class TraitementSql implements Serializable {
 	public TraitementSql() {}
 
 	public TraitementSql(ConfigOdrTraiteCsv t, String transactionType) {
-		this.dateService = new DateService();
-
 		/** ID **/
 		this.odrPk = new OdrPk(t.getNbrContractRedbox(), transactionType);
 
@@ -109,34 +105,19 @@ public class TraitementSql implements Serializable {
 
 	@Column(name = "DATE_RECEPTION", nullable = false)
 	public Date getDateReception() {
-<<<<<<< HEAD
 		return DateService.zeroTime(dateReception);
-=======
-		return dateService.zeroTime(dateReception);
->>>>>>> branch 'feature/psql' of https://github.com/gladeroz/stdpro.git
 	}
 	public void setDateReception(Date dateReception) {
-<<<<<<< HEAD
 		this.dateReception = DateService.zeroTime(dateReception);
-=======
-		this.dateReception = dateService.zeroTime(dateReception);
->>>>>>> branch 'feature/psql' of https://github.com/gladeroz/stdpro.git
 	}
 
 	@Column(name = "DATE_TRAITEMENT", nullable = false)
 	public Date getDateTraitement() {
-<<<<<<< HEAD
 		return DateService.zeroTime(dateTraitement);
-=======
-		return dateService.zeroTime(dateTraitement);
->>>>>>> branch 'feature/psql' of https://github.com/gladeroz/stdpro.git
 	}
+
 	public void setDateTraitement(Date dateTraitement) {
-<<<<<<< HEAD
 		this.dateTraitement = DateService.zeroTime(dateTraitement);
-=======
-		this.dateTraitement = dateService.zeroTime(dateTraitement);
->>>>>>> branch 'feature/psql' of https://github.com/gladeroz/stdpro.git
 	}
 
 	public CsvSql getCsv() {
