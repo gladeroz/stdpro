@@ -169,7 +169,7 @@ public class BulletinAdhesion {
 		majDelta(csvRepository, config);
 
 		//majDocTraite(config, store);
-		majDocTraite(codeEligibleRepository, traitementRepository, csvRepository, config);
+		majDocTraite(codeEligibleRepository, csvRepository, config);
 
 		//updateJsonRef(json, store);
 
@@ -205,7 +205,7 @@ public class BulletinAdhesion {
 		}
 	}
 
-	private void majDocTraite(CodeEligibleRepository codeEligibleRepository, TraitementRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws JsonParseException, JsonMappingException, UnsatisfiedLinkError, IOException, Exception {
+	private void majDocTraite(CodeEligibleRepository codeEligibleRepository, CsvRepository csvRepository, CustomConfigOdr config) throws JsonParseException, JsonMappingException, UnsatisfiedLinkError, IOException, Exception {
 		if(Traitement.variableExist(config.getDocTraite())) {
 
 			logger.info("Mise a jour de la BDD avec les documents traites");
@@ -229,18 +229,26 @@ public class BulletinAdhesion {
 
 				boolean venteExist = itemVte != null;
 				boolean resExist = itemRes != null;
-
+				
 				if(resExist) {
+					itemRes.setTraitement(new TraitementSql(importCsv, TransactionType.RES.toString()));
+					changeValueType(itemRes.getTraitement(), BaType.NS_RES);
+					csvRepository.save(itemRes);
+				}
+				
+				if(venteExist) {
+					itemVte.setTraitement(new TraitementSql(importCsv, TransactionType.VTE.toString()));
+					
 					String numeroContrat = importCsv.getNbrContractRedbox();
-					String productCode = itemRes.getProductCode();
+					String productCode = itemVte.getProductCode();
 
-					if(! eligiblite.contains(new CodeEligibleSql(productCode))) {
+					if(! containsCode(eligiblite, productCode)) {
 						logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [product code :" + productCode + "]");
-						changeValueType(importCsv, BaType.NS_NOT_ELI);
+						changeValueType(itemVte.getTraitement(), BaType.NS_NOT_ELI);
 					}
 
 					Calendar dRef = Calendar.getInstance();
-					dRef.setTime(itemRes.getProductSalesDate());
+					dRef.setTime(itemVte.getProductSalesDate());
 
 					Calendar dImport = Calendar.getInstance();
 					dImport.setTime(importCsv.getDateReception());
@@ -249,7 +257,7 @@ public class BulletinAdhesion {
 						dRef.add(Calendar.DAY_OF_MONTH, 30);
 						if(dImport.after(dRef)) {
 							logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [date depassee pour le type ODR]");
-							changeValueType(importCsv, BaType.NS_ODR_HD);
+							changeValueType(itemVte.getTraitement(), BaType.NS_ODR_HD);
 						}
 					} else if(importCsv.getOffre().equals(Offre.ODF)) {
 						boolean found = false;
@@ -262,27 +270,22 @@ public class BulletinAdhesion {
 
 						if(!found) {
 							logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [Avant Terme]");
-							changeValueType(importCsv, BaType.NS_ODF_AT);
+							changeValueType(itemVte.getTraitement(), BaType.NS_ODF_AT);
 						}
 					}
+					csvRepository.save(itemVte);
 				}
-
-				if(resExist) {
-					changeValueType(importCsv, BaType.NS_RES);
-					traitementRepository.save(new TraitementSql(importCsv, TransactionType.RES.toString()));
-				}
-
-				if(venteExist) {
-					traitementRepository.save(new TraitementSql(importCsv, TransactionType.VTE.toString()));
-				}
-
-				if(!venteExist) {
+				
+				if(!venteExist && !resExist) {
 					logger.warn("Le numero de contrat "+ importCsv.getNbrContractRedbox() +" n est pas dans la base");
 				}
 			}
 		}
 	}
 
+	private boolean containsCode(final List<CodeEligibleSql> list, final String code){
+	    return list.stream().filter(o -> o.getCodeEligible().equals(code)).findFirst().isPresent();
+	}
 
 	private void initTableCodeEligible(CodeEligibleRepository codeEligibleRepository) {
 		logger.info("Injection des codes Eligibles");
@@ -356,9 +359,11 @@ public class BulletinAdhesion {
 		return false;
 	}
 
-	private static void changeValueType (ConfigOdrTraiteCsv line, BaType type) {
+	private static void changeValueType (TraitementSql traitementSql, BaType type) {
+		if(traitementSql == null) return;
+		
 		if(!type.equals(BaType.NV)) {
-			line.setBulletin(type);
+			traitementSql.setBulletin(type);
 		}
 	}
 }
