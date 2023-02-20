@@ -169,7 +169,7 @@ public class BulletinAdhesion {
 		majDelta(csvRepository, config);
 
 		//majDocTraite(config, store);
-		majDocTraite(codeEligibleRepository, traitementRepository, csvRepository, config);
+		majDocTraite(codeEligibleRepository, csvRepository, config);
 
 		//updateJsonRef(json, store);
 
@@ -205,7 +205,7 @@ public class BulletinAdhesion {
 		}
 	}
 
-	private void majDocTraite(CodeEligibleRepository codeEligibleRepository, TraitementRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws JsonParseException, JsonMappingException, UnsatisfiedLinkError, IOException, Exception {
+	private void majDocTraite(CodeEligibleRepository codeEligibleRepository, CsvRepository csvRepository, CustomConfigOdr config) throws JsonParseException, JsonMappingException, UnsatisfiedLinkError, IOException, Exception {
 		if(Traitement.variableExist(config.getDocTraite())) {
 
 			logger.info("Mise a jour de la BDD avec les documents traites");
@@ -229,60 +229,63 @@ public class BulletinAdhesion {
 
 				boolean venteExist = itemVte != null;
 				boolean resExist = itemRes != null;
-
+				
 				if(resExist) {
-					String numeroContrat = importCsv.getNbrContractRedbox();
-					String productCode = itemRes.getProductCode();
+					ConfigOdrTraiteCsv tmp = importCsv;
+					changeValueType(tmp, BaType.NS_RES);
+					itemRes.setTraitement(new TraitementSql(tmp, TransactionType.RES.toString()));
+				}
+				
+				if(venteExist) {
+					ConfigOdrTraiteCsv tmp = importCsv;
+					String numeroContrat = tmp.getNbrContractRedbox();
+					String productCode = itemVte.getProductCode();
 
-					if(! eligiblite.contains(new CodeEligibleSql(productCode))) {
+					if(! containsCode(eligiblite, productCode)) {
 						logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [product code :" + productCode + "]");
-						changeValueType(importCsv, BaType.NS_NOT_ELI);
+						changeValueType(tmp, BaType.NS_NOT_ELI);
 					}
 
 					Calendar dRef = Calendar.getInstance();
-					dRef.setTime(itemRes.getProductSalesDate());
+					dRef.setTime(itemVte.getProductSalesDate());
 
 					Calendar dImport = Calendar.getInstance();
-					dImport.setTime(importCsv.getDateReception());
+					dImport.setTime(tmp.getDateReception());
 
 					if(importCsv.getOffre().equals(Offre.ODR)) {
 						dRef.add(Calendar.DAY_OF_MONTH, 30);
 						if(dImport.after(dRef)) {
 							logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [date depassee pour le type ODR]");
-							changeValueType(importCsv, BaType.NS_ODR_HD);
+							changeValueType(tmp, BaType.NS_ODR_HD);
 						}
 					} else if(importCsv.getOffre().equals(Offre.ODF)) {
 						boolean found = false;
 
 						//On itere sur 5 ans
 						for(int i = 1; i <= MAXYEARS; i++) {
-							found = intervalOdf(importCsv, dRef, dImport, i);
+							found = intervalOdf(tmp, dRef, dImport, i);
 							if(found) break;
 						}
 
 						if(!found) {
 							logger.warn("Le contrat [" + numeroContrat + "] n est pas eligible [Avant Terme]");
-							changeValueType(importCsv, BaType.NS_ODF_AT);
+							changeValueType(tmp, BaType.NS_ODF_AT);
 						}
 					}
+					
+					itemVte.setTraitement(new TraitementSql(tmp, TransactionType.VTE.toString()));
 				}
-
-				if(resExist) {
-					changeValueType(importCsv, BaType.NS_RES);
-					traitementRepository.save(new TraitementSql(importCsv, TransactionType.RES.toString()));
-				}
-
-				if(venteExist) {
-					traitementRepository.save(new TraitementSql(importCsv, TransactionType.VTE.toString()));
-				}
-
-				if(!venteExist) {
+				
+				if(!venteExist && !resExist) {
 					logger.warn("Le numero de contrat "+ importCsv.getNbrContractRedbox() +" n est pas dans la base");
 				}
 			}
 		}
 	}
 
+	private boolean containsCode(final List<CodeEligibleSql> list, final String code){
+	    return list.stream().filter(o -> o.getCodeEligible().equals(code)).findFirst().isPresent();
+	}
 
 	private void initTableCodeEligible(CodeEligibleRepository codeEligibleRepository) {
 		logger.info("Injection des codes Eligibles");
