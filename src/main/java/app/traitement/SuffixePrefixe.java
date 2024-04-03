@@ -13,7 +13,7 @@ import app.traitement.enums.CustomEnumSuffixe;
 import enums.Extension;
 
 public class SuffixePrefixe {
-	
+
 	private static Logger logger = Logger.getLogger(SuffixePrefixe.class);
 
 	public static CustomConfigSuffixe initConfig(Collection<ConfigItem> config) {
@@ -61,8 +61,8 @@ public class SuffixePrefixe {
 		if( ! Traitement.variableExist(config.getPrefixe()) && ! Traitement.variableExist(config.getSuffixe())) {
 			logger.info("Aucun suffixe ou prefixe n'a ete renseigne");
 			return;
-		} 
-		
+		}
+
 		if( ! Traitement.variableExist(config.getPath())) {
 			logger.info("Le chemin de traitement n'est pas valide");
 			return;
@@ -81,7 +81,7 @@ public class SuffixePrefixe {
 			dirToList += Traitement.withSlash(currentDir);
 		}
 
-		File f =  new File(dirToList); 
+		File f =  new File(dirToList);
 		File[] subFiles = f.listFiles();
 		if (subFiles != null && subFiles.length > 0) {
 			for (File aFile : subFiles) {
@@ -99,13 +99,13 @@ public class SuffixePrefixe {
 					if(config.getPrefixe() != null) {
 						NEWFILE = NEWFILE.replace(currentFileName, config.getPrefixe() + currentFileName);
 					}
-					
+
 					/** Partie Suffixe **/
 					if(config.getSuffixe() != null) {
 						int where = NEWFILE.lastIndexOf(".");
 						NEWFILE = NEWFILE.substring(0, where) + config.getSuffixe() + NEWFILE.substring(where);
 					}
-				
+
 					/** save new file **/
 					boolean success = aFile.renameTo(new File(NEWFILE));
 					if (!success) {

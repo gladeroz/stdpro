@@ -159,7 +159,7 @@ public class Traitement implements Runnable {
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, DateService.getDateFormat(), false)) { 
+			if(valideDateEligible(config, line, DateService.getDateFormat(), false)) {
 				String montant = getMontant(codeEligibleRepository, line.getTraitement().getOffre(), odr.getProductCode());
 
 				CSVService.writeLine(writer,
@@ -203,20 +203,20 @@ public class Traitement implements Runnable {
 
 			if(valideDateEligible(config, line, DateService.getDateFormat(), true)) {
 				CSVService.writeLine(writer, Arrays.asList(
-						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())), 
-						Integer.toString((Integer.parseInt(odr.getRecordType()))), 
-						odr.getSubsidiaryCode(), 
-						String.format("%03d" , Integer.parseInt(odr.getStoreCode())), 
-						odr.getPurchaseOrderNumber(), 
-						String.format("%05d" , Integer.parseInt(odr.getLinenumber())), 
-						odr.getTransactionType(), 
-						odr.getStoreName(), 
-						odr.getPaymentType(), 
+						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())),
+						Integer.toString((Integer.parseInt(odr.getRecordType()))),
+						odr.getSubsidiaryCode(),
+						String.format("%03d" , Integer.parseInt(odr.getStoreCode())),
+						odr.getPurchaseOrderNumber(),
+						String.format("%05d" , Integer.parseInt(odr.getLinenumber())),
+						odr.getTransactionType(),
+						odr.getStoreName(),
+						odr.getPaymentType(),
 						dateFormat.format(odr.getProductSalesDate()),
 						dateFormat.format(odr.getWarrantySalesDate()),
-						odr.getFamilyInsuranceCode(), 
+						odr.getFamilyInsuranceCode(),
 						odr.getFamilyInsuranceLabel(),
-						odr.getNameofService(), 
+						odr.getNameofService(),
 						odr.getProductCode(),
 						String.format("%05d" , Integer.parseInt(odr.getQuantitySold())),
 						odr.getPrixUnitProvision(),
@@ -224,29 +224,29 @@ public class Traitement implements Runnable {
 						odr.getFamilyProductLabel(),
 						odr.getProductBrandCode(),
 						odr.getBrandNameProduct(),
-						odr.getProductReference(), 
-						odr.getCodic(), 
-						String.format("%05d" , Integer.parseInt(odr.getProductQty())), 
-						odr.getPrixUnitProduct(), 
-						odr.getProductPrixTotal(), 
-						odr.getClientID(), 
-						odr.getCustomerTitle(), 
-						odr.getClientName(), 
-						odr.getCustomerFirstName(), 
-						odr.getNbrInTheTrack(), 
-						odr.getTrackCodeType(), 
-						odr.getTrackName(), 
-						odr.getPostalCode(), 
-						odr.getCodeINSEE(), 
-						odr.getLocation(), 
-						odr.getImeiNumber(), 
-						odr.getTypeOfSale(), 
+						odr.getProductReference(),
+						odr.getCodic(),
+						String.format("%05d" , Integer.parseInt(odr.getProductQty())),
+						odr.getPrixUnitProduct(),
+						odr.getProductPrixTotal(),
+						odr.getClientID(),
+						odr.getCustomerTitle(),
+						odr.getClientName(),
+						odr.getCustomerFirstName(),
+						odr.getNbrInTheTrack(),
+						odr.getTrackCodeType(),
+						odr.getTrackName(),
+						odr.getPostalCode(),
+						odr.getCodeINSEE(),
+						odr.getLocation(),
+						odr.getImeiNumber(),
+						odr.getTypeOfSale(),
 						odr.getSalesChannel(),
-						odr.getEmailAdress(), 
-						odr.getNbrContractRedbox(), 
-						traitement.getFiller(), 
-						traitement.getFormulaire().getOutput().toString(), 
-						traitement.getBulletin().getOutput().toString(), 
+						odr.getEmailAdress(),
+						odr.getNbrContractRedbox(),
+						traitement.getFiller(),
+						traitement.getFormulaire().getOutput().toString(),
+						traitement.getBulletin().getOutput().toString(),
 						traitement.getFacture().getOutput().toString(),
 						traitement.getRib().getOutput().toString(),
 						dateFormat.format(traitement.getDateReception())));
@@ -265,29 +265,29 @@ public class Traitement implements Runnable {
 		for(ConfigOdrJson line : store.getStore() ) {
 			ConfigOdrRefCsv odr = line.getOdr();
 
-			if(valideDateEligible(config, line, DateService.getDateFormat(), true)) { 
+			if(valideDateEligible(config, line, DateService.getDateFormat(), true)) {
 				ConfigOdrTraiteCsv traitement = line.getTraitement();
 				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
-				
+
 				CSVService.writeLine(writer,
-						Arrays.asList(odr.getEmailAdress(), 
-								odr.getNbrContractRedbox(), 
-								traitement.getFiller(), 
+						Arrays.asList(odr.getEmailAdress(),
+								odr.getNbrContractRedbox(),
+								traitement.getFiller(),
 								traitement.getFormulaire().toString(),
-								traitement.getBulletin().toString(), 
-								traitement.getFacture().toString(), 
-								traitement.getRib().toString(), 
-								dateFormat.format(traitement.getDateReception()), 
+								traitement.getBulletin().toString(),
+								traitement.getFacture().toString(),
+								traitement.getRib().toString(),
+								dateFormat.format(traitement.getDateReception()),
 								dateFormat.format(traitement.getDateTraitement()),
-								odr.getCustomerTitle(), 
+								odr.getCustomerTitle(),
 								odr.getClientName(),
-								odr.getCustomerFirstName(), 
-								traitement.getOffre().toString(), 
-								montant, 
-								odr.getStoreName(), 
-								odr.getTransactionType(), 
-								dateFormat.format(odr.getProductSalesDate()), 
-								dateFormat.format(odr.getWarrantySalesDate()), 
+								odr.getCustomerFirstName(),
+								traitement.getOffre().toString(),
+								montant,
+								odr.getStoreName(),
+								odr.getTransactionType(),
+								dateFormat.format(odr.getProductSalesDate()),
+								dateFormat.format(odr.getWarrantySalesDate()),
 								odr.getProductCode()
 								));
 			}
@@ -308,8 +308,7 @@ public class Traitement implements Runnable {
 
 		ConfigOdrTraiteCsv trait = line.getTraitement();
 
-		if(trait == null) return false;
-		if(StringUtils.isEmpty(line.getOdr().getProductCode())) return false;
+		if((trait == null) || StringUtils.isEmpty(line.getOdr().getProductCode())) return false;
 
 		boolean dateTraitement = trait.getDateTraitement() != null;
 
@@ -331,17 +330,17 @@ public class Traitement implements Runnable {
 			}
 		}
 
-		if(!full && (trait == null 
-				|| trait.getBulletin() == null 
-				|| trait.getFacture() == null 
-				|| trait.getFormulaire() == null 
+		if(!full && (trait == null
+				|| trait.getBulletin() == null
+				|| trait.getFacture() == null
+				|| trait.getFormulaire() == null
 				|| trait.getRib() == null)) {
 			return false;
 		}
 
-		if(!full && (trait.getBulletin().equals(BaType.S) 
-				&& trait.getFacture().equals(FactType.S) 
-				&& trait.getFormulaire().equals(FormType.S) 
+		if(!full && (trait.getBulletin().equals(BaType.S)
+				&& trait.getFacture().equals(FactType.S)
+				&& trait.getFormulaire().equals(FormType.S)
 				&& trait.getRib().equals(RibType.S))
 				) {
 			return true;
@@ -361,7 +360,7 @@ public class Traitement implements Runnable {
 
 		for(TraitementSql traitement : traitements) {
 			CsvSql odr = traitement.getCsv();
-			if(valideDateEligible(traitement, config, odr, false)) { 
+			if(valideDateEligible(traitement, config, odr, false)) {
 				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
 
 				CSVService.writeLine(writer,
@@ -396,20 +395,20 @@ public class Traitement implements Runnable {
 
 			if(valideDateEligible(traitement, config, odr, true)) {
 				CSVService.writeLine(writer, Arrays.asList(
-						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())), 
-						Integer.toString((Integer.parseInt(odr.getRecordType()))), 
-						odr.getSubsidiaryCode(), 
-						String.format("%03d" , Integer.parseInt(odr.getStoreCode())), 
-						odr.getPurchaseOrderNumber(), 
-						String.format("%05d" , Integer.parseInt(odr.getLinenumber())), 
-						odr.getOdrPk().getTransactionType(), 
-						odr.getStoreName(), 
-						odr.getPaymentType(), 
+						String.format("%07d" , Integer.parseInt(odr.getSeqNumber())),
+						Integer.toString((Integer.parseInt(odr.getRecordType()))),
+						odr.getSubsidiaryCode(),
+						String.format("%03d" , Integer.parseInt(odr.getStoreCode())),
+						odr.getPurchaseOrderNumber(),
+						String.format("%05d" , Integer.parseInt(odr.getLinenumber())),
+						odr.getOdrPk().getTransactionType(),
+						odr.getStoreName(),
+						odr.getPaymentType(),
 						dateFormat.format(odr.getProductSalesDate()),
 						dateFormat.format(odr.getWarrantySalesDate()),
-						odr.getFamilyInsuranceCode(), 
+						odr.getFamilyInsuranceCode(),
 						odr.getFamilyInsuranceLabel(),
-						odr.getNameofService(), 
+						odr.getNameofService(),
 						odr.getProductCode(),
 						String.format("%05d" , Integer.parseInt(odr.getQuantitySold())),
 						odr.getPrixUnitProvision(),
@@ -417,29 +416,29 @@ public class Traitement implements Runnable {
 						odr.getFamilyProductLabel(),
 						odr.getProductBrandCode(),
 						odr.getBrandNameProduct(),
-						odr.getProductReference(), 
-						odr.getCodic(), 
-						String.format("%05d" , Integer.parseInt(odr.getProductQty())), 
-						odr.getPrixUnitProduct(), 
-						odr.getProductPrixTotal(), 
-						odr.getClientID(), 
-						odr.getCustomerTitle(), 
-						odr.getClientName(), 
-						odr.getCustomerFirstName(), 
-						odr.getNbrInTheTrack(), 
-						odr.getTrackCodeType(), 
-						odr.getTrackName(), 
-						odr.getPostalCode(), 
-						odr.getCodeINSEE(), 
-						odr.getLocation(), 
-						odr.getImeiNumber(), 
-						odr.getTypeOfSale(), 
+						odr.getProductReference(),
+						odr.getCodic(),
+						String.format("%05d" , Integer.parseInt(odr.getProductQty())),
+						odr.getPrixUnitProduct(),
+						odr.getProductPrixTotal(),
+						odr.getClientID(),
+						odr.getCustomerTitle(),
+						odr.getClientName(),
+						odr.getCustomerFirstName(),
+						odr.getNbrInTheTrack(),
+						odr.getTrackCodeType(),
+						odr.getTrackName(),
+						odr.getPostalCode(),
+						odr.getCodeINSEE(),
+						odr.getLocation(),
+						odr.getImeiNumber(),
+						odr.getTypeOfSale(),
 						odr.getSalesChannel(),
-						odr.getEmailAdress(), 
-						odr.getOdrPk().getNbrContractRedbox(), 
-						traitement.getFiller(), 
-						traitement.getFormulaire().getOutput().toString(), 
-						traitement.getBulletin().getOutput().toString(), 
+						odr.getEmailAdress(),
+						odr.getOdrPk().getNbrContractRedbox(),
+						traitement.getFiller(),
+						traitement.getFormulaire().getOutput().toString(),
+						traitement.getBulletin().getOutput().toString(),
 						traitement.getFacture().getOutput().toString(),
 						traitement.getRib().getOutput().toString(),
 						dateFormat.format(traitement.getDateReception())));
@@ -458,27 +457,27 @@ public class Traitement implements Runnable {
 		for(TraitementSql traitement : traitements) {
 			CsvSql odr = traitement.getCsv();
 
-			if(valideDateEligible(traitement, config, odr, true)) { 
+			if(valideDateEligible(traitement, config, odr, true)) {
 				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
 				CSVService.writeLine(writer,
-						Arrays.asList(odr.getEmailAdress(), 
-								odr.getOdrPk().getNbrContractRedbox(), 
-								traitement.getFiller(), 
+						Arrays.asList(odr.getEmailAdress(),
+								odr.getOdrPk().getNbrContractRedbox(),
+								traitement.getFiller(),
 								traitement.getFormulaire().toString(),
-								traitement.getBulletin().toString(), 
-								traitement.getFacture().toString(), 
-								traitement.getRib().toString(), 
-								dateFormat.format(traitement.getDateReception()), 
+								traitement.getBulletin().toString(),
+								traitement.getFacture().toString(),
+								traitement.getRib().toString(),
+								dateFormat.format(traitement.getDateReception()),
 								dateFormat.format(traitement.getDateTraitement()),
-								odr.getCustomerTitle(), 
+								odr.getCustomerTitle(),
 								odr.getClientName(),
-								odr.getCustomerFirstName(), 
-								traitement.getOffre().toString(), 
-								montant, 
-								odr.getStoreName(), 
-								odr.getOdrPk().getTransactionType(), 
-								dateFormat.format(odr.getProductSalesDate()), 
-								dateFormat.format(odr.getWarrantySalesDate()), 
+								odr.getCustomerFirstName(),
+								traitement.getOffre().toString(),
+								montant,
+								odr.getStoreName(),
+								odr.getOdrPk().getTransactionType(),
+								dateFormat.format(odr.getProductSalesDate()),
+								dateFormat.format(odr.getWarrantySalesDate()),
 								odr.getProductCode()
 								));
 			}
@@ -490,20 +489,19 @@ public class Traitement implements Runnable {
 	}
 
 	private static boolean valideDateEligible(TraitementSql trait, CustomConfigOdr config, CsvSql line, boolean full) throws ParseException {
-		if(trait == null) return false;
-		if(StringUtils.isEmpty(line.getProductCode())) return false;
+		if((trait == null) || StringUtils.isEmpty(line.getProductCode())) return false;
 
-		if(!full && (trait == null 
-				|| trait.getBulletin() == null 
-				|| trait.getFacture() == null 
-				|| trait.getFormulaire() == null 
+		if(!full && (trait == null
+				|| trait.getBulletin() == null
+				|| trait.getFacture() == null
+				|| trait.getFormulaire() == null
 				|| trait.getRib() == null)) {
 			return false;
 		}
 
-		if(!full && (trait.getBulletin().equals(BaType.S) 
-				&& trait.getFacture().equals(FactType.S) 
-				&& trait.getFormulaire().equals(FormType.S) 
+		if(!full && (trait.getBulletin().equals(BaType.S)
+				&& trait.getFacture().equals(FactType.S)
+				&& trait.getFormulaire().equals(FormType.S)
 				&& trait.getRib().equals(RibType.S))
 				) {
 			return true;

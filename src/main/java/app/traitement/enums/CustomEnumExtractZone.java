@@ -2,11 +2,11 @@ package app.traitement.enums;
 
 public enum CustomEnumExtractZone {
 	PATH ("path"),
-	X ("axisX"), 
+	X ("axisX"),
 	Y ("axisY"),
 	HEIGHT("height"),
 	WIDTH("width"),
-	OCR("ocr"), 
+	OCR("ocr"),
 	EXPORTCSV ("exportcsv"),
 	TESS4J ("tess4j");
 

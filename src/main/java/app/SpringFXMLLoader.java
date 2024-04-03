@@ -28,7 +28,7 @@ public class SpringFXMLLoader {
 	private ConfigCollection config;
 	private ConfigurationController cc;
 
-	public void loadAnchorPane(BorderPane rootLayout, String fxmlPath, AreaPosition zone) throws IOException {      
+	public void loadAnchorPane(BorderPane rootLayout, String fxmlPath, AreaPosition zone) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 		loader.setController(cc);
 		AnchorPane overview = loader.load();

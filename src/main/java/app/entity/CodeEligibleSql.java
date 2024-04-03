@@ -21,7 +21,7 @@ public class CodeEligibleSql implements Serializable {
 		this.odrPrix = 30;
 		this.odfPrix = 30;
 	}
-	
+
 	public CodeEligibleSql(String codeEligible, Integer odrPrix, Integer odfPrix) {
 		this.codeEligible = codeEligible;
 		this.odrPrix = odrPrix;
@@ -53,5 +53,5 @@ public class CodeEligibleSql implements Serializable {
 
 	public void setOdfPrix(Integer odfPrix) {
 		this.odfPrix = odfPrix;
-	}	
+	}
 }

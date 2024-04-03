@@ -188,7 +188,7 @@ public class BulletinAdhesion {
 			}else{
 				odrs  = traitementRepository.findAllByDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMax()));
 			}
-			
+
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 
@@ -224,16 +224,16 @@ public class BulletinAdhesion {
 
 				boolean venteExist = itemVte != null;
 				boolean resExist = itemRes != null;
-				
+
 				if(resExist) {
 					itemRes.setTraitement(new TraitementSql(importCsv, TransactionType.RES.toString()));
 					changeValueType(itemRes.getTraitement(), BaType.NS_RES);
 					csvRepository.save(itemRes);
 				}
-				
+
 				if(venteExist) {
 					itemVte.setTraitement(new TraitementSql(importCsv, TransactionType.VTE.toString()));
-					
+
 					String numeroContrat = importCsv.getNbrContractRedbox();
 					String productCode = itemVte.getProductCode();
 
@@ -270,7 +270,7 @@ public class BulletinAdhesion {
 					}
 					csvRepository.save(itemVte);
 				}
-				
+
 				if(!venteExist && !resExist) {
 					logger.warn("Le numero de contrat "+ importCsv.getNbrContractRedbox() +" n est pas dans la base");
 				}
@@ -284,7 +284,7 @@ public class BulletinAdhesion {
 
 	private void initTableCodeEligible(CodeEligibleRepository codeEligibleRepository) {
 		logger.info("Injection des codes Eligibles");
-		List<String> eligiblite = new ArrayList<String>(Arrays.asList(
+		List<String> eligiblite = new ArrayList<>(Arrays.asList(
 				"24021","24023","24024","24026","24028",
 				"24032","24053","24054","22368","22370",
 				"22372","22374","22375","22377","22379",
@@ -356,7 +356,7 @@ public class BulletinAdhesion {
 
 	private static void changeValueType (TraitementSql traitementSql, BaType type) {
 		if(traitementSql == null) return;
-		
+
 		if(!type.equals(BaType.NV)) {
 			traitementSql.setBulletin(type);
 		}

@@ -93,7 +93,7 @@ public class SendMail {
 		//MailService service = new MailService(config.getMailEmetteur(), config.getPassEmetteur());
 		final MailJetService client = new MailJetService(API_KEY_STATIC, API_SECRET_KEY_STATIC);
 
-		File f = new File(config.getPath()); 
+		File f = new File(config.getPath());
 		File[] subFiles = f.listFiles();
 
 		if (subFiles != null && subFiles.length > 0) {
