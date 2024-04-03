@@ -10,11 +10,7 @@
 	<name>std</name>
 
 	<packaging>jar</packaging>
-<<<<<<< HEAD
 	<version>2.7</version>
-=======
-	<version>2.3</version>
->>>>>>> master
 
 	<organization>
 		<!-- Used as the 'Vendor' for JNLP generation -->
@@ -25,13 +21,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-<<<<<<< HEAD
 		<log4j.version>2.19.0</log4j.version>
-=======
-		<slf4j.version>2.0.3</slf4j.version>
-		<log4j.version>2.19.0</log4j.version>
-		<jackson.version>2.13.4.2</jackson.version>
->>>>>>> master
 		<javafx.version>19</javafx.version>
 	</properties>
 	
@@ -51,35 +41,8 @@
 			    <artifactId>javafx-maven-plugin</artifactId>
 			    <version>0.0.8</version>
 			    <configuration>
-<<<<<<< HEAD
 			        <mainClass>app.JfxApp</mainClass>
 			    </configuration>
-=======
-			        <mainClass>controlleur.MainApp</mainClass>
-			    </configuration>
-			</plugin>
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-assembly-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <phase>package</phase>
-			            <goals>
-			                <goal>single</goal>
-			            </goals>
-			            <configuration>
-			                <archive>
-			                <manifest>
-			                    <mainClass>controlleur.MainApp</mainClass>
-			                </manifest>
-			                </archive>
-			                <descriptorRefs>
-			                    <descriptorRef>jar-with-dependencies</descriptorRef>
-			                </descriptorRefs>
-			            </configuration>
-			        </execution>
-			    </executions>
->>>>>>> master
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -95,8 +58,6 @@
 		    <groupId>com.squareup.okhttp3</groupId>
 		    <artifactId>logging-interceptor</artifactId>
 		</dependency>
-
-<<<<<<< HEAD
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -117,9 +78,6 @@
 		    <artifactId>mailjet-client</artifactId>
 		    <version>5.2.1</version>
 		</dependency>
-
-=======
->>>>>>> master
 		<!-- https://mvnrepository.com/artifact/org.apache.camel/camel-barcode -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -173,10 +131,6 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-<<<<<<< HEAD
-=======
-			<version>2.8.9</version>
->>>>>>> master
 		</dependency>
 
 		<dependency>
@@ -214,15 +168,10 @@
 		    <artifactId>javafx-controls</artifactId>
 		    <version>${javafx.version}</version>
 		</dependency>
-<<<<<<< HEAD
-=======
-		
->>>>>>> master
 		<dependency>
 		    <groupId>org.openjfx</groupId>
 		    <artifactId>javafx-fxml</artifactId>
 		    <version>${javafx.version}</version>
-<<<<<<< HEAD
 		</dependency>
 	    <dependency>
 			<groupId>org.openjfx</groupId>
@@ -235,8 +184,6 @@
 		    <artifactId>javafx</artifactId>
 		    <version>${javafx.version}</version>
 		    <type>pom</type>
-=======
->>>>>>> master
 		</dependency>
 	</dependencies>
 </project>
