@@ -3,8 +3,8 @@ package enums;
 public enum TypeInput {
 	PATH,
 	STRING,
-	EMAIL, 
-	DATEPICKER, 
-	CHECKBOX, 
+	EMAIL,
+	DATEPICKER,
+	CHECKBOX,
 	PASSWORD
 }

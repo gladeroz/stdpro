@@ -84,9 +84,9 @@ public class PdfService {
 		//File[] png = PdfUtilities.convertPdf2Png(afile);
 		//logger.info("[Fichier convertit en png]");
 
-		// the path of your tess data folder inside the extracted file 
-		//return TesseracService.getInstance().doOCR(png[0]); 
-		return TesseracService.getInstance().doOCR(afile); 
+		// the path of your tess data folder inside the extracted file
+		//return TesseracService.getInstance().doOCR(png[0]);
+		return TesseracService.getInstance().doOCR(afile);
 	}
 
 	public static String getTextOcr(File afile, String xStr, String yStr, String widthStr, String heightStr) throws IOException, UnsatisfiedLinkError, TesseractException {
@@ -98,8 +98,8 @@ public class PdfService {
 		int width = (int) getCmToPixels(Integer.parseInt(widthStr));
 		int height = (int) getCmToPixels(Integer.parseInt(heightStr));
 
-		// the path of your tess data folder inside the extracted file 
-		return TesseracService.getInstance().doOCR(png[0], new Rectangle(x, y, width - x, height - y)); 
+		// the path of your tess data folder inside the extracted file
+		return TesseracService.getInstance().doOCR(png[0], new Rectangle(x, y, width - x, height - y));
 	}
 
 	public static String getText(File aFile, String x, String y, String width, String height, Boolean ocr, String tess4j) throws IOException, UnsatisfiedLinkError, TesseractException {
@@ -140,12 +140,12 @@ public class PdfService {
 			hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
 			hints.put(DecodeHintType.POSSIBLE_FORMATS, Arrays.asList(BarcodeFormat.CODE_128, BarcodeFormat.CODE_39));
 			Result[] result = mbReader.decodeMultiple(bb, hints);
-			
+
 			if(result.length == 0) {
 				logger.error("Aucun code barre n'a ete trouve dans ce document");
 				return null;
 			}
-			
+
 			return new BarcodeInfo(result[0].getText(), result[0].getBarcodeFormat().name());
 		}catch(IOException e) {
 			logger.error(e);
@@ -173,7 +173,7 @@ public class PdfService {
 		}catch(IOException e) {
 			logger.error(e);
 		}catch (NotFoundException e) {logger.error("Aucun code barre n'a ete trouve dans ce document");}
-		return new ArrayList<BarcodeInfo>();
+		return new ArrayList<>();
 	}
 
 	private static double getCmToPixels(int x) {

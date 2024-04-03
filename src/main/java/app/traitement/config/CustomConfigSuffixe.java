@@ -4,7 +4,7 @@ public class CustomConfigSuffixe {
 	private String prefixe;
 	private String suffixe;
 	private String path;
-	
+
 	public String getPrefixe() {
 		return prefixe;
 	}

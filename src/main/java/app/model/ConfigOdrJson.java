@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 	"traitement"
 })
 public class ConfigOdrJson {
-	
+
 	@JsonProperty("contrat")
 	private String nbrContractRedbox;
 
@@ -46,7 +46,7 @@ public class ConfigOdrJson {
 	public void setTraitement(ConfigOdrTraiteCsv traitement) {
 		this.traitement = traitement;
 	}
-	
+
 	public String getContrat() {
 		return nbrContractRedbox;
 	}

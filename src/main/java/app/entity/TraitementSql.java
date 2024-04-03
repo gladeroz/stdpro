@@ -26,10 +26,10 @@ public class TraitementSql implements Serializable {
 	@EmbeddedId private OdrPk odrPk;
 	private Offre offre;
 	private String filler;
-	private FactType facture; 
+	private FactType facture;
 	private FormType formulaire;
 	private BaType bulletin;
-	private RibType rib; 
+	private RibType rib;
 	private Date dateReception;
 	private Date dateTraitement;
 
@@ -52,7 +52,7 @@ public class TraitementSql implements Serializable {
 		this.filler = t.getFiller();
 		this.formulaire = t.getFormulaire();
 		this.offre = t.getOffre();
-		this.rib = t.getRib();	
+		this.rib = t.getRib();
 	}
 
 	@Column(name = "OFFRE", nullable = false)

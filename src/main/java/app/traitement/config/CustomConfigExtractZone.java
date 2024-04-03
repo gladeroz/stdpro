@@ -9,7 +9,7 @@ public class CustomConfigExtractZone {
 	private String height;
 	private String exportcsv;
 	private Boolean ocr;
-	
+
 	public String getPath() {
 		return path;
 	}

@@ -1,10 +1,10 @@
 package app.traitement.enums;
 
 public enum CustomEnumSuffixe {
-	SUFFIXE ("suffixe"), 
-	PREFIXE ("prefixe"), 
+	SUFFIXE ("suffixe"),
+	PREFIXE ("prefixe"),
 	PATH ("path");
-	
+
 	private String value;
 
 	CustomEnumSuffixe(String str) {
