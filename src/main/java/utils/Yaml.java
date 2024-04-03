@@ -87,7 +87,7 @@ public class Yaml {
 				writer.writeValue(pwriter, cc);
 			} catch (IOException e) {
 				logger.error(e);
-			} 
+			}
 		}
 	}
 

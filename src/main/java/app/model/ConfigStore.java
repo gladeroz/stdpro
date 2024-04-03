@@ -11,5 +11,5 @@ public class ConfigStore {
 
 	public void setStore(List<ConfigOdrJson> store) {
 		this.store = store;
-	}	
+	}
 }

@@ -5,7 +5,7 @@ public class CustomConfigSendMail {
 	private String mailEmetteur;
 	private String mailDestinataire;
 	private String passEmetteur;
-	
+
 	public String getPath() {
 		return path;
 	}

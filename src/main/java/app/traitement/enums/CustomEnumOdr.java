@@ -1,11 +1,11 @@
 package app.traitement.enums;
 
 public enum CustomEnumOdr {
-	DELTA ("delta"), 
+	DELTA ("delta"),
 	DOC_TRAITE("doc_traite"),
-	EXPORTCSV("exportcsv"), 
-	REFERENTIAL("referential"), 
-	INTERVALMIN("intervalmin"), 
+	EXPORTCSV("exportcsv"),
+	REFERENTIAL("referential"),
+	INTERVALMIN("intervalmin"),
 	INTERVALMAX("intervalmax"),
 	MIGRATION("migration");
 

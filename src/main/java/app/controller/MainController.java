@@ -35,7 +35,7 @@ public class MainController implements Initializable {
 	@FXML private CheckMenuItem tOdr;
 
 	@Lazy @Autowired private StageManager stageManager;
-	
+
 	private Stage primaryStage;
 
 	private ConfigurationController cc;

@@ -19,7 +19,7 @@ import app.traitement.enums.CustomEnumComptage;
 import enums.Extension;
 
 public class ComptagePDF {
-	
+
 	private static Logger logger = Logger.getLogger(ComptagePDF.class);
 
 	public static CustomConfigComptage initConfig(Collection<ConfigItem> config) {
@@ -30,7 +30,7 @@ public class ComptagePDF {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setPath(item.getValue());
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumComptage.EXPORTCSV.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setExportcsv(item.getValue());
@@ -45,7 +45,7 @@ public class ComptagePDF {
 
 		logger.debug("Configuration en cours de traitement");
 		CustomConfigComptage conf = initConfig(config);
-		
+
 		if(conf == null) {
 			logger.error("La Configuration comporte des erreurs ou il manque un parametre");
 			return;
@@ -65,7 +65,7 @@ public class ComptagePDF {
 		long startTime = System.nanoTime();
 
 		listDirectory(Traitement.withSlash(config.getPath()), "", resultat);
-		
+
 		if(Traitement.variableExist(config.getExportcsv())) {
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportToCsv(config.getExportcsv(), resultat, Arrays.asList("FOLDER", "FILE NAME", "LINE COUNT"));
@@ -82,7 +82,7 @@ public class ComptagePDF {
 			dirToList += Traitement.withSlash(currentDir);
 		}
 
-		File f =  new File(dirToList); 
+		File f =  new File(dirToList);
 		File[] subFiles = f.listFiles();
 		if (subFiles != null && subFiles.length > 0) {
 			for (File aFile : subFiles) {
@@ -100,7 +100,7 @@ public class ComptagePDF {
 			}
 		}
 	}
-	
+
 	private static Integer nbPagesPdf(String pdf) throws IOException{
 		PdfReader p = new PdfReader(pdf);
 		Integer retur = p.getNumberOfPages();

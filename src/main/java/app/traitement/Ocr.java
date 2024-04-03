@@ -112,7 +112,7 @@ public class Ocr {
 			dirToList += Traitement.withSlash(currentDir);
 		}
 
-		File f = new File(dirToList); 
+		File f = new File(dirToList);
 		File[] subFiles = f.listFiles();
 		if (subFiles != null && subFiles.length > 0) {
 			for (File aFile : subFiles) {
@@ -129,7 +129,7 @@ public class Ocr {
 					String text = PdfService.getText(aFile, config.getX(), config.getY(), config.getWidth(), config.getHeight(), config.getOcr(), config.getTess4j());
 
 					if( ! Traitement.variableExist(config.getPattern())) {
-						logger.info("[OCR] " + text); 
+						logger.info("[OCR] " + text);
 					} else {
 						if(text == null || text == "") {
 							logger.error("Texte vide");
@@ -166,7 +166,7 @@ public class Ocr {
 								} else {
 									logger.warn("La sous-chaine n'a pas ete trouvee");
 								}
-							} 
+							}
 						}else {
 							logger.warn("La chaine n'a pas ete retrouvee dans le document pdf");
 						}
@@ -175,7 +175,7 @@ public class Ocr {
 			}
 		}
 	}
-	
+
 	private static String cleanString(String s) {
 		return s.replace("/", "");
 	}

@@ -1,9 +1,9 @@
 package app.traitement.enums;
 
 public enum CustomEnumComptage {
-	PATH("path"), 
+	PATH("path"),
 	EXPORTCSV ("exportcsv");
-	
+
 	private String value;
 
 	CustomEnumComptage(String str) {
