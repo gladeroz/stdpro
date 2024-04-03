@@ -165,19 +165,14 @@ public class BulletinAdhesion {
 		logger.info("Nombre totale de traitements en base : " + traitementRepository.count());
 		logger.info("Nombre totale de odr/odt en base : " + csvRepository.count());
 
-		//majDelta(config, store);
 		majDelta(csvRepository, config);
 
-		//majDocTraite(config, store);
 		majDocTraite(codeEligibleRepository, csvRepository, config);
 
-		//updateJsonRef(json, store);
-
-		//exportToCsv(config, store);
-		exportToCsv(traitementRepository, csvRepository, config);
+		exportToCsv(codeEligibleRepository, traitementRepository, csvRepository, config);
 	}
 
-	private void exportToCsv(TraitementRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
+	private void exportToCsv(CodeEligibleRepository codeEligibleRepository, TraitementRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
 		if(Traitement.variableExist(config.getExportcsv())) {
 			DateFormat exportFormat = DateService.getDateFormat();
 			DateFormat varFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -193,15 +188,15 @@ public class BulletinAdhesion {
 			}else{
 				odrs  = traitementRepository.findAllByDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMax()));
 			}
-
+			
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + exportFormat.format(new Date())+".csv" , config, varFormat);
+			Traitement.exportToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 
 			logger.info("Export Full du resultat en CSV : " + config.getExportcsv());
 			Traitement.exportFullToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 
 			logger.info("Traitement pour les mails du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportMailToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + exportFormat.format(new Date())+".csv" , config, varFormat);
+			Traitement.exportMailToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + exportFormat.format(new Date())+".csv" , config, varFormat);
 		}
 	}
 

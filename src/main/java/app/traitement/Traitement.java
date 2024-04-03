@@ -5,17 +5,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import app.entity.CodeEligibleSql;
 import app.entity.CsvSql;
 import app.entity.TraitementSql;
 import app.model.ConfigCollection;
@@ -24,6 +23,7 @@ import app.model.ConfigOdrJson;
 import app.model.ConfigOdrRefCsv;
 import app.model.ConfigOdrTraiteCsv;
 import app.model.ConfigStore;
+import app.repository.CodeEligibleRepository;
 import app.traitement.config.CustomConfigOdr;
 import enums.Job;
 import enums.Offre;
@@ -39,7 +39,6 @@ public class Traitement implements Runnable {
 
 	private static Job action;
 	private static ConfigCollection config;
-	private static HashMap<Integer, Integer> odfPrice;
 
 	@Override
 	public void run() {
@@ -152,7 +151,7 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
+	public static void exportToCsvOdr(CodeEligibleRepository codeEligibleRepository, String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("NumeroContratRedbox", "DateEffet", "Nom", "Prenom", "Adresse", "CodePostal", "Ville", "Ctry", "IBAN", "Bic", "Montant"));
@@ -161,7 +160,7 @@ public class Traitement implements Runnable {
 			ConfigOdrRefCsv odr = line.getOdr();
 
 			if(valideDateEligible(config, line, DateService.getDateFormat(), false)) { 
-				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
+				String montant = getMontant(codeEligibleRepository, line.getTraitement().getOffre(), odr.getProductCode());
 
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getNbrContractRedbox(), dateFormat.format(odr.getProductSalesDate()),	odr.getClientName(),odr.getCustomerFirstName(),
@@ -258,7 +257,7 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportMailToCsvOdr(String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
+	public static void exportMailToCsvOdr(CodeEligibleRepository codeEligibleRepository, String csvFile, ConfigStore store, CustomConfigOdr config, DateFormat dateFormat) throws IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Date de traitement", "Titre client", "Nom ", "Prenom", "Offre", "Montant", "Code magasin", "Type d acte","Date operation","Date delivrance","Code prestation"));
@@ -267,10 +266,9 @@ public class Traitement implements Runnable {
 			ConfigOdrRefCsv odr = line.getOdr();
 
 			if(valideDateEligible(config, line, DateService.getDateFormat(), true)) { 
-				String montant = line.getTraitement().getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
-
 				ConfigOdrTraiteCsv traitement = line.getTraitement();
-
+				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
+				
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getEmailAdress(), 
 								odr.getNbrContractRedbox(), 
@@ -356,65 +354,7 @@ public class Traitement implements Runnable {
 		return false;
 	}
 
-	public static HashMap<Integer, Integer> getOdfPrice() {
-		if(odfPrice == null) {
-			odfPrice = new HashMap<Integer, Integer>();
-
-			odfPrice.put(25698, 30);
-			odfPrice.put(25699, 30);
-			odfPrice.put(25700, 30);
-			odfPrice.put(25701, 30);
-			odfPrice.put(25702, 30);
-			odfPrice.put(25703, 30);
-			odfPrice.put(25704, 30);
-			odfPrice.put(25705, 30);
-			odfPrice.put(25706, 30);
-			odfPrice.put(25707, 30);
-			odfPrice.put(25708, 30);
-			odfPrice.put(25709, 30);
-
-			odfPrice.put(25710, 30);
-			odfPrice.put(25711, 30);
-			odfPrice.put(25712, 30);
-			odfPrice.put(25713, 30);
-			
-			odfPrice.put(24021, 30);
-			odfPrice.put(24023, 40);
-			odfPrice.put(24024, 60);
-			odfPrice.put(24026, 80);
-			odfPrice.put(24028, 30);
-			odfPrice.put(24032, 40);
-			odfPrice.put(24053, 60);
-			odfPrice.put(24054, 80);
-
-			odfPrice.put(22368, 30);
-			odfPrice.put(22370, 40);
-			odfPrice.put(22372, 60);
-			odfPrice.put(22374, 80);
-			odfPrice.put(22375, 30);
-			odfPrice.put(22377, 40);
-			odfPrice.put(22379, 60);
-			odfPrice.put(22380, 80);
-
-			odfPrice.put(18274, 30);
-			odfPrice.put(18275, 30);
-			odfPrice.put(18276, 30);
-			odfPrice.put(18277, 30);	
-
-			odfPrice.put(22382, 60);
-			odfPrice.put(22385, 60);
-			odfPrice.put(22384, 60);
-			odfPrice.put(22387, 60);
-
-			odfPrice.put(24064, 60);
-			odfPrice.put(24066, 60);
-			odfPrice.put(24065, 60);
-			odfPrice.put(24067, 60);
-		}
-		return odfPrice;
-	}
-
-	public static void exportToCsvOdr(TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
+	public static void exportToCsvOdr(CodeEligibleRepository codeEligibleRepository, TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("NumeroContratRedbox", "DateEffet", "Nom", "Prenom", "Adresse", "CodePostal", "Ville", "Ctry", "IBAN", "Bic", "Montant"));
@@ -422,7 +362,8 @@ public class Traitement implements Runnable {
 		for(TraitementSql traitement : traitements) {
 			CsvSql odr = traitement.getCsv();
 			if(valideDateEligible(traitement, config, odr, false)) { 
-				String montant = traitement.getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
+				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
+
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getOdrPk().getNbrContractRedbox(), dateFormat.format(odr.getProductSalesDate()),	odr.getClientName(),odr.getCustomerFirstName(),
 								odr.getNbrInTheTrack() + " " + odr.getTrackCodeType() + " " + odr.getTrackName(),
@@ -509,7 +450,7 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportMailToCsvOdr(TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
+	public static void exportMailToCsvOdr(CodeEligibleRepository codeEligibleRepository, TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Date de traitement", "Titre client", "Nom ", "Prenom", "Offre", "Montant", "Code magasin", "Type d acte","Date operation","Date delivrance","Code prestation"));
@@ -518,9 +459,7 @@ public class Traitement implements Runnable {
 			CsvSql odr = traitement.getCsv();
 
 			if(valideDateEligible(traitement, config, odr, true)) { 
-
-				String montant = traitement.getOffre().equals(Offre.ODR) ? "30" : String.valueOf(getOdfPrice().get(Integer.parseInt(odr.getProductCode())));
-
+				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
 				CSVService.writeLine(writer,
 						Arrays.asList(odr.getEmailAdress(), 
 								odr.getOdrPk().getNbrContractRedbox(), 
@@ -575,5 +514,11 @@ public class Traitement implements Runnable {
 		}
 
 		return false;
+	}
+
+	private static String getMontant(CodeEligibleRepository codeEligibleRepository, Offre offre, String productCode) {
+		CodeEligibleSql code = codeEligibleRepository.findByCodeEligible(productCode);
+		if(code == null) return "ERROR : CODE NON TROUVE";
+		return offre.equals(Offre.ODR) ? code.getOdrPrix().toString() : code.getOdfPrix().toString();
 	}
 }
