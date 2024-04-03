@@ -15,17 +15,11 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-import model.ConfigOdrRefCsv;
-
 public class CSVService {
 
-    private static final char DEFAULT_SEPARATOR = ';';
-    
-    public static MappingIterator<ConfigOdrRefCsv> getOdrdata() throws IOException {
-    	return getOdrdata("configuration/Assurant.csv", true, ConfigOdrRefCsv.class);
-    }
-    
-    public static <T> MappingIterator<T> getOdrdata(String path, boolean ressource, Class<T> classType) throws IOException {
+	private static final char DEFAULT_SEPARATOR = ';';
+
+	public static <T> MappingIterator<T> getOdrdata(String path, boolean ressource, Class<T> classType) throws IOException {
 		CsvFactory csvFactory = new CsvFactory();
 		csvFactory.enable(CsvParser.Feature.TRIM_SPACES);
 		csvFactory.enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS);
@@ -38,54 +32,54 @@ public class CSVService {
 		} else {
 			return mapper.readerFor(classType).with(schema).readValues(new File(path));
 		}
-    }
-    
-    public static void writeLine(Writer w, List<String> values) throws IOException {
-        writeLine(w, values, DEFAULT_SEPARATOR, ' ');
-    }
+	}
 
-    public static void writeLine(Writer w, List<String> values, char separators) throws IOException {
-        writeLine(w, values, separators, ' ');
-    }
+	public static void writeLine(Writer w, List<String> values) throws IOException {
+		writeLine(w, values, DEFAULT_SEPARATOR, ' ');
+	}
 
-    //https://tools.ietf.org/html/rfc4180
-    private static String followCVSformat(String value) {
-        String result = value;
-        if (result.contains("\"")) {
-            result = result.replace("\"", "\"\"");
-        }
-        return result;
-    }
+	public static void writeLine(Writer w, List<String> values, char separators) throws IOException {
+		writeLine(w, values, separators, ' ');
+	}
 
-    public static void writeLine(Writer w, List<String> values, char separators, char customQuote) throws IOException {
-        boolean first = true;
+	//https://tools.ietf.org/html/rfc4180
+	private static String followCVSformat(String value) {
+		String result = value;
+		if (result.contains("\"")) {
+			result = result.replace("\"", "\"\"");
+		}
+		return result;
+	}
 
-        if (separators == ' ') {
-            separators = DEFAULT_SEPARATOR;
-        }
+	public static void writeLine(Writer w, List<String> values, char separators, char customQuote) throws IOException {
+		boolean first = true;
 
-        StringBuilder sb = new StringBuilder();
-        for (String value : values) {
-            if (!first) {
-                sb.append(separators);
-            }
-            if (customQuote == ' ') {
-                sb.append(followCVSformat(value));
-            } else {
-                sb.append(customQuote).append(followCVSformat(value)).append(customQuote);
-            }
+		if (separators == ' ') {
+			separators = DEFAULT_SEPARATOR;
+		}
 
-            first = false;
-        }
-        
-        // change LF (\n) to CRLF (\r\n)
-        sb.append("\r\n");
-        w.append(sb.toString());
-    }
-    
-    public static String formatDateForCompare(Date date) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMMdd", Locale.ENGLISH);
+		StringBuilder sb = new StringBuilder();
+		for (String value : values) {
+			if (!first) {
+				sb.append(separators);
+			}
+			if (customQuote == ' ') {
+				sb.append(followCVSformat(value));
+			} else {
+				sb.append(customQuote).append(followCVSformat(value)).append(customQuote);
+			}
+
+			first = false;
+		}
+
+		// change LF (\n) to CRLF (\r\n)
+		sb.append("\r\n");
+		w.append(sb.toString());
+	}
+
+	public static String formatDateForCompare(Date date) {
+		SimpleDateFormat dateFormat = DateService.getDateFormat();
 		return dateFormat.format(date);
-    }
+	}
 
 }

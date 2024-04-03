@@ -244,14 +244,6 @@
 			"type": "STRING",
 			"value": "",
 			"mandatory": true
-		},
-		{
-			"configName": "passEmetteur",
-			"id": 43,
-			"label": "Mot de passe emetteur",
-			"type": "PASSWORD",
-			"value": "",
-			"mandatory": true
 		}
 	],
 	"configCodeBarre": [
@@ -287,6 +279,14 @@
 		}
 	],
 	"configOdr": [
+		{
+			"configName": "migration",
+			"id": 59,
+			"label": "Migrer le json",
+			"type": "CHECKBOX",
+			"value": "",
+			"mandatory": false
+		},
 		{
 			"configName": "referential",
 			"id": 60,

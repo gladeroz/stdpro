@@ -2,6 +2,8 @@ package utils;
 
 import java.io.File;
 
+import app.traitement.Traitement;
+
 //import org.apache.log4j.Logger;
 
 import net.sourceforge.tess4j.Tesseract;
@@ -29,9 +31,9 @@ public class TesseracService {
 			if (System.getProperty("os.name").contains("Windows")) {
 				boolean is64bit = (System.getenv("ProgramFiles(x86)") != null);
 				if(is64bit) {
-					System.load(Traitement.withSlash(tess4j) + "lib"+ File.separator + "win32-x86-64" + File.separator + "gsdll64.dll");
+					System.load(Traitement.withSlash(tess4j) + "win32-x86-64" + File.separator + "gsdll64.dll");
 				} else {
-					System.load(Traitement.withSlash(tess4j) + "lib"+ File.separator + "win32-x86" + File.separator + "gsdll32.dll");
+					System.load(Traitement.withSlash(tess4j) + "win32-x86" + File.separator + "gsdll32.dll");
 				}
 			} 
 		}

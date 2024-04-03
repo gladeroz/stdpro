@@ -27,7 +27,8 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.multi.GenericMultipleBarcodeReader;
 import com.google.zxing.multi.MultipleBarcodeReader;
 
-import model.BarcodeInfo;
+import app.model.BarcodeInfo;
+import app.traitement.Traitement;
 import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.PdfUtilities;
 
@@ -80,11 +81,12 @@ public class PdfService {
 	}
 
 	public static String getTextOcr(File afile) throws IOException, UnsatisfiedLinkError, TesseractException {
-		File[] png = PdfUtilities.convertPdf2Png(afile);
+		//File[] png = PdfUtilities.convertPdf2Png(afile);
 		//logger.info("[Fichier convertit en png]");
 
 		// the path of your tess data folder inside the extracted file 
-		return TesseracService.getInstance().doOCR(png[0]); 
+		//return TesseracService.getInstance().doOCR(png[0]); 
+		return TesseracService.getInstance().doOCR(afile); 
 	}
 
 	public static String getTextOcr(File afile, String xStr, String yStr, String widthStr, String heightStr) throws IOException, UnsatisfiedLinkError, TesseractException {
