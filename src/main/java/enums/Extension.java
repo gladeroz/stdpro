@@ -4,7 +4,7 @@ public enum Extension {
 	PDF,
 	CSV,
 	XLS,
-	XLSX, 
+	XLSX,
 	TXT,
 	JPG,
 	TIFF,

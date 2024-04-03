@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.log4j.Logger;
 
 import app.model.ConfigItem;
@@ -52,12 +53,12 @@ public class ExtractZone {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setExportcsv(item.getValue());
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumExtractZone.OCR.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setOcr(new Boolean(item.getValue()));
 			}
-			
+
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
 				cc.setTess4j(item.getValue());
@@ -94,10 +95,10 @@ public class ExtractZone {
 	}
 
 	private static void extractZone(CustomConfigExtractZone config) throws Exception, UnsatisfiedLinkError {
-		File f = new File(config.getPath()); 
+		File f = new File(config.getPath());
 		File[] subFiles = f.listFiles();
 
-		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String>> output = new ArrayList<>();
 
 		if (subFiles != null && subFiles.length > 0) {
 			for (File aFile : subFiles) {
@@ -117,7 +118,7 @@ public class ExtractZone {
 					logger.info(result);
 
 					if(Traitement.variableExist(config.getExportcsv())) {
-						output.add(new ArrayList<String>(Arrays.asList(result.split("\\r?\\n"))));
+						output.add(new ArrayList<>(Arrays.asList(result.split("\\r?\\n"))));
 					}
 				}
 			}

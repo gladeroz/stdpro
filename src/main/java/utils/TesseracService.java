@@ -10,11 +10,11 @@ import net.sourceforge.tess4j.Tesseract;
 
 public class TesseracService {
 	//private static Logger logger = Logger.getLogger(TesseracService.class);
-	
+
 	private static Tesseract tesseract;
-	
+
 	private static String tess4j;
-	
+
 	private static int dpi = 300;
 
 	private TesseracService(){}
@@ -22,11 +22,11 @@ public class TesseracService {
 	public static Tesseract getInstance() throws UnsatisfiedLinkError {
 		if(tesseract == null) {
 			//logger.warn("Initialisation de Tesserac");
-			
-			tesseract = new Tesseract(); 
-			tesseract.setDatapath(Traitement.withoutSlash(tess4j)); 
+
+			tesseract = new Tesseract();
+			tesseract.setDatapath(Traitement.withoutSlash(tess4j));
 			tesseract.setLanguage("fra");
-			tesseract.setTessVariable("user_defined_dpi", Integer.toString(dpi));      
+			tesseract.setTessVariable("user_defined_dpi", Integer.toString(dpi));
 
 			if (System.getProperty("os.name").contains("Windows")) {
 				boolean is64bit = (System.getenv("ProgramFiles(x86)") != null);
@@ -35,7 +35,7 @@ public class TesseracService {
 				} else {
 					System.load(Traitement.withSlash(tess4j) + "win32-x86" + File.separator + "gsdll32.dll");
 				}
-			} 
+			}
 		}
 		return tesseract;
 	}

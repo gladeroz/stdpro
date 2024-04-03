@@ -11,7 +11,7 @@ public class CustomConfigOcr {
 	private String y;
 	private String width;
 	private String height;
-	
+
 	public String getPath() {
 		return path;
 	}

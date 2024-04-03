@@ -13,9 +13,9 @@ public class ConfigItem {
 	private String value;
 	private String configName;
 	private Boolean mandatory;
-	
+
 	private ArrayList<Options> options;
-	
+
 	public Integer getId() {
 		return id;
 	}

@@ -2,12 +2,12 @@ package app.traitement.enums;
 
 public enum CustomEnumOcr {
 	PATH ("path"),
-	TESS4J ("tess4j"), 
-	PATTERN ("pattern"), 
+	TESS4J ("tess4j"),
+	PATTERN ("pattern"),
 	SUBSEARCH ("subSearch"),
 	RENAME ("rename"),
 	OCR("ocr"),
-	X ("axisX"), 
+	X ("axisX"),
 	Y ("axisY"),
 	HEIGHT("height"),
 	WIDTH("width"),;

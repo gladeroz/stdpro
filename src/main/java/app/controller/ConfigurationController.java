@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
+
 import app.config.StageManager;
 import app.model.ConfigCollection;
 import app.model.ConfigItem;
@@ -100,7 +101,7 @@ public class ConfigurationController implements Initializable {
 		applyConfButton.setOnAction(this::defaultApplyButtonAction);
 
 		configuration.autosize();
-	}  
+	}
 
 	@FXML
 	private void defaultApplyButtonAction(ActionEvent event){
@@ -273,7 +274,7 @@ public class ConfigurationController implements Initializable {
 			case CHECKBOX :
 				CheckBox c = new CheckBox();
 				c.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
-				c.setSelected(new Boolean(child.getValue()));	
+				c.setSelected(new Boolean(child.getValue()));
 				GridPane.setConstraints(c, 1, count);
 				grid.getChildren().add(c);
 

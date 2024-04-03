@@ -73,7 +73,7 @@ public class CodeBarre {
 	}
 
 	private static void codeBarre(CustomConfigCodeBarre config) throws Exception, UnsatisfiedLinkError {
-		File f = new File(config.getPath()); 
+		File f = new File(config.getPath());
 		File[] subFiles = f.listFiles();
 
 		if (subFiles != null && subFiles.length > 0) {

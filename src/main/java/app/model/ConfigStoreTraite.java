@@ -11,5 +11,5 @@ public class ConfigStoreTraite {
 
 	public void setStore(List<ConfigOdrTraiteCsv> store) {
 		this.store = store;
-	}	
+	}
 }

@@ -1,10 +1,10 @@
 package app.traitement.enums;
 
 public enum CustomEnumCodeBarre {
-	PATH("path"), 
+	PATH("path"),
 	TESS4J ("tess4j"),
 	RENAME ("rename");
-	
+
 	private String value;
 
 	CustomEnumCodeBarre(String str) {
