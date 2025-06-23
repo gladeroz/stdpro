@@ -77,7 +77,9 @@ public class Yaml {
 		FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showSaveDialog(stage);
 
-		if(file == null) return;
+		if(file == null) {
+			return;
+		}
 
 		PrintWriter pwriter = new PrintWriter(file.getPath(), java.nio.charset.StandardCharsets.UTF_8.name());
 

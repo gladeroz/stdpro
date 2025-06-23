@@ -4,7 +4,7 @@ public class CustomConfigCodeBarre {
 	private String path;
 	private String tess4j;
 	private Boolean rename;
-
+	
 	public String getPath() {
 		return path;
 	}

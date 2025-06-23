@@ -27,12 +27,16 @@ public class ComptagePDF {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumComptage.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumComptage.EXPORTCSV.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setExportcsv(item.getValue());
 			}
 		}

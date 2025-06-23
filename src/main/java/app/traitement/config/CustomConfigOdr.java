@@ -8,59 +8,46 @@ public class CustomConfigOdr {
 	private String intervalMin;
 	private String intervalMax;
 	private boolean migration;
-
-	public String getReferential() {
-		return referential;
-	}
-
-	public void setReferential(String referential) {
-		this.referential = referential;
-	}
-
-	public String getDocTraite() {
-		return docTraite;
-	}
-
-	public void setDocTraite(String docTraite) {
-		this.docTraite = docTraite;
-	}
-
-	public String getExportcsv() {
-		return exportcsv;
-	}
-
-	public void setExportcsv(String exportcsv) {
-		this.exportcsv = exportcsv;
-	}
-
+	
 	public String getDelta() {
 		return delta;
 	}
-
 	public void setDelta(String delta) {
 		this.delta = delta;
 	}
-
+	public String getReferential() {
+		return referential;
+	}
+	public void setReferential(String referential) {
+		this.referential = referential;
+	}
+	public String getDocTraite() {
+		return docTraite;
+	}
+	public void setDocTraite(String docTraite) {
+		this.docTraite = docTraite;
+	}
+	public String getExportcsv() {
+		return exportcsv;
+	}
+	public void setExportcsv(String exportcsv) {
+		this.exportcsv = exportcsv;
+	}
 	public String getIntervalMin() {
 		return intervalMin;
 	}
-
 	public void setIntervalMin(String intervalMin) {
 		this.intervalMin = intervalMin;
 	}
-
 	public String getIntervalMax() {
 		return intervalMax;
 	}
-
 	public void setIntervalMax(String intervalMax) {
 		this.intervalMax = intervalMax;
 	}
-
 	public boolean getMigration() {
 		return migration;
 	}
-
 	public void setMigration(boolean migration) {
 		this.migration = migration;
 	}

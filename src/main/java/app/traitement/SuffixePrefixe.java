@@ -21,17 +21,23 @@ public class SuffixePrefixe {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumSuffixe.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumSuffixe.SUFFIXE.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setSuffixe(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumSuffixe.PREFIXE.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPrefixe(item.getValue());
 			}
 		}

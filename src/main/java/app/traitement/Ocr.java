@@ -27,52 +27,72 @@ public class Ocr {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumOcr.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.PATTERN.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPattern(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.SUBSEARCH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setSubSearch(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.Y.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setY(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.X.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setX(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.WIDTH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setWidth(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.HEIGHT.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setHeight(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.RENAME.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setRename(new Boolean(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.OCR.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setOcr(new Boolean(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setTess4j(item.getValue());
 			}
 		}

@@ -12,22 +12,27 @@ public class ConfigExportCSV {
 		this.nombrePage = nombrePage;
 	}
 
-	public Integer getNombrePage() {
-		return nombrePage;
-	}
-	public void setNombrePage(Integer nombrePage) {
-		this.nombrePage = nombrePage;
-	}
-	public String getFileName() {
-		return fileName;
-	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
 	public String getDirectory() {
 		return directory;
 	}
+
 	public void setDirectory(String directory) {
 		this.directory = directory;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public Integer getNombrePage() {
+		return nombrePage;
+	}
+
+	public void setNombrePage(Integer nombrePage) {
+		this.nombrePage = nombrePage;
 	}
 }

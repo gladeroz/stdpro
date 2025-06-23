@@ -1,0 +1,40 @@
+spring:
+  main:
+    web-application-type: none
+
+odr:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/odr?currentSchema=public
+    username: postgres
+    password: pgadmin
+    driver-class-name: org.postgresql.Driver
+  #jpa:
+    #properties:
+      #hibernate:
+        #dialect: org.hibernate.dialect.PostgreSQLDialect
+        #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        #jdbc.lob.non_contextual_creation: true
+    #hibernate:
+      #ddl-auto: update
+    #show-sql: true
+
+gims:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/second?currentSchema=public
+    username: postgres
+    password: pgadmin
+    driver-class-name: org.postgresql.Driver
+  #jpa:
+    #properties:
+      #hibernate:
+        #dialect: org.hibernate.dialect.PostgreSQLDialect
+        #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        #jdbc.lob.non_contextual_creation: true
+    #hibernate:
+      #ddl-auto: update
+    #show-sql: true
+
+stdpro:
+  mail:
+    api-key: toto
+    api-secret-key: toto

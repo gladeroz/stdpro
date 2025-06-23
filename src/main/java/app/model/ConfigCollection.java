@@ -13,6 +13,7 @@ public class ConfigCollection {
 	private Collection<ConfigItem> configSendMail;
 	private Collection<ConfigItem> configExtractZone;
 	private Collection<ConfigItem> configOdr;
+	private Collection<ConfigItem> configGims;
 
 	public Collection<ConfigItem> getSpecificConfig(Job job){
 		switch (job) {
@@ -30,6 +31,8 @@ public class ConfigCollection {
 			return getConfigCodeBarre();
 		case ODR:
 			return getConfigOdr();
+		case GIMS:
+			return getConfigGims();
 		default:
 			return null;
 		}
@@ -89,5 +92,13 @@ public class ConfigCollection {
 
 	public void setConfigOdr(Collection<ConfigItem> configOdr) {
 		this.configOdr = configOdr;
+	}
+
+	public Collection<ConfigItem> getConfigGims() {
+		return configGims;
+	}
+
+	public void setConfigGims(Collection<ConfigItem> configGims) {
+		this.configGims = configGims;
 	}
 }

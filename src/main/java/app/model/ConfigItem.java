@@ -13,9 +13,7 @@ public class ConfigItem {
 	private String value;
 	private String configName;
 	private Boolean mandatory;
-
 	private ArrayList<Options> options;
-
 	public Integer getId() {
 		return id;
 	}
@@ -46,16 +44,16 @@ public class ConfigItem {
 	public void setConfigName(String configName) {
 		this.configName = configName;
 	}
-	public ArrayList<Options> getOptions() {
-		return options;
-	}
-	public void setOptions(ArrayList<Options> options) {
-		this.options = options;
-	}
 	public Boolean getMandatory() {
 		return mandatory;
 	}
 	public void setMandatory(Boolean mandatory) {
 		this.mandatory = mandatory;
+	}
+	public ArrayList<Options> getOptions() {
+		return options;
+	}
+	public void setOptions(ArrayList<Options> options) {
+		this.options = options;
 	}
 }

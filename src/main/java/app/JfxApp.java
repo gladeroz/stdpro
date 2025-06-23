@@ -5,23 +5,22 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import app.config.StageManager;
-import app.repository.TraitementRepository;
+import app.repository.gims.TraitementGimsRepository;
+import app.repository.odr.TraitementOdrRepository;
 import app.service.MainRepository;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 @SpringBootApplication
-@EntityScan("app.entity")
-@EnableJpaRepositories("app.repository")
 public class JfxApp extends Application {
 
-	@Autowired TraitementRepository t;
+	@Autowired TraitementGimsRepository gims;
+
+	@Autowired TraitementOdrRepository odr;
 
 	protected ConfigurableApplicationContext springContext;
 	protected StageManager stageManager;

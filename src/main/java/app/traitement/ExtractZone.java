@@ -25,42 +25,58 @@ public class ExtractZone {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumExtractZone.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumExtractZone.Y.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setY(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumExtractZone.X.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setX(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumExtractZone.WIDTH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setWidth(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumExtractZone.HEIGHT.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setHeight(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumExtractZone.EXPORTCSV.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setExportcsv(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumExtractZone.OCR.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setOcr(new Boolean(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setTess4j(item.getValue());
 			}
 		}

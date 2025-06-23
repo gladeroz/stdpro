@@ -347,5 +347,40 @@
 			"configName": "intervalmax",
 			"mandatory": false
 		}
+	],
+	"configGims": [
+		{
+			"configName": "doc_traite",
+			"id": 66,
+			"label": "Mise a jour des factures",
+			"options": [
+				"FILECHOOSER_FILE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
+		},
+		{
+			"configName": "doc_suivi",
+			"id": 67,
+			"label": "Mise a jour du suivi",
+			"options": [
+				"FILECHOOSER_FILE"
+			],
+			"type": "PATH",
+			"value": "",
+			"mandatory": false
+		},
+		{
+			"configName": "exportcsv",
+			"id": 68,
+			"label": "Chemin CSV",
+			"options": [
+				"FILECHOOSER_DIRECTORY"
+			],
+			"type": "PATH",
+			"value": "C:\\",
+			"mandatory": false
+		}
 	]
 } 
