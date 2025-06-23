@@ -8,22 +8,23 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import app.entity.CodeEligibleSql;
-import app.entity.CsvSql;
-import app.entity.TraitementSql;
+import app.entity.odr.CodeEligibleSql;
+import app.entity.odr.CsvSql;
+import app.entity.odr.TraitementSql;
 import app.model.ConfigCollection;
 import app.model.ConfigExportCSV;
 import app.model.ConfigOdrJson;
 import app.model.ConfigOdrRefCsv;
 import app.model.ConfigOdrTraiteCsv;
 import app.model.ConfigStore;
-import app.repository.CodeEligibleRepository;
+import app.repository.odr.CodeEligibleRepository;
 import app.traitement.config.CustomConfigOdr;
 import enums.Job;
 import enums.Offre;
@@ -77,6 +78,9 @@ public class Traitement implements Runnable {
 			case ODR:
 				new BulletinAdhesion().traitement(config.getConfigOdr());
 				break;
+			case GIMS:
+				Gims.traitement(config.getConfigGims());
+				break;
 			default:
 				logger.error("L'action n'est pas implementee");
 			}
@@ -104,7 +108,9 @@ public class Traitement implements Runnable {
 	}
 
 	public static String withSlash(String path) {
-		if(! Traitement.variableExist(path)) return null;
+		if(! Traitement.variableExist(path)) {
+			return null;
+		}
 
 		if(path.charAt(path.length()-1) != File.separatorChar){
 			return path + File.separator;
@@ -113,7 +119,9 @@ public class Traitement implements Runnable {
 	}
 
 	public static String withoutSlash(String path) {
-		if(! Traitement.variableExist(path)) return null;
+		if(! Traitement.variableExist(path)) {
+			return null;
+		}
 
 		if(path.charAt(path.length()-1) == File.separatorChar){
 			return path.substring(0, path.length() - 1);
@@ -308,7 +316,9 @@ public class Traitement implements Runnable {
 
 		ConfigOdrTraiteCsv trait = line.getTraitement();
 
-		if((trait == null) || StringUtils.isEmpty(line.getOdr().getProductCode())) return false;
+		if((trait == null) || StringUtils.isEmpty(line.getOdr().getProductCode())) {
+			return false;
+		}
 
 		boolean dateTraitement = trait.getDateTraitement() != null;
 
@@ -449,12 +459,12 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportMailToCsvOdr(CodeEligibleRepository codeEligibleRepository, TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
+	public static void exportMailToCsvOdr(CodeEligibleRepository codeEligibleRepository, app.entity.odr.TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("Adresse mail", "Numero Contrat Redbox", "Filler", "Formulaire", "Bulletin d adhesion", "Facture", "RIB", "Date reception", "Date de traitement", "Titre client", "Nom ", "Prenom", "Offre", "Montant", "Code magasin", "Type d acte","Date operation","Date delivrance","Code prestation"));
 
-		for(TraitementSql traitement : traitements) {
+		for(app.entity.odr.TraitementSql traitement : traitements) {
 			CsvSql odr = traitement.getCsv();
 
 			if(valideDateEligible(traitement, config, odr, true)) {
@@ -485,11 +495,69 @@ public class Traitement implements Runnable {
 
 		writer.flush();
 		writer.close();
+	}
 
+
+	public static void exportToCsvPayeGims(List<app.entity.gims.TraitementSql> ts, String csvFile, DateFormat dateFormat) throws IOException {
+		FileWriter writer = new FileWriter(csvFile);
+
+		CSVService.writeLine(writer, Arrays.asList("t.tierscode", "t.numerofacture", "s.dateaction", "s.action", "t.soldetenuecompte"));
+
+		for(app.entity.gims.TraitementSql t : ts) {
+			if(!t.getSuivi().isEmpty()) {
+				t.getSuivi().sort(Comparator.comparing(suivi -> suivi.getSuiviGimsPk().getDateAction()));
+				for(app.entity.gims.SuiviSql s : t.getSuivi()) {
+					CSVService.writeLine(writer, Arrays.asList(
+							t.getGimsPk().getTiersCode().toString(),
+							t.getGimsPk().getNumeroFacture().toString(),
+							dateFormat.format(s.getSuiviGimsPk().getDateAction()),
+							s.getSuiviGimsPk().getAction().toString(),
+							t.getSoldeTenueCompte().toString()
+							));
+				}
+			}
+		}
+
+		writer.flush();
+		writer.close();
+	}
+	
+	public static void exportToCsvRafGims(List<app.entity.gims.TraitementSql> ts, String csvFile, DateFormat dateFormat) throws IOException {
+		FileWriter writer = new FileWriter(csvFile);
+
+		CSVService.writeLine(writer, Arrays.asList("t.tierscode", "t.numerofacture", "s.dateaction", "s.action", "t.soldetenuecompte"));
+
+		for(app.entity.gims.TraitementSql t : ts) {
+			if(!t.getSuivi().isEmpty()) {
+				t.getSuivi().sort(Comparator.comparing(suivi -> suivi.getSuiviGimsPk().getDateAction()));
+				for(app.entity.gims.SuiviSql s : t.getSuivi()) {
+					CSVService.writeLine(writer, Arrays.asList(
+							t.getGimsPk().getTiersCode().toString(),
+							t.getGimsPk().getNumeroFacture().toString(),
+							dateFormat.format(s.getSuiviGimsPk().getDateAction()),
+							s.getSuiviGimsPk().getAction().toString(),
+							t.getSoldeTenueCompte().toString()
+					));
+				}
+			} else {
+				CSVService.writeLine(writer, Arrays.asList(
+						t.getGimsPk().getTiersCode().toString(),
+						t.getGimsPk().getNumeroFacture().toString(),
+						"",
+						"",
+						t.getSoldeTenueCompte().toString()
+				));
+			}
+		}
+
+		writer.flush();
+		writer.close();
 	}
 
 	private static boolean valideDateEligible(TraitementSql trait, CustomConfigOdr config, CsvSql line, boolean full) throws ParseException {
-		if((trait == null) || StringUtils.isEmpty(line.getProductCode())) return false;
+		if((trait == null) || StringUtils.isEmpty(line.getProductCode())) {
+			return false;
+		}
 
 		if(!full && (trait == null
 				|| trait.getBulletin() == null
@@ -516,7 +584,9 @@ public class Traitement implements Runnable {
 
 	private static String getMontant(CodeEligibleRepository codeEligibleRepository, Offre offre, String productCode) {
 		CodeEligibleSql code = codeEligibleRepository.findByCodeEligible(productCode);
-		if(code == null) return "ERROR : CODE NON TROUVE";
+		if(code == null) {
+			return "ERROR : CODE NON TROUVE";
+		}
 		return offre.equals(Offre.ODR) ? code.getOdrPrix().toString() : code.getOdfPrix().toString();
 	}
 }

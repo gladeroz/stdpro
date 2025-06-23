@@ -21,18 +21,18 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 
-import app.entity.CodeEligibleSql;
-import app.entity.CsvSql;
-import app.entity.TraitementSql;
-import app.entity.pk.OdrPk;
+import app.entity.odr.CodeEligibleSql;
+import app.entity.odr.CsvSql;
+import app.entity.odr.TraitementSql;
+import app.entity.odr.pk.OdrPk;
 import app.model.ConfigItem;
 import app.model.ConfigOdrJson;
 import app.model.ConfigOdrRefCsv;
 import app.model.ConfigOdrTraiteCsv;
 import app.model.ConfigStore;
-import app.repository.CodeEligibleRepository;
-import app.repository.CsvRepository;
-import app.repository.TraitementRepository;
+import app.repository.odr.CodeEligibleRepository;
+import app.repository.odr.CsvRepository;
+import app.repository.odr.TraitementOdrRepository;
 import app.service.MainRepository;
 import app.traitement.config.CustomConfigOdr;
 import app.traitement.enums.CustomEnumOdr;
@@ -55,37 +55,51 @@ public class BulletinAdhesion {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumOdr.MIGRATION.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setMigration(new Boolean(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.REFERENTIAL.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setReferential(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.DELTA.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setDelta(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.DOC_TRAITE.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setDocTraite(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.EXPORTCSV.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setExportcsv(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.INTERVALMIN.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setIntervalMin(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.INTERVALMAX.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setIntervalMax(item.getValue());
 			}
 		}
@@ -123,7 +137,7 @@ public class BulletinAdhesion {
 
 		//int countAlreadyExist = 0, countAdd = 0;
 
-		TraitementRepository traitementRepository = MainRepository.getTraitementRepository();
+		TraitementOdrRepository traitementRepository = MainRepository.getTraitementOdrRepository();
 		CsvRepository csvRepository = MainRepository.getCsvRepository();
 		CodeEligibleRepository codeEligibleRepository = MainRepository.getCodeEligibleRepository();
 
@@ -172,7 +186,7 @@ public class BulletinAdhesion {
 		exportToCsv(codeEligibleRepository, traitementRepository, csvRepository, config);
 	}
 
-	private void exportToCsv(CodeEligibleRepository codeEligibleRepository, TraitementRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
+	private void exportToCsv(CodeEligibleRepository codeEligibleRepository, TraitementOdrRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
 		if(Traitement.variableExist(config.getExportcsv())) {
 			DateFormat exportFormat = DateService.getDateFormat();
 			DateFormat varFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -204,7 +218,7 @@ public class BulletinAdhesion {
 		if(Traitement.variableExist(config.getDocTraite())) {
 
 			logger.info("Mise a jour de la BDD avec les documents traites");
-			MappingIterator<ConfigOdrTraiteCsv> traitement = CSVService.getOdrdata(config.getDocTraite(), false, ConfigOdrTraiteCsv.class);
+			MappingIterator<ConfigOdrTraiteCsv> traitement = CSVService.getCsvData(config.getDocTraite(), false, ConfigOdrTraiteCsv.class);
 
 			if(codeEligibleRepository.count() == 0) {
 				initTableCodeEligible(codeEligibleRepository);
@@ -215,7 +229,9 @@ public class BulletinAdhesion {
 
 			while(traitement.hasNext()) {
 				ConfigOdrTraiteCsv importCsv = traitement.next();
-				if(importCsv.getNbrContractRedbox().isEmpty()) continue;
+				if(importCsv.getNbrContractRedbox().isEmpty()) {
+					continue;
+				}
 
 				logger.info("Import du numero de contrat traite : {"+ importCsv.getNbrContractRedbox()+"}");
 
@@ -260,7 +276,9 @@ public class BulletinAdhesion {
 						//On itere sur 5 ans
 						for(int i = 1; i <= MAXYEARS; i++) {
 							found = intervalOdf(importCsv, dRef, dImport, i);
-							if(found) break;
+							if(found) {
+								break;
+							}
 						}
 
 						if(!found) {
@@ -305,11 +323,13 @@ public class BulletinAdhesion {
 		if(Traitement.variableExist(config.getDelta())) {
 
 			logger.info("Mise a jour de la BDD avec un delta");
-			MappingIterator<ConfigOdrRefCsv> delta = CSVService.getOdrdata(config.getDelta(), false, ConfigOdrRefCsv.class);
+			MappingIterator<ConfigOdrRefCsv> delta = CSVService.getCsvData(config.getDelta(), false, ConfigOdrRefCsv.class);
 
 			while(delta.hasNext()) {
 				ConfigOdrRefCsv odrDelta = delta.next();
-				if(odrDelta.getNbrContractRedbox().isEmpty()) continue;
+				if(odrDelta.getNbrContractRedbox().isEmpty()) {
+					continue;
+				}
 
 				logger.info("Import du numero de contrat en delta : {"+ odrDelta.getNbrContractRedbox()+"}");
 
@@ -355,7 +375,9 @@ public class BulletinAdhesion {
 	}
 
 	private static void changeValueType (TraitementSql traitementSql, BaType type) {
-		if(traitementSql == null) return;
+		if(traitementSql == null) {
+			return;
+		}
 
 		if(!type.equals(BaType.NV)) {
 			traitementSql.setBulletin(type);

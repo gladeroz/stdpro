@@ -28,17 +28,23 @@ public class CodeBarre {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumCodeBarre.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumCodeBarre.TESS4J.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setTess4j(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumCodeBarre.RENAME.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setRename(new Boolean(item.getValue()));
 			}
 		}

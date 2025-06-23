@@ -16,7 +16,7 @@ public class DateService {
 		return setTime( date, 0, 0, 0, 0);
 	}
 
-	public static Date setTime( final Date date, final int hourOfDay, final int minute, final int second, final int ms ){
+	public static Date setTime(final Date date, final int hourOfDay, final int minute, final int second, final int ms ){
 		final GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime( date );
 		gc.set( Calendar.HOUR_OF_DAY, hourOfDay );

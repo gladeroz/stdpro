@@ -62,6 +62,7 @@ public class ConfigurationController implements Initializable {
 	@FXML private GridPane gridSendMail;
 	@FXML private GridPane gridExtractZone;
 	@FXML private GridPane gridOdr;
+	@FXML private GridPane gridGims;
 
 	@FXML public TextArea LogArea;
 
@@ -149,6 +150,7 @@ public class ConfigurationController implements Initializable {
 			createSectionAccordion(Job.EXTRACT_ZONE, gridExtractZone, cc.getConfigExtractZone());
 			createSectionAccordion(Job.SEND_MAIL, gridSendMail, cc.getConfigSendMail());
 			createSectionAccordion(Job.ODR, gridOdr, cc.getConfigOdr());
+			createSectionAccordion(Job.GIMS, gridGims, cc.getConfigGims());
 			logger.debug("Fin de la creation des onglets de sauvegarde");
 		}catch(Exception e) {
 			logger.error(e);
@@ -163,6 +165,7 @@ public class ConfigurationController implements Initializable {
 		cc.setConfigExtractZone(saveOneConfig(Job.EXTRACT_ZONE, gridExtractZone));
 		cc.setConfigSendMail(saveOneConfig(Job.SEND_MAIL, gridSendMail));
 		cc.setConfigOdr(saveOneConfig(Job.ODR, gridOdr));
+		cc.setConfigGims(saveOneConfig(Job.GIMS, gridGims));
 		logger.debug("Fin du chargement de la sauvegarde");
 	}
 
@@ -172,7 +175,7 @@ public class ConfigurationController implements Initializable {
 		Collection<ConfigItem> cc = config.getSpecificConfig(job);
 		for(Node node : grid.getChildren()) {
 			if(node instanceof DatePicker) {
-				String[] id = ((DatePicker) node).getId().split("#");
+				String[] id = node.getId().split("#");
 				for(ConfigItem c : cc) {
 					LocalDate value = ((DatePicker) node).getValue();
 					String eq = value == null ? null : value.toString();
@@ -184,7 +187,7 @@ public class ConfigurationController implements Initializable {
 			}
 
 			if(node instanceof CheckBox) {
-				String[] id = ((CheckBox) node).getId().split("#");
+				String[] id = node.getId().split("#");
 				for(ConfigItem c : cc) {
 					Boolean value = ((CheckBox) node).isSelected();
 					if(c.getId().equals(Integer.valueOf(id[2])) && ! new Boolean(c.getValue()).equals(value))  {
@@ -196,7 +199,7 @@ public class ConfigurationController implements Initializable {
 
 
 			if(node instanceof TextField) {
-				String[] id = ((TextField) node).getId().split("#");
+				String[] id = node.getId().split("#");
 
 				for(ConfigItem c : cc) {
 					String value = ((TextField) node).getText();
@@ -208,7 +211,7 @@ public class ConfigurationController implements Initializable {
 			}
 
 			if(node instanceof PasswordField) {
-				String[] id = ((PasswordField) node).getId().split("#");
+				String[] id = node.getId().split("#");
 
 				for(ConfigItem c : cc) {
 					String value = ((PasswordField) node).getText();
@@ -231,7 +234,9 @@ public class ConfigurationController implements Initializable {
 
 		int  count = 0;
 
-		if(children == null) return;
+		if(children == null) {
+			return;
+		}
 
 		for (ConfigItem child : children) {
 

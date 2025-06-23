@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvFactory;
@@ -18,12 +19,14 @@ public class CSVService {
 
 	private static final char DEFAULT_SEPARATOR = ';';
 
-	public static <T> MappingIterator<T> getOdrdata(String path, boolean ressource, Class<T> classType) throws IOException {
+	public static <T> MappingIterator<T> getCsvData(String path, boolean ressource, Class<T> classType) throws IOException {
 		CsvFactory csvFactory = new CsvFactory();
 		csvFactory.enable(CsvParser.Feature.TRIM_SPACES);
 		csvFactory.enable(CsvParser.Feature.FAIL_ON_MISSING_COLUMNS);
 		CsvMapper mapper = new CsvMapper(csvFactory);
 		mapper.disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
+		mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+		//mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 
 		CsvSchema schema = mapper.schemaFor(classType).withHeader().withColumnSeparator(DEFAULT_SEPARATOR).withoutEscapeChar();
 		if(ressource) {
@@ -80,5 +83,4 @@ public class CSVService {
 		SimpleDateFormat dateFormat = DateService.getDateFormat();
 		return dateFormat.format(date);
 	}
-
 }

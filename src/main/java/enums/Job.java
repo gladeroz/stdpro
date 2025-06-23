@@ -7,5 +7,6 @@ public enum Job {
 	SEND_MAIL,
 	EXTRACT_ZONE,
 	CODE_BARRE,
-	ODR;
+	ODR,
+	GIMS;
 }

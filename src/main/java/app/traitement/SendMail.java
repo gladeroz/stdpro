@@ -45,17 +45,23 @@ public class SendMail {
 
 		for(ConfigItem item : config) {
 			if(item.getConfigName().equals(CustomEnumSendMail.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setPath(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumSendMail.MAIL_DESTINATAIRE.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setMailDestinataire(item.getValue());
 			}
 
 			if(item.getConfigName().equals(CustomEnumSendMail.MAIL_EMETTEUR.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) return null;
+				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+					return null;
+				}
 				cc.setMailEmetteur(item.getValue());
 			}
 		}

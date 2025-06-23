@@ -25,6 +25,7 @@
                   <CheckMenuItem fx:id="tExtractZone" mnemonicParsing="false" onAction="#validateTraitement" text="Extraire une zone des PDFs" />
                   <CheckMenuItem fx:id="tSendMail" mnemonicParsing="false" onAction="#validateTraitement" text="Envoi de mail" />
                   <CheckMenuItem fx:id="tOdr" mnemonicParsing="false" onAction="#validateTraitement" text="ODR" />
+                  <CheckMenuItem fx:id="tGims" mnemonicParsing="false" onAction="#validateTraitement" text="GIMS" />
               </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Console">

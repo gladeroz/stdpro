@@ -33,6 +33,7 @@ public class MainController implements Initializable {
 	@FXML private CheckMenuItem tExtractZone;
 	@FXML private CheckMenuItem tCodeBarre;
 	@FXML private CheckMenuItem tOdr;
+	@FXML private CheckMenuItem tGims;
 
 	@Lazy @Autowired private StageManager stageManager;
 
@@ -116,6 +117,8 @@ public class MainController implements Initializable {
 			cc.setJob(Job.CODE_BARRE);
 		} else if(item.equals(tOdr)) {
 			cc.setJob(Job.ODR);
+		} else if(item.equals(tGims)) {
+			cc.setJob(Job.GIMS);
 		}
 
 		item.setSelected(true);
