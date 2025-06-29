@@ -79,14 +79,14 @@ public class Ocr {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setRename(new Boolean(item.getValue()));
+				cc.setRename(Boolean.valueOf(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.OCR.getValue())) {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setOcr(new Boolean(item.getValue()));
+				cc.setOcr(Boolean.valueOf(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {

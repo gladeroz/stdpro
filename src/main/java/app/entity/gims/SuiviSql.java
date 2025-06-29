@@ -1,17 +1,20 @@
 package app.entity.gims;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import app.entity.gims.pk.SuiviGimsPk;
-import lombok.Data;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
 @Table(name = "SUIVI")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class SuiviSql {
 
 	@EmbeddedId private SuiviGimsPk suiviGimsPk;

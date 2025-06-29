@@ -2,7 +2,7 @@ package app.entity.pk;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class OdrPk implements Serializable {

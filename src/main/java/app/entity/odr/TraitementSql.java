@@ -3,12 +3,12 @@ package app.entity.odr;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 import app.entity.odr.pk.OdrPk;
 import app.model.ConfigOdrTraiteCsv;
@@ -22,7 +22,8 @@ import utils.DateService;
 @Entity
 @Table(name = "Traitement")
 public class TraitementSql implements Serializable {
-
+	private static final long serialVersionUID = 1L;
+	
 	@EmbeddedId private OdrPk odrPk;
 	private Offre offre;
 	private String filler;

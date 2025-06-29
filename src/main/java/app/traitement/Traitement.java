@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import app.entity.odr.CodeEligibleSql;
 import app.entity.odr.CsvSql;
-import app.entity.odr.TraitementSql;
 import app.model.ConfigCollection;
 import app.model.ConfigExportCSV;
 import app.model.ConfigOdrJson;
@@ -363,12 +362,12 @@ public class Traitement implements Runnable {
 		return false;
 	}
 
-	public static void exportToCsvOdr(CodeEligibleRepository codeEligibleRepository, TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
+	public static void exportToCsvOdr(CodeEligibleRepository codeEligibleRepository, app.entity.odr.TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws IOException, NumberFormatException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("NumeroContratRedbox", "DateEffet", "Nom", "Prenom", "Adresse", "CodePostal", "Ville", "Ctry", "IBAN", "Bic", "Montant"));
 
-		for(TraitementSql traitement : traitements) {
+		for(app.entity.odr.TraitementSql traitement : traitements) {
 			CsvSql odr = traitement.getCsv();
 			if(valideDateEligible(traitement, config, odr, false)) {
 				String montant = getMontant(codeEligibleRepository, traitement.getOffre(), odr.getProductCode());
@@ -385,7 +384,7 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	public static void exportFullToCsvOdr(TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws NumberFormatException, IOException, ParseException {
+	public static void exportFullToCsvOdr(app.entity.odr.TraitementSql[] traitements, String csvFile, CustomConfigOdr config, DateFormat dateFormat) throws NumberFormatException, IOException, ParseException {
 		FileWriter writer = new FileWriter(csvFile);
 
 		CSVService.writeLine(writer, Arrays.asList("Sequence","Type SPB","Code ste","Code magasin","N vente","N ligne","Type acte",
@@ -400,7 +399,7 @@ public class Traitement implements Runnable {
 				"Bulletin d adhesion","Facture","RIB","Date reception"
 				));
 
-		for(TraitementSql traitement : traitements) {
+		for(app.entity.odr.TraitementSql traitement : traitements) {
 			CsvSql odr = traitement.getCsv();
 
 			if(valideDateEligible(traitement, config, odr, true)) {
@@ -554,7 +553,7 @@ public class Traitement implements Runnable {
 		writer.close();
 	}
 
-	private static boolean valideDateEligible(TraitementSql trait, CustomConfigOdr config, CsvSql line, boolean full) throws ParseException {
+	private static boolean valideDateEligible(app.entity.odr.TraitementSql trait, CustomConfigOdr config, CsvSql line, boolean full) throws ParseException {
 		if((trait == null) || StringUtils.isEmpty(line.getProductCode())) {
 			return false;
 		}

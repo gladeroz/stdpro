@@ -58,7 +58,7 @@ public class BulletinAdhesion {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setMigration(new Boolean(item.getValue()));
+				cc.setMigration(Boolean.valueOf(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.REFERENTIAL.getValue())) {

@@ -2,34 +2,27 @@ package app.entity.gims.pk;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Embeddable
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class GimsPk implements Serializable {
-	private String numeroFacture;
+	private static final long serialVersionUID = 1L;
+	@EqualsAndHashCode.Include 
+	@Column(name = "tiers_code", nullable = false)
 	private Integer tiersCode;
-	
-	public GimsPk() {}
-
-	public GimsPk(Integer tiersCode, String numeroFacture) {
-		this.numeroFacture = numeroFacture;
-		this.tiersCode = tiersCode;
-	}
-
-	public String getNumeroFacture() {
-		return numeroFacture;
-	}
-
-	public void setNumeroFacture(String numeroFacture) {
-		this.numeroFacture = numeroFacture;
-	}
-
-	public Integer getTiersCode() {
-		return tiersCode;
-	}
-
-	public void setTiersCode(Integer tiersCode) {
-		this.tiersCode = tiersCode;
-	}
+	@EqualsAndHashCode.Include 
+	@Column(name = "numero_facture", nullable = false)
+	private String numeroFacture;
 }
 

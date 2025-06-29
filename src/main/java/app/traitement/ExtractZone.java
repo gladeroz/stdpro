@@ -70,7 +70,7 @@ public class ExtractZone {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setOcr(new Boolean(item.getValue()));
+				cc.setOcr(Boolean.valueOf(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {

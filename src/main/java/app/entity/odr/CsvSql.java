@@ -3,12 +3,12 @@ package app.entity.odr;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 import app.entity.odr.pk.OdrPk;
 import app.model.ConfigOdrRefCsv;
@@ -16,6 +16,7 @@ import app.model.ConfigOdrRefCsv;
 @Entity
 @Table(name = "CSV")
 public class CsvSql implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId private OdrPk odrPk;
 

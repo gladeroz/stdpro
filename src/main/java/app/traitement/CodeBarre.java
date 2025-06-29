@@ -45,7 +45,7 @@ public class CodeBarre {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setRename(new Boolean(item.getValue()));
+				cc.setRename(Boolean.valueOf(item.getValue()));
 			}
 		}
 
