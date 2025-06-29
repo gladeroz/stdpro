@@ -3,49 +3,27 @@ package app.entity.gims.pk;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Embeddable;
-
 import enums.gims.ActionGims;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Embeddable
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class SuiviGimsPk implements Serializable {
+	private static final long serialVersionUID = 1L;
+	@EqualsAndHashCode.Include 
 	private GimsPk gimsPk;
+	@EqualsAndHashCode.Include 
 	private Date dateAction;
+	@EqualsAndHashCode.Include 
 	private ActionGims action;
-
-	public SuiviGimsPk() {}
-	
-	public SuiviGimsPk(GimsPk gimsPk, Date dateAction, ActionGims action) {
-		super();
-		this.gimsPk = gimsPk;
-		this.dateAction = dateAction;
-		this.action = action;
-	}
-
-
-
-	public GimsPk getGimsPk() {
-		return gimsPk;
-	}
-
-	public void setNumeroFacture(GimsPk gimsPk) {
-		this.gimsPk = gimsPk;
-	}
-
-	public Date getDateAction() {
-		return dateAction;
-	}
-
-	public void setDateAction(Date dateAction) {
-		this.dateAction = dateAction;
-	}
-
-	public ActionGims getAction() {
-		return action;
-	}
-
-	public void setAction(ActionGims action) {
-		this.action = action;
-	}
 }
 

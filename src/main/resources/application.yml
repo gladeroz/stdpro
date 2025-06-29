@@ -3,36 +3,56 @@ spring:
     web-application-type: none
 
 odr:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/odr?currentSchema=public
-    username: postgres
-    password: pgadmin
-    driver-class-name: org.postgresql.Driver
-  #jpa:
-    #properties:
-      #hibernate:
-        #dialect: org.hibernate.dialect.PostgreSQLDialect
-        #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-        #jdbc.lob.non_contextual_creation: true
-    #hibernate:
-      #ddl-auto: update
-    #show-sql: true
+  url: jdbc:postgresql://localhost:5432/odr
+  username: postgres
+  password: pgadmin
+  driver-class-name: org.postgresql.Driver
+  hikari:
+    minimum-idle: 5
+    maximum-pool-size: 20
+    idle-timeout: 30000
+    connection-timeout: 30000
+    max-lifetime: 1800000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate.hbm2ddl.auto: update
+      hibernate.connection.url: ${odr.url}
+      hibernate.connection.username: ${odr.username}
+      hibernate.connection.password: ${odr.password}
+      hibernate.connection.autocommit: false
+      hibernate.connection.isolation: TRANSACTION_REPEATABLE_READ
+      hibernate.connection.pool_size: ${odr.hikari.maximum-pool-size}
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.temp.allow_jdbc_metadata_access: true
+      hibernate.jdbc.lob.non_contextual_creation: true
 
 gims:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/second?currentSchema=public
-    username: postgres
-    password: pgadmin
-    driver-class-name: org.postgresql.Driver
-  #jpa:
-    #properties:
-      #hibernate:
-        #dialect: org.hibernate.dialect.PostgreSQLDialect
-        #current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-        #jdbc.lob.non_contextual_creation: true
-    #hibernate:
-      #ddl-auto: update
-    #show-sql: true
+  url: jdbc:postgresql://localhost:5432/second
+  username: postgres
+  password: pgadmin
+  driver-class-name: org.postgresql.Driver
+  hikari:
+    minimum-idle: 5
+    maximum-pool-size: 20
+    idle-timeout: 30000
+    connection-timeout: 30000
+    max-lifetime: 1800000
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate.hbm2ddl.auto: update
+      hibernate.connection.url: ${gims.url}
+      hibernate.connection.username: ${gims.username}
+      hibernate.connection.password: ${gims.password}
+      hibernate.connection.autocommit: false
+      hibernate.connection.isolation: TRANSACTION_REPEATABLE_READ
+      hibernate.connection.pool_size: ${gims.hikari.maximum-pool-size}
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.temp.allow_jdbc_metadata_access: true
+      hibernate.jdbc.lob.non_contextual_creation: true
 
 stdpro:
   mail:

@@ -190,7 +190,7 @@ public class ConfigurationController implements Initializable {
 				String[] id = node.getId().split("#");
 				for(ConfigItem c : cc) {
 					Boolean value = ((CheckBox) node).isSelected();
-					if(c.getId().equals(Integer.valueOf(id[2])) && ! new Boolean(c.getValue()).equals(value))  {
+					if(c.getId().equals(Integer.valueOf(id[2])) && ! Boolean.valueOf(c.getValue()).equals(value))  {
 						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
 						c.setValue(value.toString());
 					}
@@ -279,7 +279,7 @@ public class ConfigurationController implements Initializable {
 			case CHECKBOX :
 				CheckBox c = new CheckBox();
 				c.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
-				c.setSelected(new Boolean(child.getValue()));
+				c.setSelected(Boolean.valueOf(child.getValue()));
 				GridPane.setConstraints(c, 1, count);
 				grid.getChildren().add(c);
 

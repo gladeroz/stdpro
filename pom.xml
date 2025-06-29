@@ -10,7 +10,7 @@
 	<name>std</name>
 
 	<packaging>jar</packaging>
-	<version>2.7</version>
+	<version>2.9</version>
 
 	<organization>
 		<!-- Used as the 'Vendor' for JNLP generation -->
@@ -19,8 +19,8 @@
 	
 	<!-- https://download2.gluonhq.com/openjfx/19/openjfx-19_windows-x64_bin-sdk.zip -->
 	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<log4j.version>2.19.0</log4j.version>
 		<javafx.version>17</javafx.version>
 	</properties>
@@ -28,7 +28,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.5</version>
+		<version>3.5.3</version>
 		<relativePath />
 		<!-- lookup parent from reposictory -->
 	</parent>
@@ -71,11 +71,22 @@
 	</build>
 
 	<dependencies>
-	
+		<!-- exclude tomcat jdbc connection pool, use HikariCP -->
+		<dependency>
+		   <groupId>org.springframework.boot</groupId>
+		   <artifactId>spring-boot-starter-jdbc</artifactId>
+		   <exclusions>
+		      <exclusion>
+		         <groupId>org.apache.tomcat</groupId>
+		         <artifactId>tomcat-jdbc</artifactId>
+		      </exclusion>
+		   </exclusions>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/logging-interceptor -->
 		<dependency>
 		    <groupId>com.squareup.okhttp3</groupId>
 		    <artifactId>logging-interceptor</artifactId>
+		    <version>4.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -145,13 +156,6 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.13.3</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>com.zaxxer</groupId>
-		    <artifactId>HikariCP</artifactId>
-		    <version>5.1.0</version> <!-- Use the latest stable version -->
-		</dependency>
-
 
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
