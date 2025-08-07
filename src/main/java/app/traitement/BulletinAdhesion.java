@@ -204,13 +204,13 @@ public class BulletinAdhesion {
 			}
 
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + exportFormat.format(new Date())+".csv" , config, varFormat);
+			Traitement.exportToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_CUSTOMER_BANKINFO_" + exportFormat.format(new Date())+".csv" , config, exportFormat);
 
 			logger.info("Export Full du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportFullToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + exportFormat.format(new Date())+".csv" , config, varFormat);
+			Traitement.exportFullToCsvOdr(odrs, Traitement.withSlash(config.getExportcsv()) + "ASSURANT_REPORT_ODR_" + exportFormat.format(new Date())+".csv" , config, exportFormat);
 
 			logger.info("Traitement pour les mails du resultat en CSV : " + config.getExportcsv());
-			Traitement.exportMailToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + exportFormat.format(new Date())+".csv" , config, varFormat);
+			Traitement.exportMailToCsvOdr(codeEligibleRepository, odrs, Traitement.withSlash(config.getExportcsv()) + "TRAITEMENT_MAIL_" + exportFormat.format(new Date())+".csv" , config, exportFormat);
 		}
 	}
 

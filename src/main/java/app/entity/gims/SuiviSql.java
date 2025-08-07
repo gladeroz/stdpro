@@ -4,6 +4,7 @@ import app.entity.gims.pk.SuiviGimsPk;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,6 @@ public class SuiviSql {
 	@EmbeddedId private SuiviGimsPk suiviGimsPk;
 
 	@ManyToOne
+	@MapsId("gimsPk")
 	TraitementSql traitement;
 }
