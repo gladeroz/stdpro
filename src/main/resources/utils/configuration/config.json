@@ -357,7 +357,7 @@
 				"FILECHOOSER_FILE"
 			],
 			"type": "PATH",
-			"value": "",
+			"value": "C:\\gims\\recouvrement\\05\\Recouvrement Clients 2025_05_06.csv",
 			"mandatory": false
 		},
 		{
@@ -379,7 +379,7 @@
 				"FILECHOOSER_DIRECTORY"
 			],
 			"type": "PATH",
-			"value": "C:\\",
+			"value": "",
 			"mandatory": false
 		}
 	]
