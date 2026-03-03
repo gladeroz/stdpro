@@ -10,3 +10,5 @@
 .factorypath
 .project
 .settings/*
+src/main/resources/application.yml
+*.yml
