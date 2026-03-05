@@ -195,11 +195,19 @@ public class BulletinAdhesion {
 			boolean maxExist = Traitement.variableExist(config.getIntervalMax());
 
 			TraitementSql[] odrs = null;
+			// Calculer la limite à 2 ans maximum (aujourd'hui - 2 ans) : RGPD
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.YEAR, -2);
+			Date limiteDeuxAns = cal.getTime();
+
+			// Si intervalMaxConfig > 2 ans, utiliser la limite de 2 ans
+			Date intervalMinFinal = varFormat.parse(config.getIntervalMin()).after(limiteDeuxAns) ? limiteDeuxAns : varFormat.parse(config.getIntervalMin());
+
 			if(minExist && maxExist) {
-				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqualAndDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMin()), varFormat.parse(config.getIntervalMax()));
-			}else if(minExist) {
-				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqual(varFormat.parse(config.getIntervalMin()));
-			}else{
+				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqualAndDateTraitementLessThanEqual(intervalMinFinal, varFormat.parse(config.getIntervalMax()));
+			} else if(minExist) {
+				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqual(intervalMinFinal);
+			} else{
 				odrs  = traitementRepository.findAllByDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMax()));
 			}
 
