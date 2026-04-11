@@ -3,15 +3,12 @@ package app;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import app.config.StageManager;
-import app.repository.gims.TraitementGimsRepository;
-import app.repository.odr.TraitementOdrRepository;
 import app.service.MainRepository;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,15 +16,11 @@ import javafx.stage.Stage;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class JfxApp extends Application {
 
-	@Autowired TraitementGimsRepository gims;
-
-	@Autowired TraitementOdrRepository odr;
-
 	protected ConfigurableApplicationContext springContext;
 	protected StageManager stageManager;
 
 	@Override
-	public void init() throws Exception {
+	public void init() {
 		springContext = springBootApplicationContext();
 	}
 
@@ -39,8 +32,8 @@ public class JfxApp extends Application {
 	}
 
 	@Override
-	public void stop() throws Exception {
-		springContext.stop();
+	public void stop() {
+		springContext.close();
 	}
 
 	public static void main(String[] args) {
@@ -49,7 +42,7 @@ public class JfxApp extends Application {
 
 	private ConfigurableApplicationContext springBootApplicationContext() {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(JfxApp.class);
-		String[] args = getParameters().getRaw().stream().toArray(String[]::new);
+		String[] args = getParameters().getRaw().toArray(String[]::new);
 		return builder.run(args);
 	}
 }

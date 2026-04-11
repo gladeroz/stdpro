@@ -1,13 +1,15 @@
 package utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
-import org.apache.log4j.Logger;
+import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -23,9 +25,11 @@ import javafx.stage.Stage;
 
 public class Yaml {
 
-	private static Logger logger = Logger.getLogger(Yaml.class);
-	private static String path = "configuration/config.json";
-	private static ConfigCollection config;
+	private static final Logger logger = LogManager.getLogger(Yaml.class);
+	@Getter
+    private static String path = "configuration/config.json";
+	@Getter
+    private static ConfigCollection config;
 
 	public static ConfigCollection parseConfig() {
 		return parseConfig(path, true);
@@ -42,9 +46,9 @@ public class Yaml {
 		logger.info("Debut de la lecture de la configuration "+ path);
 
 		try{
-			ConfigCollection cc = null;
+			ConfigCollection cc;
 			if(ressources) {
-				cc = JsonService.getInstance().readValue(Yaml.class.getResource(path), ConfigCollection.class);
+				cc = JsonService.getInstance().readValue(Objects.requireNonNull(Yaml.class.getResource(path)).openStream(), ConfigCollection.class);
 			} else {
 				cc = JsonService.getInstance().readValue(new File(path), ConfigCollection.class);
 			}
@@ -73,7 +77,7 @@ public class Yaml {
 		logger.info("Fin de l'affichage de la configuration");
 	}
 
-	public static void saveConfig(ConfigCollection cc, Stage stage) throws FileNotFoundException, URISyntaxException, UnsupportedEncodingException {
+	public static void saveConfig(ConfigCollection cc, Stage stage) throws IOException, URISyntaxException {
 		FileChooser fileChooser = new FileChooser();
 		File file = fileChooser.showSaveDialog(stage);
 
@@ -81,17 +85,15 @@ public class Yaml {
 			return;
 		}
 
-		PrintWriter pwriter = new PrintWriter(file.getPath(), java.nio.charset.StandardCharsets.UTF_8.name());
+		PrintWriter pwriter = new PrintWriter(file.getPath(), StandardCharsets.UTF_8);
 
-		if (file != null) {
-			try {
-				ObjectWriter writer = JsonService.getInstance().writer(new DefaultPrettyPrinter());
-				writer.writeValue(pwriter, cc);
-			} catch (IOException e) {
-				logger.error(e);
-			}
-		}
-	}
+        try {
+            ObjectWriter writer = JsonService.getInstance().writer(new DefaultPrettyPrinter());
+            writer.writeValue(pwriter, cc);
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
 
 	public static ConfigCollection loadConfig(Stage stage) {
 		FileChooser fileChooser = new FileChooser();
@@ -104,19 +106,11 @@ public class Yaml {
 		}
 	}
 
-	public static ConfigCollection getConfig() {
-		return config;
-	}
-
-	public static void setConfig(ConfigCollection config) {
+    public static void setConfig(ConfigCollection config) {
 		Yaml.config = config;
 	}
 
-	public static String getPath() {
-		return path;
-	}
-
-	public static void setPath(String path) {
+    public static void setPath(String path) {
 		Yaml.path = path;
 	}
 }

@@ -2,6 +2,8 @@ package app.model;
 
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -13,6 +15,8 @@ import enums.odrodf.FactType;
 import enums.odrodf.FormType;
 import enums.odrodf.RibType;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ConfigOdrTraiteCsv {
 
@@ -39,78 +43,6 @@ public class ConfigOdrTraiteCsv {
 		this.bulletin = BaType.NV;
 		this.facture = FactType.NV;
 		this.rib = RibType.S;
-	}
-
-	public String getNbrContractRedbox() {
-		return nbrContractRedbox;
-	}
-
-	public void setNbrContractRedbox(String nbrContractRedbox) {
-		this.nbrContractRedbox = nbrContractRedbox;
-	}
-
-	public FormType getFormulaire() {
-		return formulaire;
-	}
-
-	public void setFormulaire(FormType formulaire) {
-		this.formulaire = formulaire;
-	}
-
-	public BaType getBulletin() {
-		return bulletin;
-	}
-
-	public void setBulletin(BaType bulletin) {
-		this.bulletin = bulletin;
-	}
-
-	public RibType getRib() {
-		return rib;
-	}
-
-	public void setRib(RibType rib) {
-		this.rib = rib;
-	}
-
-	public Date getDateReception() {
-		return dateReception;
-	}
-
-	public void setDateReception(Date dateReception) {
-		this.dateReception = dateReception;
-	}
-
-	public FactType getFacture() {
-		return facture;
-	}
-
-	public void setFacture(FactType facture) {
-		this.facture = facture;
-	}
-
-	public String getFiller() {
-		return filler;
-	}
-
-	public void setFiller(String filler) {
-		this.filler = filler;
-	}
-
-	public Offre getOffre() {
-		return offre;
-	}
-
-	public void setOffre(Offre offre) {
-		this.offre = offre;
-	}
-
-	public Date getDateTraitement() {
-		return dateTraitement;
-	}
-
-	public void setDateTraitement(Date dateTraitement) {
-		this.dateTraitement = dateTraitement;
 	}
 
 	@Override

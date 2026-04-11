@@ -1,12 +1,12 @@
 package app.traitement;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ import utils.MailJetService;
 
 @Component
 public class SendMail {
-	private static Logger logger = Logger.getLogger(SendMail.class);
+	private static final Logger logger = LogManager.getLogger(SendMail.class);
 
 	private static final String HTML_PART  = "<p>Bonne reception</p><p>KRISTINA</p>";
 
@@ -95,14 +95,14 @@ public class SendMail {
 		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
-	private static void sendPdf(CustomConfigSendMail config) throws URISyntaxException, Exception {
+	private static void sendPdf(CustomConfigSendMail config) throws Exception {
 		//MailService service = new MailService(config.getMailEmetteur(), config.getPassEmetteur());
 		final MailJetService client = new MailJetService(API_KEY_STATIC, API_SECRET_KEY_STATIC);
 
 		File f = new File(config.getPath());
 		File[] subFiles = f.listFiles();
 
-		if (subFiles != null && subFiles.length > 0) {
+		if (subFiles != null) {
 			for (File aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".") || currentFileName.equals("..")) {
@@ -122,7 +122,7 @@ public class SendMail {
 		}
 	}
 
-	private static void sendMail(CustomConfigSendMail config, String pjName, String pjPath, MailJetService client) throws URISyntaxException, Exception {
+	private static void sendMail(CustomConfigSendMail config, String pjName, String pjPath, MailJetService client) throws Exception {
 		final TransactionalEmail message = TransactionalEmail
 				.builder()
 				.to(new SendContact(config.getMailDestinataire()))

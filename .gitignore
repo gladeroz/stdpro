@@ -1,7 +1,6 @@
 /target/
 /target.zip
 /std*.zip
-/pom.xml
 /.settings
 /.classpath
 /.apt_generated/
@@ -11,4 +10,7 @@
 .project
 .settings/*
 src/main/resources/application.yml
+src/main/resources/application.yaml
 *.yml
+.idea/
+.claude/

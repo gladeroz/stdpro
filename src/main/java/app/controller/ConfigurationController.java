@@ -2,6 +2,7 @@ package app.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -12,7 +13,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import app.model.ConfigItem;
 import app.traitement.Traitement;
 import enums.Job;
 import enums.Options;
+import lombok.Getter;
+import lombok.Setter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,6 +48,7 @@ import utils.LoggerService;
 import utils.Yaml;
 
 @Controller
+@Getter @Setter
 public class ConfigurationController implements Initializable {
 
 	@Lazy @Autowired private StageManager stageManager;
@@ -66,29 +71,14 @@ public class ConfigurationController implements Initializable {
 
 	@FXML public TextArea LogArea;
 
-	private static Logger logger = Logger.getLogger(ConfigurationController.class);
-	private static ExecutorService executor = Executors.newFixedThreadPool(5);
+	private static final Logger logger = LogManager.getLogger(ConfigurationController.class);
+	@Getter
+    private static ExecutorService executor = Executors.newFixedThreadPool(5);
 	private ConfigCollection config;
 	private Stage stage;
 	private Job job;
 
 	public ConfigurationController() {super();}
-
-	public ConfigCollection getConfig() {
-		return config;
-	}
-
-	public void setConfig(ConfigCollection config) {
-		this.config = config;
-	}
-
-	public Stage getStage() {
-		return stage;
-	}
-
-	public void setStage(Stage stage) {
-		this.stage = stage;
-	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -138,19 +128,21 @@ public class ConfigurationController implements Initializable {
 			logger.debug("Fin de la sauvegarde");
 		} catch (FileNotFoundException | URISyntaxException | UnsupportedEncodingException e) {
 			logger.error(e);
-		}
-	}
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	private void createAccordionConfiguration(ConfigCollection cc) {
 		try {
-			createSectionAccordion(Job.COMPTAGE_PDF, gridComptage, cc.getConfigComptagePdf());
-			createSectionAccordion(Job.SUFFIX_PREFIX, gridSuffixe, cc.getConfigSuffixPrefix());
-			createSectionAccordion(Job.OCR, gridOcr, cc.getConfigOcr());
-			createSectionAccordion(Job.CODE_BARRE, gridCodeBarre, cc.getConfigCodeBarre());
-			createSectionAccordion(Job.EXTRACT_ZONE, gridExtractZone, cc.getConfigExtractZone());
-			createSectionAccordion(Job.SEND_MAIL, gridSendMail, cc.getConfigSendMail());
-			createSectionAccordion(Job.ODR, gridOdr, cc.getConfigOdr());
-			createSectionAccordion(Job.GIMS, gridGims, cc.getConfigGims());
+			createSectionAccordion(gridComptage, cc.getConfigComptagePdf());
+			createSectionAccordion(gridSuffixe, cc.getConfigSuffixPrefix());
+			createSectionAccordion(gridOcr, cc.getConfigOcr());
+			createSectionAccordion(gridCodeBarre, cc.getConfigCodeBarre());
+			createSectionAccordion(gridExtractZone, cc.getConfigExtractZone());
+			createSectionAccordion(gridSendMail, cc.getConfigSendMail());
+			createSectionAccordion(gridOdr, cc.getConfigOdr());
+			createSectionAccordion(gridGims, cc.getConfigGims());
 			logger.debug("Fin de la creation des onglets de sauvegarde");
 		}catch(Exception e) {
 			logger.error(e);
@@ -189,10 +181,10 @@ public class ConfigurationController implements Initializable {
 			if(node instanceof CheckBox) {
 				String[] id = node.getId().split("#");
 				for(ConfigItem c : cc) {
-					Boolean value = ((CheckBox) node).isSelected();
-					if(c.getId().equals(Integer.valueOf(id[2])) && ! Boolean.valueOf(c.getValue()).equals(value))  {
+					boolean value = ((CheckBox) node).isSelected();
+					if(c.getId().equals(Integer.valueOf(id[2])) && ! Boolean.parseBoolean(c.getValue()) == value)  {
 						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
-						c.setValue(value.toString());
+						c.setValue(Boolean.toString(value));
 					}
 				}
 			}
@@ -216,7 +208,7 @@ public class ConfigurationController implements Initializable {
 				for(ConfigItem c : cc) {
 					String value = ((PasswordField) node).getText();
 					if(c.getId().equals(Integer.valueOf(id[2])) && !c.getValue().equals(value)) {
-						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Ancienne valeur : "+ c.getValue() + " | Nouvelle valeur : " + value + "]");
+						logger.debug("[Nom de la configuration : " + c.getLabel() + " | Valeur modifiee]");
 						c.setValue(value);
 					}
 				}
@@ -225,7 +217,7 @@ public class ConfigurationController implements Initializable {
 		return cc;
 	}
 
-	private void createSectionAccordion(Job job, GridPane grid, Collection<ConfigItem> children) throws Exception {
+	private void createSectionAccordion(GridPane grid, Collection<ConfigItem> children) throws Exception {
 
 		grid.getChildren().clear();
 
@@ -268,7 +260,7 @@ public class ConfigurationController implements Initializable {
 				DatePicker f = createDatePickerEvent();
 				f.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
 				final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				if(child.getValue() != null && child.getValue() != "") {
+				if(child.getValue() != null && !child.getValue().isEmpty()) {
 					f.setValue(LocalDate.parse(child.getValue(), dtf));
 				}
 				GridPane.setConstraints(f, 1, count);
@@ -279,7 +271,7 @@ public class ConfigurationController implements Initializable {
 			case CHECKBOX :
 				CheckBox c = new CheckBox();
 				c.setId("INPUT#" + child.getConfigName() + "#" + child.getId());
-				c.setSelected(Boolean.valueOf(child.getValue()));
+				c.setSelected(Boolean.parseBoolean(child.getValue()));
 				GridPane.setConstraints(c, 1, count);
 				grid.getChildren().add(c);
 
@@ -367,15 +359,4 @@ public class ConfigurationController implements Initializable {
 		}
 	}
 
-	public Job getJob() {
-		return job;
-	}
-
-	public void setJob(Job job) {
-		this.job = job;
-	}
-
-	public static ExecutorService getExecutor() {
-		return executor;
-	}
 }

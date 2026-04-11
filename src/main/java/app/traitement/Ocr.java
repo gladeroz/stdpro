@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import app.model.ConfigItem;
 import app.traitement.config.CustomConfigOcr;
@@ -20,79 +22,39 @@ import utils.RegexService;
 
 public class Ocr {
 
-	private static Logger logger = Logger.getLogger(Ocr.class);
+	private Ocr() {}
+
+	private static final Logger logger = LogManager.getLogger(Ocr.class);
 
 	public static CustomConfigOcr initConfig(Collection<ConfigItem> config) {
 		CustomConfigOcr cc = new CustomConfigOcr();
 
 		for(ConfigItem item : config) {
-			if(item.getConfigName().equals(CustomEnumOcr.PATH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
+				return null;
+			}
+
+			String name = item.getConfigName();
+
+			if(name.equals(CustomEnumOcr.PATH.getValue())) {
 				cc.setPath(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.PATTERN.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.PATTERN.getValue())) {
 				cc.setPattern(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.SUBSEARCH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.SUBSEARCH.getValue())) {
 				cc.setSubSearch(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.Y.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.Y.getValue())) {
 				cc.setY(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.X.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.X.getValue())) {
 				cc.setX(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.WIDTH.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.WIDTH.getValue())) {
 				cc.setWidth(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.HEIGHT.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.HEIGHT.getValue())) {
 				cc.setHeight(item.getValue());
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.RENAME.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
-				cc.setRename(Boolean.valueOf(item.getValue()));
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.OCR.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
-				cc.setOcr(Boolean.valueOf(item.getValue()));
-			}
-
-			if(item.getConfigName().equals(CustomEnumOcr.TESS4J.getValue())) {
-				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
-					return null;
-				}
+			} else if(name.equals(CustomEnumOcr.RENAME.getValue())) {
+				cc.setRename(Boolean.parseBoolean(item.getValue()));
+			} else if(name.equals(CustomEnumOcr.OCR.getValue())) {
+				cc.setOcr(Boolean.parseBoolean(item.getValue()));
+			} else if(name.equals(CustomEnumOcr.TESS4J.getValue())) {
 				cc.setTess4j(item.getValue());
 			}
 		}
@@ -100,7 +62,7 @@ public class Ocr {
 		return cc;
 	}
 
-	public static void traitement(Collection<ConfigItem> config) throws Exception, UnsatisfiedLinkError {
+	public static void traitement(Collection<ConfigItem> config) throws Exception {
 		logger.info("Traitement 'OCR' en cours");
 
 		logger.debug("Configuration en cours de traitement");
@@ -111,9 +73,9 @@ public class Ocr {
 			return;
 		}
 
-		logger.debug("Lancement du Traitement : " + new Date());
+		logger.debug("Lancement du Traitement : {}", new Date());
 		job(conf);
-		logger.debug("Fin du Traitement : " + new Date());
+		logger.debug("Fin du Traitement : {}", new Date());
 	}
 
 	public static void job(CustomConfigOcr config) throws Exception {
@@ -123,35 +85,32 @@ public class Ocr {
 
 		long endTime = System.nanoTime();
 
-		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
+		logger.info("Temps de Traitement : {} secondes", TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS));
 	}
 
-	private static void ocr(CustomConfigOcr config, String parentDir, String currentDir) throws Exception, UnsatisfiedLinkError {
+	private static void ocr(CustomConfigOcr config, String parentDir, String currentDir) throws Exception {
 		String dirToList = Traitement.withSlash(parentDir);
-		if (!currentDir.equals("")) {
+		if (!currentDir.isEmpty()) {
 			dirToList += Traitement.withSlash(currentDir);
 		}
 
 		File f = new File(dirToList);
 		File[] subFiles = f.listFiles();
-		if (subFiles != null && subFiles.length > 0) {
+		if (subFiles != null) {
 			for (File aFile : subFiles) {
 				String currentFileName = aFile.getName();
-				if (currentFileName.equals(".") || currentFileName.equals("..")) {
-					continue;
-				}
 				if (aFile.isDirectory()) {
 					ocr(config, dirToList, currentFileName);
-				}else  if(currentFileName.toUpperCase().endsWith(Extension.PDF.name())){
-					String NEWFILE = Traitement.withSlash(dirToList) + currentFileName;
-					logger.info("[Fichier en cours : " + NEWFILE + "]");
+				} else if(StringUtils.endsWithIgnoreCase(currentFileName, Extension.PDF.name())){
+					String newFile = Traitement.withSlash(dirToList) + currentFileName;
+					logger.info("[Fichier en cours : {}]", newFile);
 
 					String text = PdfService.getText(aFile, config.getX(), config.getY(), config.getWidth(), config.getHeight(), config.getOcr(), config.getTess4j());
 
 					if( ! Traitement.variableExist(config.getPattern())) {
-						logger.info("[OCR] " + text);
+						logger.info("[OCR] {}", text);
 					} else {
-						if(text == null || text == "") {
+						if(text == null || text.isEmpty()) {
 							logger.error("Texte vide");
 							continue;
 						}
@@ -161,27 +120,27 @@ public class Ocr {
 						if (matcher.find()) {
 							String resultat = matcher.group();
 
-							logger.info("Le text (" + resultat + ") correspond au filtre de recherche");
+							logger.info("Le text ({}) correspond au filtre de recherche", resultat);
 							if ( ! Traitement.variableExist(config.getSubSearch())) {
 								if (Boolean.TRUE.equals(config.getRename())) {
-									Path source = Paths.get(NEWFILE);
+									Path source = Paths.get(newFile);
 									String output = resultat + ".pdf";
 									Path cible = searchIfExist(output, 0, resultat, source);
 									Files.move(source, cible);
-									logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ cible + ")");
+									logger.info("Le fichier ({}) a ete renomme en ({})", newFile, cible);
 								}
 							}else {
 								matcher = RegexService.get(config.getSubSearch(), resultat);
 
 								if (matcher.find()) {
 									resultat = matcher.group();
-									logger.info("Le text (" + resultat + ") correspond a la sous recherche");
+									logger.info("Le text ({}) correspond a la sous recherche", resultat);
 									if (Boolean.TRUE.equals(config.getRename())) {
-										Path source = Paths.get(NEWFILE);
+										Path source = Paths.get(newFile);
 										String output = cleanString(resultat) + ".pdf";
 										Path cible = searchIfExist(output, 0, resultat, source);
 										Files.move(source, cible);
-										logger.info("Le fichier (" + NEWFILE + ") a ete renomme en ("+ cible + ")");
+										logger.info("Le fichier ({}) a ete renomme en ({})", newFile, cible);
 									}
 								} else {
 									logger.warn("La sous-chaine n'a pas ete trouvee");
