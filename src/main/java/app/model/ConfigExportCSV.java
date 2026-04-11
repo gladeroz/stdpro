@@ -1,5 +1,10 @@
 package app.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ConfigExportCSV {
 	private String directory;
 	private String fileName;
@@ -9,30 +14,6 @@ public class ConfigExportCSV {
 		super();
 		this.directory = directory;
 		this.fileName = fileName;
-		this.nombrePage = nombrePage;
-	}
-
-	public String getDirectory() {
-		return directory;
-	}
-
-	public void setDirectory(String directory) {
-		this.directory = directory;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public Integer getNombrePage() {
-		return nombrePage;
-	}
-
-	public void setNombrePage(Integer nombrePage) {
 		this.nombrePage = nombrePage;
 	}
 }

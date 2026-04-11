@@ -2,7 +2,6 @@ package app.traitement;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +12,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 
@@ -35,7 +35,7 @@ import utils.DateService;
 
 public class Gims {
 
-	private static Logger logger = Logger.getLogger(Gims.class);
+	private static final Logger logger = LogManager.getLogger(Gims.class);
 
 	public static CustomConfigGims initConfig(Collection<ConfigItem> config) {
 		CustomConfigGims cc = new CustomConfigGims();
@@ -87,10 +87,10 @@ public class Gims {
 
 		majDocSuivi(traitementRepository, suiviGimsRepository, config);
 
-		exportToCsv(traitementRepository, suiviGimsRepository, config);
+		exportToCsv(traitementRepository, config);
 	}
 
-	private static void exportToCsv(TraitementGimsRepository traitementRepository, SuiviGimsRepository suiviGimsRepository, CustomConfigGims config) throws IOException {
+	private static void exportToCsv(TraitementGimsRepository traitementRepository, CustomConfigGims config) throws IOException {
 		if(!Traitement.variableExist(config.getExportcsv())) return;
 
 		DateFormat exportFormat = DateService.getDateFormat();
@@ -134,7 +134,7 @@ public class Gims {
 		}
 	}
 
-	private static void majDocTraite(TraitementGimsRepository traitementRepository, CustomConfigGims config) throws IOException, ParseException {
+	private static void majDocTraite(TraitementGimsRepository traitementRepository, CustomConfigGims config) throws IOException {
 		if(!Traitement.variableExist(config.getDocTraite())) return;
 
 		MappingIterator<ConfigGimsTraiteCsv> traitement = CSVService.getCsvData(config.getDocTraite(), false, ConfigGimsTraiteCsv.class);
@@ -202,19 +202,22 @@ public class Gims {
 		if(importCsv.getThirdPartyCode() == null) return true;
 		if(StringUtils.isBlank(importCsv.getInvoiceNumber())) return true;
 
-		if(!importCsv.getInvoiceNumber().startsWith("FA24") 
-				&& !importCsv.getInvoiceNumber().startsWith("FA25")
-				&& !importCsv.getInvoiceNumber().startsWith("AV24")
-				&& !importCsv.getInvoiceNumber().startsWith("AV25")
+		int currentYear = java.time.Year.now().getValue() % 100;
+		int previousYear = currentYear - 1;
+		String currentYearStr = String.format("%02d", currentYear);
+		String previousYearStr = String.format("%02d", previousYear);
+
+		if(!importCsv.getInvoiceNumber().startsWith("FA" + previousYearStr)
+				&& !importCsv.getInvoiceNumber().startsWith("FA" + currentYearStr)
+				&& !importCsv.getInvoiceNumber().startsWith("AV" + previousYearStr)
+				&& !importCsv.getInvoiceNumber().startsWith("AV" + currentYearStr)
 				) return true;
 
 		if(importCsv.getDueDate() == null) return true;
 		if(!StringUtils.isBlank(importCsv.getPriority())) return true;
-		if(!StringUtils.isBlank(importCsv.getPaymentMethodLabel()) && importCsv.getPaymentMethodLabel().equals("Prélèvement")) return true;
-		if(!importCsv.getStatus().equals(StatusGims.ACTIF)) return true;
-
-		return false;
-	}
+		if(!StringUtils.isBlank(importCsv.getPaymentMethodLabel()) && importCsv.getPaymentMethodLabel().equalsIgnoreCase("Prélèvement")) return true;
+        return !importCsv.getStatus().equals(StatusGims.ACTIF);
+    }
 
 	public static void job(CustomConfigGims config) throws Exception {
 		long startTime = System.nanoTime();

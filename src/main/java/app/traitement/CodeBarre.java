@@ -8,7 +8,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.zxing.NotFoundException;
 
@@ -21,7 +22,7 @@ import utils.PdfService;
 
 public class CodeBarre {
 
-	private static Logger logger = Logger.getLogger(CodeBarre.class);
+	private static final Logger logger = LogManager.getLogger(CodeBarre.class);
 
 	public static CustomConfigCodeBarre initConfig(Collection<ConfigItem> config) {
 		CustomConfigCodeBarre cc = new CustomConfigCodeBarre();
@@ -45,7 +46,7 @@ public class CodeBarre {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setRename(Boolean.valueOf(item.getValue()));
+				cc.setRename(Boolean.parseBoolean(item.getValue()));
 			}
 		}
 
@@ -82,7 +83,7 @@ public class CodeBarre {
 		File f = new File(config.getPath());
 		File[] subFiles = f.listFiles();
 
-		if (subFiles != null && subFiles.length > 0) {
+		if (subFiles != null) {
 			for (File aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".") || currentFileName.equals("..")) {
@@ -95,7 +96,8 @@ public class CodeBarre {
 
 					try {
 						BarcodeInfo resultat = PdfService.decodeOneBarcodeWithMBC(new File(NEWFILE), config.getTess4j());
-						logger.info(resultat.print());
+                        assert resultat != null;
+                        logger.info(resultat.print());
 
 						if (Boolean.TRUE.equals(config.getRename())) {
 							Path source = Paths.get(NEWFILE);

@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.log4j.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 
 import app.entity.odr.CodeEligibleSql;
@@ -46,7 +46,7 @@ import utils.JsonService;
 @Component
 public class BulletinAdhesion {
 
-	private static Logger logger = Logger.getLogger(BulletinAdhesion.class);
+	private static final Logger logger = LogManager.getLogger(BulletinAdhesion.class);
 
 	private static int MAXYEARS = 5;
 
@@ -58,7 +58,7 @@ public class BulletinAdhesion {
 				if(item.getMandatory() && ! Traitement.variableExist(item.getValue())) {
 					return null;
 				}
-				cc.setMigration(Boolean.valueOf(item.getValue()));
+				cc.setMigration(Boolean.parseBoolean(item.getValue()));
 			}
 
 			if(item.getConfigName().equals(CustomEnumOdr.REFERENTIAL.getValue())) {
@@ -141,7 +141,7 @@ public class BulletinAdhesion {
 		CsvRepository csvRepository = MainRepository.getCsvRepository();
 		CodeEligibleRepository codeEligibleRepository = MainRepository.getCodeEligibleRepository();
 
-		if(config.getMigration()) {
+		if(config.isMigration()) {
 			if(!Traitement.variableExist(config.getReferential())) {
 				logger.error("Vous devez specifie le chemin vers l ancienne base de donnees");
 				return;
@@ -183,10 +183,10 @@ public class BulletinAdhesion {
 
 		majDocTraite(codeEligibleRepository, csvRepository, config);
 
-		exportToCsv(codeEligibleRepository, traitementRepository, csvRepository, config);
+		exportToCsv(codeEligibleRepository, traitementRepository, config);
 	}
 
-	private void exportToCsv(CodeEligibleRepository codeEligibleRepository, TraitementOdrRepository traitementRepository, CsvRepository csvRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
+	private void exportToCsv(CodeEligibleRepository codeEligibleRepository, TraitementOdrRepository traitementRepository, CustomConfigOdr config) throws NumberFormatException, IOException, ParseException {
 		if(Traitement.variableExist(config.getExportcsv())) {
 			DateFormat exportFormat = DateService.getDateFormat();
 			DateFormat varFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -194,21 +194,27 @@ public class BulletinAdhesion {
 			boolean minExist = Traitement.variableExist(config.getIntervalMin());
 			boolean maxExist = Traitement.variableExist(config.getIntervalMax());
 
-			TraitementSql[] odrs = null;
+			TraitementSql[] odrs;
 			// Calculer la limite à 2 ans maximum (aujourd'hui - 2 ans) : RGPD
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.YEAR, -2);
 			Date limiteDeuxAns = cal.getTime();
 
-			// Si intervalMaxConfig > 2 ans, utiliser la limite de 2 ans
-			Date intervalMinFinal = varFormat.parse(config.getIntervalMin()).after(limiteDeuxAns) ? limiteDeuxAns : varFormat.parse(config.getIntervalMin());
+			// Determiner la date min finale : la plus recente entre la config et la limite RGPD
+			Date intervalMinFinal;
+			if(minExist) {
+				Date configMin = varFormat.parse(config.getIntervalMin());
+				intervalMinFinal = configMin.after(limiteDeuxAns) ? configMin : limiteDeuxAns;
+			} else {
+				intervalMinFinal = limiteDeuxAns;
+			}
 
 			if(minExist && maxExist) {
 				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqualAndDateTraitementLessThanEqual(intervalMinFinal, varFormat.parse(config.getIntervalMax()));
-			} else if(minExist) {
+			} else if(maxExist) {
+				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqualAndDateTraitementLessThanEqual(intervalMinFinal, varFormat.parse(config.getIntervalMax()));
+			} else {
 				odrs  = traitementRepository.findAllByDateTraitementGreaterThanEqual(intervalMinFinal);
-			} else{
-				odrs  = traitementRepository.findAllByDateTraitementLessThanEqual(varFormat.parse(config.getIntervalMax()));
 			}
 
 			logger.info("Export du resultat en CSV : " + config.getExportcsv());
@@ -222,7 +228,7 @@ public class BulletinAdhesion {
 		}
 	}
 
-	private void majDocTraite(CodeEligibleRepository codeEligibleRepository, CsvRepository csvRepository, CustomConfigOdr config) throws JsonParseException, JsonMappingException, UnsatisfiedLinkError, IOException, Exception {
+	private void majDocTraite(CodeEligibleRepository codeEligibleRepository, CsvRepository csvRepository, CustomConfigOdr config) throws UnsatisfiedLinkError, Exception {
 		if(Traitement.variableExist(config.getDocTraite())) {
 
 			logger.info("Mise a jour de la BDD avec les documents traites");
@@ -232,8 +238,7 @@ public class BulletinAdhesion {
 				initTableCodeEligible(codeEligibleRepository);
 			}
 
-			@SuppressWarnings("unchecked")
-			List<CodeEligibleSql> eligiblite = IteratorUtils.toList(codeEligibleRepository.findAll().iterator());
+			List<CodeEligibleSql> eligiblite = StreamSupport.stream(codeEligibleRepository.findAll().spliterator(), false).collect(Collectors.toList());
 
 			while(traitement.hasNext()) {
 				ConfigOdrTraiteCsv importCsv = traitement.next();
@@ -283,7 +288,7 @@ public class BulletinAdhesion {
 
 						//On itere sur 5 ans
 						for(int i = 1; i <= MAXYEARS; i++) {
-							found = intervalOdf(importCsv, dRef, dImport, i);
+							found = intervalOdf(dRef, dImport, i);
 							if(found) {
 								break;
 							}
@@ -305,7 +310,7 @@ public class BulletinAdhesion {
 	}
 
 	private boolean containsCode(final List<CodeEligibleSql> list, final String code){
-	    return list.stream().filter(o -> o.getCodeEligible().equals(code)).findFirst().isPresent();
+	    return list.stream().anyMatch(o -> o.getCodeEligible().equals(code));
 	}
 
 	private void initTableCodeEligible(CodeEligibleRepository codeEligibleRepository) {
@@ -363,7 +368,7 @@ public class BulletinAdhesion {
 		}
 	}
 
-	private static boolean intervalOdf(ConfigOdrTraiteCsv importCsv, Calendar dRef, Calendar dImport, int iteration) {
+	private static boolean intervalOdf(Calendar dRef, Calendar dImport, int iteration) {
 		Calendar dbefore = Calendar.getInstance();
 		dbefore.setTime(dRef.getTime());
 		dbefore.add(Calendar.YEAR, iteration);
@@ -373,10 +378,8 @@ public class BulletinAdhesion {
 			dafter.setTime(dbefore.getTime());
 			dafter.add(Calendar.MONTH, 2);
 
-			if(dImport.before(dafter) || dImport.equals(dafter)) {
-				//logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] a ete trouve ["+ s.format(dbefore.getTime()) +" < "+ s.format(dImport.getTime()) +" < "+ s.format(dafter.getTime()) +"]");
-				return true;
-			}
+            //logger.warn("Le contrat [" + importCsv.getNbrContractRedbox() + "] a ete trouve ["+ s.format(dbefore.getTime()) +" < "+ s.format(dImport.getTime()) +" < "+ s.format(dafter.getTime()) +"]");
+            return dImport.before(dafter) || dImport.equals(dafter);
 		}
 
 		return false;

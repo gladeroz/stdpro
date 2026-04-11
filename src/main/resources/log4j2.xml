@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+        <TextAreaAppender name="consoleBox">
+            <PatternLayout pattern="%-5p %c{1} - %m%n"/>
+        </TextAreaAppender>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="app" level="DEBUG"/>
+        <Logger name="utils" level="DEBUG"/>
+        <Logger name="org.hibernate" level="WARN"/>
+        <Logger name="com.zaxxer.hikari" level="WARN"/>
+        <Root level="INFO">
+            <AppenderRef ref="consoleBox"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,5 +1,6 @@
 package app.service;
 
+import lombok.Getter;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import app.repository.gims.SuiviGimsRepository;
@@ -9,45 +10,48 @@ import app.repository.odr.CsvRepository;
 import app.repository.odr.TraitementOdrRepository;
 
 public class MainRepository {
-	static private ConfigurableApplicationContext springContext;
+	@Getter
+    private static volatile ConfigurableApplicationContext springContext;
 
-	static private TraitementOdrRepository traitementOdrRepository;
-	static private TraitementGimsRepository traitementGimsRepository;
-	static private CsvRepository csvRepository;
-	static private CodeEligibleRepository codeEligibleRepository;
-	static private SuiviGimsRepository suiviGimsRepository;
+	private static volatile TraitementOdrRepository traitementOdrRepository;
+	private static volatile TraitementGimsRepository traitementGimsRepository;
+	private static volatile CsvRepository csvRepository;
+	private static volatile CodeEligibleRepository codeEligibleRepository;
+	private static volatile SuiviGimsRepository suiviGimsRepository;
 
-	public ConfigurableApplicationContext getSpringContext() {
-		return springContext;
-	}
-	public static void setSpringContext(ConfigurableApplicationContext springContext) {
+    public static void setSpringContext(ConfigurableApplicationContext springContext) {
 		MainRepository.springContext = springContext;
 	}
-	public static TraitementOdrRepository getTraitementOdrRepository() {
+
+	public static synchronized TraitementOdrRepository getTraitementOdrRepository() {
 		if(traitementOdrRepository == null) {
 			traitementOdrRepository = springContext.getBean(TraitementOdrRepository.class);
 		}
 		return traitementOdrRepository;
 	}
-	public static TraitementGimsRepository getTraitementGimsRepository() {
+
+	public static synchronized TraitementGimsRepository getTraitementGimsRepository() {
 		if(traitementGimsRepository == null) {
 			traitementGimsRepository = springContext.getBean(TraitementGimsRepository.class);
 		}
 		return traitementGimsRepository;
 	}
-	public static CsvRepository getCsvRepository() {
+
+	public static synchronized CsvRepository getCsvRepository() {
 		if(csvRepository == null) {
 			csvRepository = springContext.getBean(CsvRepository.class);
 		}
 		return csvRepository;
 	}
-	public static CodeEligibleRepository getCodeEligibleRepository() {
+
+	public static synchronized CodeEligibleRepository getCodeEligibleRepository() {
 		if(codeEligibleRepository == null) {
 			codeEligibleRepository = springContext.getBean(CodeEligibleRepository.class);
 		}
 		return codeEligibleRepository;
 	}
-	public static SuiviGimsRepository getSuiviGimsRepository() {
+
+	public static synchronized SuiviGimsRepository getSuiviGimsRepository() {
 		if(suiviGimsRepository == null) {
 			suiviGimsRepository = springContext.getBean(SuiviGimsRepository.class);
 		}

@@ -4,14 +4,15 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
@@ -34,53 +35,42 @@ import net.sourceforge.tess4j.util.PdfUtilities;
 
 public class PdfService {
 
-	private static Logger logger = Logger.getLogger(PdfService.class);
+	private static final Logger logger = LogManager.getLogger(PdfService.class);
 
 	public static String getText(File aFile) throws IOException{
-		String text = null;
+		String text;
 
-		PDDocument document = PDDocument.load(aFile);
-		try{
-			PDFTextStripper stripper = new PDFTextStripper();
-			stripper.setSortByPosition(true);
-			text = stripper.getText(document);
-		} finally {
-			if(document != null) {
-				document.close();
-			}
-		}
+        try (PDDocument document = Loader.loadPDF(aFile)) {
+            PDFTextStripper stripper = new PDFTextStripper();
+            stripper.setSortByPosition(true);
+            text = stripper.getText(document);
+        }
 
 		return text;
 	}
 
 	public static String getText(File aFile, String xStr, String yStr, String widthStr, String heightStr) throws IOException {
-		String text = null;
-		PDDocument document = PDDocument.load(aFile);
-		try {
-			PDFTextStripperByArea stripper = new PDFTextStripperByArea();
-			stripper.setSortByPosition(true);
+		String text;
+        try (PDDocument document = Loader.loadPDF(aFile)) {
+            PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+            stripper.setSortByPosition(true);
 
-			int x = (int) getCmToPoints(Integer.parseInt(xStr));
-			int y = (int) getCmToPoints(Integer.parseInt(yStr));
-			int width = (int) getCmToPoints(Integer.parseInt(widthStr));
-			int height = (int) getCmToPoints(Integer.parseInt(heightStr));
+            int x = (int) getCmToPoints(Integer.parseInt(xStr));
+            int y = (int) getCmToPoints(Integer.parseInt(yStr));
+            int width = (int) getCmToPoints(Integer.parseInt(widthStr));
+            int height = (int) getCmToPoints(Integer.parseInt(heightStr));
 
-			Rectangle rect = new Rectangle(x, y, width - x, height - y);
-			stripper.addRegion("class1", rect);
-			stripper.extractRegions(document.getPage(0));
+            Rectangle rect = new Rectangle(x, y, width - x, height - y);
+            stripper.addRegion("class1", rect);
+            stripper.extractRegions(document.getPage(0));
 
-			text = stripper.getTextForRegion("class1");
-		}
-		finally {
-			if(document != null) {
-				document.close();
-			}
-		}
+            text = stripper.getTextForRegion("class1");
+        }
 
 		return text;
 	}
 
-	public static String getTextOcr(File afile) throws IOException, UnsatisfiedLinkError, TesseractException {
+	public static String getTextOcr(File afile) throws UnsatisfiedLinkError, TesseractException {
 		//File[] png = PdfUtilities.convertPdf2Png(afile);
 		//logger.info("[Fichier convertit en png]");
 
@@ -99,7 +89,7 @@ public class PdfService {
 		int height = (int) getCmToPixels(Integer.parseInt(heightStr));
 
 		// the path of your tess data folder inside the extracted file
-		return TesseracService.getInstance().doOCR(png[0], new Rectangle(x, y, width - x, height - y));
+		return TesseracService.getInstance().doOCR(png[0], List.of(new Rectangle(x, y, width - x, height - y)));
 	}
 
 	public static String getText(File aFile, String x, String y, String width, String height, Boolean ocr, String tess4j) throws IOException, UnsatisfiedLinkError, TesseractException {
@@ -127,7 +117,7 @@ public class PdfService {
 		}
 	}
 
-	public static BarcodeInfo decodeOneBarcodeWithMBC(File path, String tess4j) throws IOException, NotFoundException  {
+	public static BarcodeInfo decodeOneBarcodeWithMBC(File path, String tess4j) throws NotFoundException  {
 		TesseracService.setConfig(tess4j);
 		TesseracService.getInstance();
 
@@ -151,29 +141,6 @@ public class PdfService {
 			logger.error(e);
 		}
 		return null;
-	}
-
-	public static List<BarcodeInfo> decodeBarcodeWithMBC(File path, String tess4j) throws IOException  {
-		TesseracService.setConfig(tess4j);
-		TesseracService.getInstance();
-
-		try {
-			File[] png = PdfUtilities.convertPdf2Png(path);
-			BufferedImage img = ImageIO.read(png[0]);
-			BinaryBitmap bb = new BinaryBitmap(new HybridBinarizer(new BufferedImageLuminanceSource(img)));
-			MultipleBarcodeReader mbReader = new GenericMultipleBarcodeReader(new MultiFormatReader());
-			Hashtable<DecodeHintType, Object> hints = new Hashtable<>();
-			hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
-			hints.put(DecodeHintType.POSSIBLE_FORMATS, Arrays.asList(BarcodeFormat.CODE_128, BarcodeFormat.CODE_39));
-			List<BarcodeInfo> list = new ArrayList<>();
-			for (Result result : mbReader.decodeMultiple(bb, hints)) {
-				list.add(new BarcodeInfo(result.getText(), result.getBarcodeFormat().name()));
-			}
-			return list;
-		}catch(IOException e) {
-			logger.error(e);
-		}catch (NotFoundException e) {logger.error("Aucun code barre n'a ete trouve dans ce document");}
-		return new ArrayList<>();
 	}
 
 	private static double getCmToPixels(int x) {

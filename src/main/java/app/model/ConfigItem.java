@@ -2,9 +2,13 @@ package app.model;
 
 import java.util.ArrayList;
 
+import lombok.Getter;
+import lombok.Setter;
 import enums.Options;
 import enums.TypeInput;
 
+@Getter
+@Setter
 public class ConfigItem {
 
 	private Integer id;
@@ -14,46 +18,4 @@ public class ConfigItem {
 	private String configName;
 	private Boolean mandatory;
 	private ArrayList<Options> options;
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getLabel() {
-		return label;
-	}
-	public void setLabel(String label) {
-		this.label = label;
-	}
-	public TypeInput getType() {
-		return type;
-	}
-	public void setType(TypeInput type) {
-		this.type = type;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	public String getConfigName() {
-		return configName;
-	}
-	public void setConfigName(String configName) {
-		this.configName = configName;
-	}
-	public Boolean getMandatory() {
-		return mandatory;
-	}
-	public void setMandatory(Boolean mandatory) {
-		this.mandatory = mandatory;
-	}
-	public ArrayList<Options> getOptions() {
-		return options;
-	}
-	public void setOptions(ArrayList<Options> options) {
-		this.options = options;
-	}
 }

@@ -5,7 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import app.model.ConfigItem;
 import app.traitement.config.CustomConfigSuffixe;
@@ -14,7 +15,7 @@ import enums.Extension;
 
 public class SuffixePrefixe {
 
-	private static Logger logger = Logger.getLogger(SuffixePrefixe.class);
+	private static final Logger logger = LogManager.getLogger(SuffixePrefixe.class);
 
 	public static CustomConfigSuffixe initConfig(Collection<ConfigItem> config) {
 		CustomConfigSuffixe cc = new CustomConfigSuffixe();
@@ -81,15 +82,15 @@ public class SuffixePrefixe {
 		logger.info("Temps de Traitement : " + TimeUnit.SECONDS.convert((endTime - startTime), TimeUnit.NANOSECONDS) + " secondes");
 	}
 
-	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) throws Exception {
+	public static void listDirectory(CustomConfigSuffixe config, String parentDir, String currentDir) {
 		String dirToList = parentDir;
-		if (!currentDir.equals("")) {
+		if (!currentDir.isEmpty()) {
 			dirToList += Traitement.withSlash(currentDir);
 		}
 
 		File f =  new File(dirToList);
 		File[] subFiles = f.listFiles();
-		if (subFiles != null && subFiles.length > 0) {
+		if (subFiles != null) {
 			for (File aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".") || currentFileName.equals("..")) {

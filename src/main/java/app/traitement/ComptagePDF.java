@@ -8,7 +8,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.itextpdf.text.pdf.PdfReader;
 
@@ -20,7 +21,7 @@ import enums.Extension;
 
 public class ComptagePDF {
 
-	private static Logger logger = Logger.getLogger(ComptagePDF.class);
+	private static final Logger logger = LogManager.getLogger(ComptagePDF.class);
 
 	public static CustomConfigComptage initConfig(Collection<ConfigItem> config) {
 		CustomConfigComptage cc = new CustomConfigComptage();
@@ -82,13 +83,13 @@ public class ComptagePDF {
 
 	public static void listDirectory(String parentDir, String currentDir, ArrayList<ConfigExportCSV> resultat) throws IOException {
 		String dirToList = Traitement.withSlash(parentDir);
-		if (!currentDir.equals("")) {
+		if (!currentDir.isEmpty()) {
 			dirToList += Traitement.withSlash(currentDir);
 		}
 
-		File f =  new File(dirToList);
+        File f =  new File(dirToList);
 		File[] subFiles = f.listFiles();
-		if (subFiles != null && subFiles.length > 0) {
+		if (subFiles != null) {
 			for (File aFile : subFiles) {
 				String currentFileName = aFile.getName();
 				if (currentFileName.equals(".") || currentFileName.equals("..")) {
@@ -107,8 +108,10 @@ public class ComptagePDF {
 
 	private static Integer nbPagesPdf(String pdf) throws IOException{
 		PdfReader p = new PdfReader(pdf);
-		Integer retur = p.getNumberOfPages();
-		p.close();
-		return retur;
+		try {
+			return p.getNumberOfPages();
+		} finally {
+			p.close();
+		}
 	}
 }

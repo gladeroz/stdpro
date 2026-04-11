@@ -6,6 +6,7 @@ import app.traitement.Traitement;
 
 //import org.apache.log4j.Logger;
 
+import lombok.Getter;
 import net.sourceforge.tess4j.Tesseract;
 
 public class TesseracService {
@@ -15,7 +16,8 @@ public class TesseracService {
 
 	private static String tess4j;
 
-	private static int dpi = 300;
+	@Getter
+    private static int dpi = 300;
 
 	private TesseracService(){}
 
@@ -26,7 +28,7 @@ public class TesseracService {
 			tesseract = new Tesseract();
 			tesseract.setDatapath(Traitement.withoutSlash(tess4j));
 			tesseract.setLanguage("fra");
-			tesseract.setTessVariable("user_defined_dpi", Integer.toString(dpi));
+			tesseract.setVariable("user_defined_dpi", Integer.toString(dpi));
 
 			if (System.getProperty("os.name").contains("Windows")) {
 				boolean is64bit = (System.getenv("ProgramFiles(x86)") != null);
@@ -44,13 +46,5 @@ public class TesseracService {
 		//logger.warn("Initialisation de la configuration de Tesserac");
 		TesseracService.tess4j = tess4j;
 		tesseract = null;
-	}
-
-	public static int getDpi() {
-		return dpi;
-	}
-
-	public static void setDpi(int dpi) {
-		TesseracService.dpi = dpi;
 	}
 }

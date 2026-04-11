@@ -1,11 +1,15 @@
 package app.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
 	"contrat",
@@ -15,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class ConfigOdrJson {
 
 	@JsonProperty("contrat")
-	private String nbrContractRedbox;
+	private String contrat;
 
 	@JsonProperty("csv")
 	private ConfigOdrRefCsv odr;
@@ -26,33 +30,9 @@ public class ConfigOdrJson {
 	public ConfigOdrJson() {}
 
 	public ConfigOdrJson(String contrat, ConfigOdrRefCsv c, ConfigOdrTraiteCsv traitement) {
-		this.nbrContractRedbox = contrat;
+		this.contrat = contrat;
 		this.odr = c;
 		this.traitement = traitement;
-	}
-
-	public ConfigOdrRefCsv getOdr() {
-		return odr;
-	}
-
-	public void setOdr(ConfigOdrRefCsv odr) {
-		this.odr = odr;
-	}
-
-	public ConfigOdrTraiteCsv getTraitement() {
-		return traitement;
-	}
-
-	public void setTraitement(ConfigOdrTraiteCsv traitement) {
-		this.traitement = traitement;
-	}
-
-	public String getContrat() {
-		return nbrContractRedbox;
-	}
-
-	public void setContrat(String contrat) {
-		this.nbrContractRedbox = contrat;
 	}
 
 	@Override
