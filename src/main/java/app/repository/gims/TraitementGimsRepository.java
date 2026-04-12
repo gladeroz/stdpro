@@ -20,9 +20,10 @@ public interface TraitementGimsRepository extends CrudRepository<TraitementSql, 
 	
 	List<TraitementSql> findByPayeFalse();
 	
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE TraitementSql s SET s.paye = :paye")
     int updateAllPaye(@Param("paye") Boolean paye);
+
 }
 

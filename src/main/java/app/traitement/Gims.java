@@ -3,13 +3,11 @@ package app.traitement;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -138,22 +136,27 @@ public class Gims {
 		if(!Traitement.variableExist(config.getDocTraite())) return;
 
 		MappingIterator<ConfigGimsTraiteCsv> traitement = CSVService.getCsvData(config.getDocTraite(), false, ConfigGimsTraiteCsv.class);
-		List<TraitementSql> all = new ArrayList<>();
 
-		logger.info("Reset tous les flags de paiement");
-		traitementRepository.updateAllPaye(Boolean.TRUE);
-		
+		List<ConfigGimsTraiteCsv> validRows = new ArrayList<>();
 		while(traitement.hasNext()) {
 			ConfigGimsTraiteCsv importCsv = traitement.next();
-			Optional<TraitementSql> t = traitementRepository.findById(new GimsPk(importCsv.getThirdPartyCode(), importCsv.getInvoiceNumber()));
-
-			if(checkDataInvalid(importCsv)) {
-				continue;
+			if(!checkDataInvalid(importCsv)) {
+				validRows.add(importCsv);
 			}
+		}
 
-			if(t.isEmpty()) {
+		Map<GimsPk, TraitementSql> existingMap = StreamSupport
+				.stream(traitementRepository.findAll().spliterator(), false)
+				.collect(Collectors.toMap(TraitementSql::getGimsPk, Function.identity()));
+
+		List<TraitementSql> all = new ArrayList<>();
+		for(ConfigGimsTraiteCsv importCsv : validRows) {
+			GimsPk pk = new GimsPk(importCsv.getThirdPartyCode(), importCsv.getInvoiceNumber());
+			TraitementSql existing = existingMap.get(pk);
+
+			if(existing == null) {
 				TraitementSql item = new TraitementSql();
-				item.setGimsPk(new GimsPk(importCsv.getThirdPartyCode(), importCsv.getInvoiceNumber()));
+				item.setGimsPk(pk);
 
 				item.setTiersNom(importCsv.getThirdPartyName());
 				item.setPriorite(importCsv.getPriority());
@@ -164,7 +167,7 @@ public class Gims {
 				item.setStatutDateFin(importCsv.getStatusEndDate());
 				item.setDateEcriture(importCsv.getEntryDate());
 
-				item.setJournalCode(importCsv.getJournalCode());			    
+				item.setJournalCode(importCsv.getJournalCode());
 				item.setDateEcheance(importCsv.getDueDate());
 
 				item.setDebitTenueCompte(importCsv.getDebitBalance());
@@ -181,18 +184,18 @@ public class Gims {
 				item.setTiersVille(importCsv.getCity());
 
 				all.add(item);
-				//logger.info("Ajout de " + importCsv.getThirdPartyCode() + " en base de données");
 			} else {
-				//logger.info("[" + importCsv.getThirdPartyCode() + " est passé en payer]");
-				TraitementSql a = t.get();
-				a.setDebitTenueCompte(importCsv.getDebitBalance());
-				a.setCreditTenueCompte(importCsv.getCreditBalance());
-				a.setSoldeTenueCompte(importCsv.getAccountBalance());
-				a.setPaye(Boolean.FALSE);
-				all.add(a);
+				existing.setDebitTenueCompte(importCsv.getDebitBalance());
+				existing.setCreditTenueCompte(importCsv.getCreditBalance());
+				existing.setSoldeTenueCompte(importCsv.getAccountBalance());
+				existing.setPaye(Boolean.FALSE);
+				all.add(existing);
 			}
 		}
-		
+
+		logger.info("Reset flags de paiement");
+		traitementRepository.updateAllPaye(Boolean.TRUE);
+
 		if(!all.isEmpty()) {
 			traitementRepository.saveAll(all);
 		}
